@@ -2,6 +2,11 @@ package data
 
 import "io"
 
+type TwoMiners struct {
+	Timestamp string `json:"@timestamp"`
+	Wallet    string `json:"wallet_keyword"`
+}
+
 type Miner struct {
 	Adress      string
 	LastBeat    float64
@@ -11,6 +16,7 @@ type Miner struct {
 }
 
 type Worker struct {
+	TwoMiners
 	Name          string  `json:"name_keyword"`
 	LastBeat      float64 `json:"lastBeat"`
 	Hr            float64 `json:"hr"`
@@ -23,8 +29,7 @@ type Worker struct {
 }
 
 type MinerInfo struct {
-	Wallet           string  `json:"wallet_keyword"`
-	Timestamp        string  `json:"@timestamp"`
+	TwoMiners
 	Two4Hnumreward   float64 `json:"24hnumreward"`
 	Two4Hreward      float64 `json:"24hreward"`
 	APIVersion       float64 `json:"apiVersion"`
@@ -78,7 +83,6 @@ type MinerInfo struct {
 		Orphan      bool    `json:"orphan"`
 		Uncle       bool    `json:"uncle"`
 	} `json:"rewards"`
-	Workers []Worker `json:"workers"`
 }
 
 type MinerStat struct {

@@ -35,7 +35,7 @@ func GetTargetUrl(MinerList []data.Miner) map[string]string {
 
 func ShipToEs(Miner []data.MinerStat) {
 	for key, _ := range Miner {
-		es.Bulk("2miners-data", Miner[key])
+		es.Bulk("2miners-data", es.PrepareDataForEs(Miner[key]))
 	}
 }
 

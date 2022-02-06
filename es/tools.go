@@ -113,13 +113,7 @@ func Write(index string) {
 	log.Println(strings.Repeat("-", 37))
 }
 
-func SendAsJson(bulkData data.MinerStat) string {
-	bulk, _ := ioutil.ReadAll(bulkData.Json)
-	WalletInserted := string(bulk)[:1] + `"wallet_keyword": "` + bulkData.Wallet + `","@timestamp": "` + time.Now().Format(time.RFC3339) + `",` + string(bulk)[1:]
-	return WalletInserted
-}
-
-func ExtractWorkerInfo(workers map[string]interface{}) []data.Worker {
+func ExtractWorkerInfo(workers map[string]interface{}, wallet string) {
 	var WorkerArray []data.Worker
 	for key, _ := range workers {
 		miner := workers[key].(map[string]interface{})
@@ -141,15 +135,18 @@ func ExtractWorkerInfo(workers map[string]interface{}) []data.Worker {
 			} else if minerKey == "sharesStale" {
 				tmpMiner.SharesStale = value.(float64)
 			}
-
+			tmpMiner.Wallet = wallet
+			tmpMiner.Timestamp = time.Now().Format(time.RFC3339)
 		}
+		tmpMinerJson, _ := json.Marshal(tmpMiner)
+		Bulk("2miners-worker", string(tmpMinerJson))
+
 		WorkerArray = append(WorkerArray, tmpMiner)
 	}
-	return WorkerArray
 }
 
 func ExtractSimpleField(esBulk *data.MinerInfo, json map[string]interface{}, wallet string) {
-	esBulk.Wallet = wallet
+	esBulk.TwoMiners.Wallet = wallet
 	esBulk.Timestamp = time.Now().Format(time.RFC3339)
 	esBulk.Two4Hnumreward = json["24hnumreward"].(float64)
 	esBulk.Two4Hreward = json["24hreward"].(float64)
@@ -190,7 +187,7 @@ func ParseJson(bulkData data.MinerStat) string {
 	utils.HandleHttpError(err)
 	var EsBulk data.MinerInfo
 	ExtractSimpleField(&EsBulk, result, bulkData.Wallet)
-	EsBulk.Workers = ExtractWorkerInfo(result["workers"].(map[string]interface{}))
+	ExtractWorkerInfo(result["workers"].(map[string]interface{}), bulkData.Wallet)
 	EsBulkJson, err := json.Marshal(EsBulk)
 	if err != nil {
 		panic(err)
@@ -198,20 +195,23 @@ func ParseJson(bulkData data.MinerStat) string {
 	return string(EsBulkJson)
 }
 
-func Bulk(index string, bulkData data.MinerStat) {
+func PrepareDataForEs(bulkData data.MinerStat) string {
+	//WalletInserted := SendAsJson(bulkData)
+	return ParseJson(bulkData)
+
+}
+
+func Bulk(index, data string) {
 	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
 		Client:     client,
 		Index:      index,
 		NumWorkers: 1,
 	})
-	//WalletInserted := SendAsJson(bulkData)
-	WalletInserted := ParseJson(bulkData)
-
 	indexer.Add(
 		context.Background(),
 		esutil.BulkIndexerItem{
 			Action: "create",
-			Body:   strings.NewReader(WalletInserted),
+			Body:   strings.NewReader(data),
 			// OnFailure is the optional callback for each failed operation
 			OnFailure: func(
 				ctx context.Context,

@@ -52,11 +52,11 @@ func getAllMiner() []data.Miner {
 	return MinerArray
 }
 
-func HarvestMinerInfo(Urls map[string]string) []*data.MinerInfo {
+func HarvestMinerStat(Urls map[string]string) []data.MinerStat {
 	localTime := time.Now()
-	log.Printf("HarvestMinerInfo start %s\n", localTime)
+	log.Printf("HarvestMinerStat start %s\n", localTime)
 	MinersInfo := AsyncGet(Urls)
 	duration := time.Since(localTime)
-	log.Printf("HarvestMinerInfo stop %f seconde", duration.Seconds())
+	log.Printf("HarvestMinerStat stop %f seconde", duration.Seconds())
 	return MinersInfo
 }

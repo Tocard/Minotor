@@ -3,6 +3,7 @@ package es
 import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
+	"2miner-monitoring/utils"
 	"context"
 	"encoding/json"
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
@@ -12,14 +13,25 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
 	r      map[string]interface{}
 	wg     sync.WaitGroup
 	client *elasticsearch.Client
+	m1     = regexp.MustCompile(`workers\.(.*)\.hr`)
+	m2     = regexp.MustCompile(`workers\.(.*)\.hr2`)
+	m3     = regexp.MustCompile(`workers\.(.*)\.lastBeat`)
+	m4     = regexp.MustCompile(`workers\.(.*)\.offline`)
+	m5     = regexp.MustCompile(`workers\.(.*)\.rhr`)
+	m6     = regexp.MustCompile(`workers\.(.*)\.sharesInvalid`)
+	m7     = regexp.MustCompile(`workers\.(.*)\.sharesStale`)
+	m8     = regexp.MustCompile(`workers\.(.*)\.sharesValid`)
 )
 
 func Connection() {
@@ -101,18 +113,134 @@ func Write(index string) {
 	log.Println(strings.Repeat("-", 37))
 }
 
-func Bulk(index, bulkData string) {
+func SendAsJson(bulkData data.MinerStat) string {
+	bulk, _ := ioutil.ReadAll(bulkData.Json)
+	WalletInserted := string(bulk)[:1] + `"wallet_keyword": "` + bulkData.Wallet + `","@timestamp": "` + time.Now().Format(time.RFC3339) + `",` + string(bulk)[1:]
+	return WalletInserted
+}
+
+func ExtractWorkerInfo(workers map[string]interface{}) []data.Worker {
+	var WorkerArray []data.Worker
+	for key, _ := range workers {
+		miner := workers[key].(map[string]interface{})
+		tmpMiner := data.Worker{}
+		tmpMiner.Name = key
+		for minerKey, value := range miner {
+			if minerKey == "hr" {
+				tmpMiner.Hr = value.(float64)
+			} else if minerKey == "offline" {
+				tmpMiner.Offline = value.(bool)
+			} else if minerKey == "Hr2" {
+				tmpMiner.Hr2 = value.(float64)
+			} else if minerKey == "lastBeat" {
+				tmpMiner.LastBeat = value.(float64)
+			} else if minerKey == "sharesValid" {
+				tmpMiner.SharesValid = value.(float64)
+			} else if minerKey == "sharesInvalid" {
+				tmpMiner.SharesInvalid = value.(float64)
+			} else if minerKey == "sharesStale" {
+				tmpMiner.SharesStale = value.(float64)
+			}
+
+		}
+		WorkerArray = append(WorkerArray, tmpMiner)
+	}
+	return WorkerArray
+}
+
+func ExtractSimpleField(esBulk *data.MinerInfo, json map[string]interface{}, wallet string) {
+	esBulk.Wallet = wallet
+	esBulk.Timestamp = time.Now().Format(time.RFC3339)
+	esBulk.Two4Hnumreward = json["24hnumreward"].(float64)
+	esBulk.Two4Hreward = json["24hreward"].(float64)
+	esBulk.APIVersion = json["apiVersion"].(float64)
+	if json["allowedMaxPayout"] != nil {
+		esBulk.AllowedMaxPayout = json["allowedMaxPayout"].(int64)
+	}
+	if json["allowedMinPayout"] != nil {
+		esBulk.AllowedMinPayout = json["allowedMinPayout"].(int)
+	}
+	if json["defaultMinPayout"] != nil {
+		esBulk.DefaultMinPayout = json["defaultMinPayout"].(int)
+	}
+	if json["ipHint"] != nil {
+		esBulk.IPHint = json["ipHint"].(string)
+	}
+	if json["ipWorkerName"] != nil {
+		esBulk.IPWorkerName = json["ipWorkerName"].(string)
+	}
+	if json["minPayout"] != nil {
+		esBulk.MinPayout = json["minPayout"].(int)
+	}
+	esBulk.CurrentHashrate = json["currentHashrate"].(float64)
+	esBulk.CurrentLuck, _ = strconv.ParseFloat(json["currentLuck"].(string), 64)
+	esBulk.Hashrate = json["hashrate"].(float64)
+	esBulk.PageSize = json["pageSize"].(float64)
+	esBulk.UpdatedAt = json["updatedAt"].(float64)
+	esBulk.WorkersOffline = json["workersOffline"].(float64)
+	esBulk.WorkersOnline = json["workersOnline"].(float64)
+	esBulk.WorkersTotal = json["workersTotal"].(float64)
+
+}
+
+func ParseJson(bulkData data.MinerStat) string {
+	bulk, _ := ioutil.ReadAll(bulkData.Json)
+	var result map[string]interface{}
+	err := json.Unmarshal(bulk, &result)
+	utils.HandleHttpError(err)
+	var EsBulk data.MinerInfo
+	ExtractSimpleField(&EsBulk, result, bulkData.Wallet)
+	EsBulk.Workers = ExtractWorkerInfo(result["workers"].(map[string]interface{}))
+	EsBulkJson, err := json.Marshal(EsBulk)
+	if err != nil {
+		panic(err)
+	}
+	return string(EsBulkJson)
+}
+
+func Bulk(index string, bulkData data.MinerStat) {
 	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
 		Client:     client,
 		Index:      index,
 		NumWorkers: 1,
 	})
+	//WalletInserted := SendAsJson(bulkData)
+	WalletInserted := ParseJson(bulkData)
+
 	indexer.Add(
 		context.Background(),
 		esutil.BulkIndexerItem{
 			Action: "create",
-			Body:   strings.NewReader(bulkData),
+			Body:   strings.NewReader(WalletInserted),
+			// OnFailure is the optional callback for each failed operation
+			OnFailure: func(
+				ctx context.Context,
+				item esutil.BulkIndexerItem,
+				res esutil.BulkIndexerResponseItem, err error,
+			) {
+				if err != nil {
+					log.Printf("ERROR: %s", err)
+				} else {
+					log.Printf("ERROR: %s: %s", res.Error.Type, res.Error.Reason)
+				}
+			},
 		})
 	indexer.Close(context.Background())
 
 }
+
+//func Bulk(index, bulkData string) {
+//	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
+//		Client:     client,
+//		Index:      index,
+//		NumWorkers: 1,
+//	})
+//	indexer.Add(
+//		context.Background(),
+//		esutil.BulkIndexerItem{
+//			Action: "create",
+//			Body:   strings.NewReader(bulkData),
+//		})
+//	indexer.Close(context.Background())
+//
+//}

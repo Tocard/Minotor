@@ -4,7 +4,6 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
 	"2miner-monitoring/es"
-	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -34,10 +33,9 @@ func GetTargetUrl(MinerList []data.Miner) map[string]string {
 	return Urls
 }
 
-func ShipToEs(Miner []*data.MinerInfo) {
+func ShipToEs(Miner []data.MinerStat) {
 	for key, _ := range Miner {
-		response, _ := json.Marshal(Miner[key])
-		es.Bulk("2miners-data", string(response))
+		es.Bulk("2miners-data", Miner[key])
 	}
 }
 
@@ -51,7 +49,7 @@ func Life() {
 	for {
 		log.Printf("Collecting for clock %s.", data.Clock)
 		localTime := time.Now()
-		MinerInfo := HarvestMinerInfo(Urls)
+		MinerInfo := HarvestMinerStat(Urls)
 		ShipToEs(MinerInfo)
 		duration := time.Since(localTime)
 		log.Printf("Collected & saved miner data. Duration :%f secondes", duration.Seconds())

@@ -114,7 +114,6 @@ func Write(index string) {
 }
 
 func ExtractWorkerInfo(workers map[string]interface{}, wallet string) {
-	var WorkerArray []data.Worker
 	for key, _ := range workers {
 		miner := workers[key].(map[string]interface{})
 		tmpMiner := data.Worker{}
@@ -127,7 +126,7 @@ func ExtractWorkerInfo(workers map[string]interface{}, wallet string) {
 			} else if minerKey == "Hr2" {
 				tmpMiner.Hr2 = value.(float64)
 			} else if minerKey == "lastBeat" {
-				tmpMiner.LastBeat = value.(float64)
+				tmpMiner.LastBeat = time.Unix(int64(value.(float64)), 0).Format(time.RFC3339)
 			} else if minerKey == "sharesValid" {
 				tmpMiner.SharesValid = value.(float64)
 			} else if minerKey == "sharesInvalid" {
@@ -140,8 +139,6 @@ func ExtractWorkerInfo(workers map[string]interface{}, wallet string) {
 		}
 		tmpMinerJson, _ := json.Marshal(tmpMiner)
 		Bulk("2miners-worker", string(tmpMinerJson))
-
-		WorkerArray = append(WorkerArray, tmpMiner)
 	}
 }
 
@@ -180,6 +177,31 @@ func ExtractSimpleField(esBulk *data.MinerInfo, json map[string]interface{}, wal
 
 }
 
+func ExtractStatInfo(stats map[string]interface{}, wallet string) {
+	tmpStat := data.Stats{}
+	for StatKey, value := range stats {
+		if StatKey == "balance" {
+			tmpStat.Balance = value.(float64)
+		} else if StatKey == "blocksFound" {
+			tmpStat.BlocksFound = value.(float64)
+		} else if StatKey == "gas" {
+			tmpStat.Gas = value.(float64)
+		} else if StatKey == "immature" {
+			tmpStat.Immature = value.(float64)
+		} else if StatKey == "lastShare" {
+			tmpStat.LastShare = time.Unix(int64(value.(float64)), 0).Format(time.RFC3339)
+		} else if StatKey == "paid" {
+			tmpStat.Paid = value.(float64)
+		} else if StatKey == "pending" {
+			tmpStat.Pending = value.(float64)
+		}
+		tmpStat.Wallet = wallet
+		tmpStat.Timestamp = time.Now().Format(time.RFC3339)
+	}
+	tmpStatJson, _ := json.Marshal(tmpStat)
+	Bulk("2miners-stat", string(tmpStatJson))
+}
+
 func ParseJson(bulkData data.MinerStat) string {
 	bulk, _ := ioutil.ReadAll(bulkData.Json)
 	var result map[string]interface{}
@@ -188,6 +210,7 @@ func ParseJson(bulkData data.MinerStat) string {
 	var EsBulk data.MinerInfo
 	ExtractSimpleField(&EsBulk, result, bulkData.Wallet)
 	ExtractWorkerInfo(result["workers"].(map[string]interface{}), bulkData.Wallet)
+	ExtractStatInfo(result["stats"].(map[string]interface{}), bulkData.Wallet)
 	EsBulkJson, err := json.Marshal(EsBulk)
 	if err != nil {
 		panic(err)

@@ -12,13 +12,13 @@ type Miner struct {
 	LastBeat    float64
 	Hr          float64
 	Offline     bool
-	CurrentLuck string
+	CurrentLuck float64
 }
 
 type Worker struct {
 	TwoMiners
 	Name          string  `json:"name_keyword"`
-	LastBeat      float64 `json:"lastBeat"`
+	LastBeat      string  `json:"lastBeat"`
 	Hr            float64 `json:"hr"`
 	Offline       bool    `json:"offline"`
 	Hr2           float64 `json:"hr2"`
@@ -26,6 +26,17 @@ type Worker struct {
 	SharesValid   float64 `json:"sharesValid"`
 	SharesInvalid float64 `json:"sharesInvalid"`
 	SharesStale   float64 `json:"sharesStale"`
+}
+
+type Stats struct {
+	TwoMiners
+	Balance     float64 `json:"balance"`
+	BlocksFound float64 `json:"blocksFound"`
+	Gas         float64 `json:"gas"`
+	Immature    float64 `json:"immature"`
+	LastShare   string  `json:"lastShare"`
+	Paid        float64 `json:"paid"`
+	Pending     float64 `json:"pending"`
 }
 
 type MinerInfo struct {
@@ -52,16 +63,7 @@ type MinerInfo struct {
 	SharesInvalid    int     `json:"sharesInvalid"`
 	SharesStale      int     `json:"sharesStale"`
 	SharesValid      int     `json:"sharesValid"`
-	Stats            struct {
-		Balance     int `json:"balance"`
-		BlocksFound int `json:"blocksFound"`
-		Gas         int `json:"gas"`
-		Immature    int `json:"immature"`
-		LastShare   int `json:"lastShare"`
-		Paid        int `json:"paid"`
-		Pending     int `json:"pending"`
-	} `json:"stats"`
-	Sumrewards []struct {
+	Sumrewards       []struct {
 		Inverval  int    `json:"inverval"`
 		Reward    int    `json:"reward"`
 		Numreward int    `json:"numreward"`

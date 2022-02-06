@@ -13,6 +13,7 @@ func Minertarget() []data.Miner {
 	var MinerList []data.Miner
 	if config.Cfg.MinerListing == "ALL" {
 		MinerList = getAllMiner()
+		return MinerList
 	} else {
 		for key := range config.Cfg.Adress {
 			tmpMiner := data.Miner{}
@@ -21,7 +22,6 @@ func Minertarget() []data.Miner {
 		}
 		return MinerList
 	}
-	return nil
 }
 
 func GetTargetUrl(MinerList []data.Miner) map[string]string {

@@ -37,8 +37,6 @@ func getAllMiner() []data.Miner {
 					tmpMiner.Hr = value.(float64)
 				} else if minerKey == "offline" {
 					tmpMiner.Offline = value.(bool)
-				} else if minerKey == "currentLuck" {
-					tmpMiner.CurrentLuck = value.(float64)
 				} else if minerKey == "lastBeat" {
 					tmpMiner.LastBeat = value.(float64)
 				}

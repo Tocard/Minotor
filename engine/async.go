@@ -17,12 +17,12 @@ func AsyncGet(urls map[string]string) []data.MinerStat {
 		go func(wallet string, u string) {
 			localTime := time.Now()
 			log.Printf("AsyncGet start %s at %s", u, localTime)
-						client := http.Client{
+			client := http.Client{
 				Timeout: 180 * time.Second,
 			}
 			resp, err := client.Get(u)
-			if (err != nil) {
-				log.Fatalf("ERROR: during async  %s",  err)
+			if err != nil {
+				log.Fatalf("ERROR: during async  %s", err)
 
 			}
 			//defer resp.Body.Close()

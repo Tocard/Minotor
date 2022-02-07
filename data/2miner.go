@@ -39,6 +39,34 @@ type Stats struct {
 	Pending     float64 `json:"pending"`
 }
 
+type Sumrewards struct {
+	TwoMiners
+	Inverval  float64 `json:"inverval"`
+	Reward    float64 `json:"reward"`
+	Numreward float64 `json:"numreward"`
+	Name      string  `json:"name"`
+	Offset    float64 `json:"offset"`
+}
+
+type Payments struct {
+	TwoMiners
+	Amount      float64 `json:"amount"`
+	PaymentDate string  `json:"payment_date"`
+	Tx          string  `json:"tx"`
+	TxFee       float64 `json:"txFee"`
+}
+
+type Rewards struct {
+	TwoMiners
+	Blockheight float64 `json:"blockheight"`
+	RewardDate  string  `json:"rewarddate"`
+	Reward      float64 `json:"reward"`
+	Percent     float64 `json:"percent"`
+	Immature    bool    `json:"immature"`
+	Orphan      bool    `json:"orphan"`
+	Uncle       bool    `json:"uncle"`
+}
+
 type MinerInfo struct {
 	TwoMiners
 	Two4Hnumreward   float64 `json:"24hnumreward"`
@@ -63,28 +91,6 @@ type MinerInfo struct {
 	SharesInvalid    int     `json:"sharesInvalid"`
 	SharesStale      int     `json:"sharesStale"`
 	SharesValid      int     `json:"sharesValid"`
-	Sumrewards       []struct {
-		Inverval  int    `json:"inverval"`
-		Reward    int    `json:"reward"`
-		Numreward int    `json:"numreward"`
-		Name      string `json:"name"`
-		Offset    int    `json:"offset"`
-	} `json:"sumrewards"`
-	Payments []struct {
-		Amount    int    `json:"amount"`
-		Timestamp int    `json:"timestamp"`
-		Tx        string `json:"tx"`
-		TxFee     int    `json:"txFee"`
-	} `json:"payments"`
-	Rewards []struct {
-		Blockheight int     `json:"blockheight"`
-		Timestamp   int     `json:"timestamp"`
-		Reward      int     `json:"reward"`
-		Percent     float64 `json:"percent"`
-		Immature    bool    `json:"immature"`
-		Orphan      bool    `json:"orphan"`
-		Uncle       bool    `json:"uncle"`
-	} `json:"rewards"`
 }
 
 type MinerStat struct {

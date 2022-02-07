@@ -177,6 +177,81 @@ func ExtractSimpleField(esBulk *data.MinerInfo, json map[string]interface{}, wal
 
 }
 
+func ExtractSumrewardsInfo(sumrewards []interface{}, wallet string) {
+	for key, _ := range sumrewards {
+		sumreward := sumrewards[key].(map[string]interface{})
+		for StatKey, value := range sumreward {
+			tmpSumrewards := data.Sumrewards{}
+			if StatKey == "inverval" {
+				tmpSumrewards.Inverval = value.(float64)
+			} else if StatKey == "reward" {
+				tmpSumrewards.Reward = value.(float64)
+			} else if StatKey == "numreward" {
+				tmpSumrewards.Numreward = value.(float64)
+			} else if StatKey == "name" {
+				tmpSumrewards.Name = value.(string)
+			} else if StatKey == "offset" {
+				tmpSumrewards.Offset = value.(float64)
+			}
+			tmpSumrewards.Wallet = wallet
+			tmpSumrewards.Timestamp = time.Now().Format(time.RFC3339)
+			tmpsumRewardsJson, _ := json.Marshal(tmpSumrewards)
+			Bulk("2miners-sumreward", string(tmpsumRewardsJson))
+		}
+	}
+}
+
+func ExtractRewardInfo(rewards []interface{}, wallet string) {
+	for key, _ := range rewards {
+		reward := rewards[key].(map[string]interface{})
+		for StatKey, value := range reward {
+			tmpReward := data.Rewards{}
+			if StatKey == "blockheight" {
+				tmpReward.Blockheight = value.(float64)
+			} else if StatKey == "timestamp" {
+				tmpReward.RewardDate = time.Unix(int64(value.(float64)), 0).Format(time.RFC3339)
+			} else if StatKey == "reward" {
+				tmpReward.Reward = value.(float64)
+			} else if StatKey == "percent" {
+				tmpReward.Percent = value.(float64)
+			} else if StatKey == "immature" {
+				tmpReward.Immature = value.(bool)
+			} else if StatKey == "orphan" {
+				tmpReward.Orphan = value.(bool)
+			} else if StatKey == "uncle" {
+				tmpReward.Uncle = value.(bool)
+			}
+
+			tmpReward.Wallet = wallet
+			tmpReward.Timestamp = time.Now().Format(time.RFC3339)
+			tmpRewardsJson, _ := json.Marshal(tmpReward)
+			Bulk("2miners-reward", string(tmpRewardsJson))
+		}
+	}
+}
+
+func ExtractPaymentInfo(payments []interface{}, wallet string) {
+	for key, _ := range payments {
+		payment := payments[key].(map[string]interface{})
+		for StatKey, value := range payment {
+			tmpPayments := data.Payments{}
+			if StatKey == "amount" {
+				tmpPayments.Amount = value.(float64)
+			} else if StatKey == "tx" {
+				tmpPayments.Tx = value.(string)
+			} else if StatKey == "txFee" {
+				tmpPayments.TxFee = value.(float64)
+			} else if StatKey == "timestamp" {
+				tmpPayments.PaymentDate = time.Unix(int64(value.(float64)), 0).Format(time.RFC3339)
+			}
+			tmpPayments.Wallet = wallet
+			tmpPayments.Timestamp = time.Now().Format(time.RFC3339)
+			tmpPaymentsJson, _ := json.Marshal(tmpPayments)
+			Bulk("2miners-payment", string(tmpPaymentsJson))
+		}
+	}
+}
+
 func ExtractStatInfo(stats map[string]interface{}, wallet string) {
 	tmpStat := data.Stats{}
 	for StatKey, value := range stats {
@@ -211,6 +286,9 @@ func ParseJson(bulkData data.MinerStat) string {
 	ExtractSimpleField(&EsBulk, result, bulkData.Wallet)
 	ExtractWorkerInfo(result["workers"].(map[string]interface{}), bulkData.Wallet)
 	ExtractStatInfo(result["stats"].(map[string]interface{}), bulkData.Wallet)
+	ExtractPaymentInfo(result["payments"].([]interface{}), bulkData.Wallet)
+	ExtractSumrewardsInfo(result["sumrewards"].([]interface{}), bulkData.Wallet)
+	ExtractRewardInfo(result["rewards"].([]interface{}), bulkData.Wallet)
 	EsBulkJson, err := json.Marshal(EsBulk)
 	if err != nil {
 		panic(err)

@@ -26,6 +26,10 @@ type Config struct {
 	EthFactor             float64  `yaml:"ether_factor"`
 	GazFactor             float64  `yaml:"gaz_factor"`
 	MinerListing          string   `yaml:"miner_listing"`
+	APIPort               int      `yaml:"api_port"`
+	APILogFile            string   `yaml:"api_log_file"`
+	APIUsername           string   `yaml:"api_username"`
+	APIPassword           string   `yaml:"api_password"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

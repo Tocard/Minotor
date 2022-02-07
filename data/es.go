@@ -1,5 +1,10 @@
 package data
 
+type Bulkdata struct {
+	index string
+	data  string
+}
+
 type BulkResponse struct {
 	Errors bool `json:"errors"`
 	Items  []struct {

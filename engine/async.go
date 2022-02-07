@@ -9,6 +9,7 @@ import (
 
 func AsyncGet(urls map[string]string) []data.MinerStat {
 	ch := make(chan data.MinerStat)
+	defer close(ch)
 	var responses []data.MinerStat
 
 	for wallet, url := range urls {
@@ -16,18 +17,19 @@ func AsyncGet(urls map[string]string) []data.MinerStat {
 		go func(wallet string, u string) {
 			localTime := time.Now()
 			log.Printf("AsyncGet start %s at %s", u, localTime)
-			resp, _ := http.Get(u)
-			//MinerInfo := &data.MinerInfo{}
-			//d := json.NewDecoder(resp.Body)
-			//_ = d.Decode(MinerInfo)
-			//MinerInfo.Wallet = wallet
-			//MinerInfo.Timestamp = time.Now().Format(time.RFC3339)
+						client := http.Client{
+				Timeout: 180 * time.Second,
+			}
+			resp, err := client.Get(u)
+			if (err != nil) {
+				log.Fatalf("ERROR: during async  %s",  err)
 
+			}
+			//defer resp.Body.Close()
 			ch <- data.MinerStat{
 				Json:   resp.Body,
 				Wallet: wallet,
 			}
-			//ch <- MinerInfo
 			duration := time.Since(localTime)
 			log.Printf("AsyncGet stop at %s. Duration :%f secondes", u, duration.Seconds())
 		}(wallet, url)

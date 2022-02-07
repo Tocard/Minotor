@@ -3,7 +3,9 @@ package engine
 import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
+	"2miner-monitoring/utils"
 	"fmt"
+	"net/http"
 )
 
 func Minertarget() []data.Miner {
@@ -20,11 +22,24 @@ func Minertarget() []data.Miner {
 	}
 }
 
-func GetTargetUrl(MinerList []data.Miner) map[string]string {
-	Urls := map[string]string{}
-	for key, _ := range MinerList {
-		url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, MinerList[key].Adress)
-		Urls[MinerList[key].Adress] = url
+func HarvestMiners(wallet string) {
+	url := fmt.Sprintf("http://127.0.0.1:%d/miners", config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func HarvestFactory(endpoint string) {
+	for key := range config.Cfg.Adress {
+		go func(wallet string) {
+			url := fmt.Sprintf("http://127.0.0.1:%d/harvest/%s/%s", config.Cfg.APIPort, endpoint, wallet)
+			resp, err := http.Get(url)
+			utils.HandleHttpError(err)
+			defer resp.Body.Close()
+			fmt.Println(resp)
+		}(config.Cfg.Adress[key])
+
 	}
-	return Urls
 }

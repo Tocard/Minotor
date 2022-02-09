@@ -4,12 +4,11 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
 	"2miner-monitoring/es"
+	"2miner-monitoring/redis"
 	"2miner-monitoring/utils"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -17,64 +16,47 @@ import (
 	"time"
 )
 
-//TODO: refactor common code and use redis to cache data
-
 func GetAllMiner(c *gin.Context) {
-	data.RefreshClock()
-	log.Printf("Collecting all miner at %s\n", data.Clock)
-	resp, err := http.Get(config.Cfg.TwoMinersURL + "/miners")
-	utils.HandleHttpError(err)
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var result map[string]interface{}
-	err = json.Unmarshal(bodyBytes, &result)
-	utils.HandleHttpError(err)
+	RedisMiner := redis.GetFromToRedis(1, "Miners")
+	if RedisMiner == "" {
+		log.Printf("Collecting all miner at %s\n", data.Clock)
+		resp, err := http.Get(config.Cfg.TwoMinersURL + "/miners")
+		utils.HandleHttpError(err)
+		bodyBytes, err := io.ReadAll(resp.Body)
+		utils.HandleHttpError(err)
+		var result map[string]interface{}
+		err = json.Unmarshal(bodyBytes, &result)
+		utils.HandleHttpError(err)
 
-	var MinerArray []data.Miner
-	miners := result["miners"].(map[string]interface{})
-	for key, _ := range miners {
-		if strings.HasPrefix(key, "0x") {
-			miner := miners[key].(map[string]interface{})
-			tmpMiner := data.Miner{}
-			tmpMiner.Adress = key
-			for minerKey, value := range miner {
-				if minerKey == "hr" {
-					tmpMiner.Hr = value.(float64)
-				} else if minerKey == "offline" {
-					tmpMiner.Offline = value.(bool)
-				} else if minerKey == "lastBeat" {
-					tmpMiner.LastBeat = value.(float64)
+		var MinerArray []data.Miner
+		miners := result["miners"].(map[string]interface{})
+		for key, _ := range miners {
+			if strings.HasPrefix(key, "0x") {
+				miner := miners[key].(map[string]interface{})
+				tmpMiner := data.Miner{}
+				tmpMiner.Adress = key
+				for minerKey, value := range miner {
+					if minerKey == "hr" {
+						tmpMiner.Hr = value.(float64)
+					} else if minerKey == "offline" {
+						tmpMiner.Offline = value.(bool)
+					} else if minerKey == "lastBeat" {
+						tmpMiner.LastBeat = value.(float64)
+					}
 				}
+				MinerArray = append(MinerArray, tmpMiner)
 			}
-			MinerArray = append(MinerArray, tmpMiner)
 		}
+		save, _ := json.Marshal(MinerArray)
+		redis.WriteToRedis(1, "Miners", string(save), "long")
+		duration := time.Since(data.Clock)
+		log.Printf("Collected all miner at %s. Duration :%f\n secondes", data.Clock, duration.Seconds())
 	}
-	duration := time.Since(data.Clock)
-	data.RefreshClock()
-	log.Printf("Collected all miner at %s. Duration :%f\n secondes", data.Clock, duration.Seconds())
 	c.String(200, "OK")
 }
 
 func ExtractWorkerInfo(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
+	result, wallet := RequestStorage(c)
 	for key, _ := range result["workers"].(map[string]interface{}) {
 		miner := result["workers"].(map[string]interface{})[key].(map[string]interface{})
 		tmpMiner := data.Worker{}
@@ -105,23 +87,7 @@ func ExtractWorkerInfo(c *gin.Context) {
 }
 
 func ExtractSimpleField(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
+	result, wallet := RequestStorage(c)
 	var esBulk data.MinerInfo
 	esBulk.TwoMiners.Wallet = wallet
 	esBulk.Timestamp = time.Now().Format(time.RFC3339)
@@ -162,23 +128,7 @@ func ExtractSimpleField(c *gin.Context) {
 }
 
 func ExtractSumrewardsInfo(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
+	result, wallet := RequestStorage(c)
 	for key, _ := range result["sumrewards"].([]interface{}) {
 		sumreward := result["sumrewards"].([]interface{})[key].(map[string]interface{})
 		for StatKey, value := range sumreward {
@@ -204,24 +154,7 @@ func ExtractSumrewardsInfo(c *gin.Context) {
 }
 
 func ExtractRewardInfo(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
-
+	result, wallet := RequestStorage(c)
 	for key, _ := range result["rewards"].([]interface{}) {
 		reward := result["rewards"].([]interface{})[key].(map[string]interface{})
 		for StatKey, value := range reward {
@@ -253,23 +186,7 @@ func ExtractRewardInfo(c *gin.Context) {
 }
 
 func ExtractPaymentInfo(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
+	result, wallet := RequestStorage(c)
 	for key, _ := range result["payments"].([]interface{}) {
 		payment := result["payments"].([]interface{})[key].(map[string]interface{})
 		for StatKey, value := range payment {
@@ -293,23 +210,7 @@ func ExtractPaymentInfo(c *gin.Context) {
 }
 
 func ExtractStatInfo(c *gin.Context) {
-	wallet := c.Param("wallet")
-	client := http.Client{
-		Timeout: 180 * time.Second,
-	}
-	url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, wallet)
-	//TODO: store it to redis
-	resp, err := client.Get(url)
-	//TODO: check this error
-	defer resp.Body.Close()
-	if err != nil {
-		log.Fatalf("ERROR: during fetch %s  %s", url, err)
-
-	}
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
-	utils.HandleHttpError(err)
+	result, wallet := RequestStorage(c)
 	tmpStat := data.Stats{}
 	for StatKey, value := range result["stats"].(map[string]interface{}) {
 		if StatKey == "balance" {

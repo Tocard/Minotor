@@ -21,7 +21,9 @@ type Config struct {
 	RedisHost             string   `yaml:"redis_host"`
 	RedisPort             int      `yaml:"redis_port"`
 	RedisPassword         string   `yaml:"redis_password"`
-	RedisLifetime         int      `yaml:"redis_lifetime"`
+	RedisShortLifetime    int      `yaml:"redis_short_lifetime"`
+	RedisMidLifetime      int      `yaml:"redis_mid_lifetime"`
+	RedisLongLifetime     int      `yaml:"redis_long_lifetime"`
 	Factor                float64  `yaml:"factor"`
 	EthFactor             float64  `yaml:"ether_factor"`
 	GazFactor             float64  `yaml:"gaz_factor"`
@@ -31,7 +33,7 @@ type Config struct {
 	APILogFile            string   `yaml:"api_log_file"`
 	APIUsername           string   `yaml:"api_username"`
 	APIPassword           string   `yaml:"api_password"`
-	APIAdress           string   `yaml:"api_adress"`
+	APIAdress             string   `yaml:"api_adress"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

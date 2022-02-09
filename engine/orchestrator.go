@@ -22,7 +22,7 @@ func Minertarget() []data.Miner {
 	}
 }
 
-func HarvestMiners(wallet string) {
+func HarvestMiners() {
 	url := fmt.Sprintf("%s:%d/miners", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)

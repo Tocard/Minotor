@@ -23,7 +23,7 @@ func Minertarget() []data.Miner {
 }
 
 func HarvestMiners(wallet string) {
-	url := fmt.Sprintf("http://127.0.0.1:%d/miners", config.Cfg.APIPort)
+	url := fmt.Sprintf("%s:%d/miners", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
@@ -34,7 +34,7 @@ func HarvestMiners(wallet string) {
 func HarvestFactory(endpoint string) {
 	for key := range config.Cfg.Adress {
 		go func(wallet string) {
-			url := fmt.Sprintf("http://127.0.0.1:%d/harvest/%s/%s", config.Cfg.APIPort, endpoint, wallet)
+			url := fmt.Sprintf("%s:%d/harvest/%s/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, endpoint, wallet)
 			resp, err := http.Get(url)
 			utils.HandleHttpError(err)
 			defer resp.Body.Close()

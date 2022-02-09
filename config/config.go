@@ -27,9 +27,11 @@ type Config struct {
 	GazFactor             float64  `yaml:"gaz_factor"`
 	MinerListing          string   `yaml:"miner_listing"`
 	APIPort               int      `yaml:"api_port"`
+	APIFrontPort          int      `yaml:"api_front_port"`
 	APILogFile            string   `yaml:"api_log_file"`
 	APIUsername           string   `yaml:"api_username"`
 	APIPassword           string   `yaml:"api_password"`
+	APIAdress           string   `yaml:"api_adress"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

@@ -19,7 +19,7 @@ func Health(c *gin.Context) {
 
 func RequestStorage(c *gin.Context) (map[string]interface{}, string) {
 	wallet := c.Param("wallet")
-	redisResult := redis.GetFromToRedis(1, wallet)
+	redisResult := redis.GetFromToRedis(0, wallet)
 	if redisResult == "" {
 
 		client := http.Client{
@@ -33,7 +33,7 @@ func RequestStorage(c *gin.Context) (map[string]interface{}, string) {
 
 		}
 		bulk, _ := ioutil.ReadAll(resp.Body)
-		redis.WriteToRedis(1, wallet, string(bulk), "short")
+		redis.WriteToRedis(0, wallet, string(bulk), "short")
 		var result map[string]interface{}
 		err = json.Unmarshal(bulk, &result)
 		utils.HandleHttpError(err)

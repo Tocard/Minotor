@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-
+	"log"
 	"github.com/go-redis/redis"
 )
 
@@ -21,7 +21,7 @@ func InitRedis() {
 			select {
 			case <-time.Tick(1 * time.Second):
 				if err := Clis[0].Ping(); err.Err() != nil {
-					fmt.Println(err.Err())
+					log.Println(err.Err())
 					connect(0)
 				}
 			}

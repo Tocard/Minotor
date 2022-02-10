@@ -5,6 +5,7 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/engine"
 	"2miner-monitoring/server"
+	"2miner-monitoring/redis"
 	"github.com/go-co-op/gocron"
 	"time"
 )
@@ -13,7 +14,7 @@ func main() {
 	cliFilled := cli.Cli()
 	config.LoadYamlConfig(cliFilled.FilePathConfig)
 	//log2miner.InitLogger("2miner.log2miner")
-	//redis.InitRedis()
+	redis.InitRedis()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		// cron expressions supported

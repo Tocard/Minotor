@@ -77,9 +77,9 @@ func ExtractWorkerInfo(c *gin.Context) {
 			} else if minerKey == "sharesStale" {
 				tmpMiner.SharesStale = value.(float64)
 			}
-			tmpMiner.Wallet = wallet
-			tmpMiner.Timestamp = time.Now().Format(time.RFC3339)
 		}
+		tmpMiner.Wallet = wallet
+		tmpMiner.Timestamp = time.Now().Format(time.RFC3339)
 		tmpMinerJson, _ := json.Marshal(tmpMiner)
 		es.Bulk("2miners-worker", string(tmpMinerJson))
 	}
@@ -131,8 +131,8 @@ func ExtractSumrewardsInfo(c *gin.Context) {
 	result, wallet := RequestStorage(c)
 	for key, _ := range result["sumrewards"].([]interface{}) {
 		sumreward := result["sumrewards"].([]interface{})[key].(map[string]interface{})
+		tmpSumrewards := data.Sumrewards{}
 		for StatKey, value := range sumreward {
-			tmpSumrewards := data.Sumrewards{}
 			if StatKey == "inverval" {
 				tmpSumrewards.Inverval = value.(float64)
 			} else if StatKey == "reward" {
@@ -144,11 +144,11 @@ func ExtractSumrewardsInfo(c *gin.Context) {
 			} else if StatKey == "offset" {
 				tmpSumrewards.Offset = value.(float64)
 			}
-			tmpSumrewards.Wallet = wallet
-			tmpSumrewards.Timestamp = time.Now().Format(time.RFC3339)
-			tmpsumRewardsJson, _ := json.Marshal(tmpSumrewards)
-			es.Bulk("2miners-sumreward", string(tmpsumRewardsJson))
 		}
+		tmpSumrewards.Wallet = wallet
+		tmpSumrewards.Timestamp = time.Now().Format(time.RFC3339)
+		tmpsumRewardsJson, _ := json.Marshal(tmpSumrewards)
+		es.Bulk("2miners-sumreward", string(tmpsumRewardsJson))
 	}
 	c.String(200, "OK")
 }
@@ -157,8 +157,8 @@ func ExtractRewardInfo(c *gin.Context) {
 	result, wallet := RequestStorage(c)
 	for key, _ := range result["rewards"].([]interface{}) {
 		reward := result["rewards"].([]interface{})[key].(map[string]interface{})
+		tmpReward := data.Rewards{}
 		for StatKey, value := range reward {
-			tmpReward := data.Rewards{}
 			if StatKey == "blockheight" {
 				tmpReward.Blockheight = value.(float64)
 			} else if StatKey == "timestamp" {
@@ -174,12 +174,11 @@ func ExtractRewardInfo(c *gin.Context) {
 			} else if StatKey == "uncle" {
 				tmpReward.Uncle = value.(bool)
 			}
-
-			tmpReward.Wallet = wallet
-			tmpReward.Timestamp = time.Now().Format(time.RFC3339)
-			tmpRewardsJson, _ := json.Marshal(tmpReward)
-			es.Bulk("2miners-reward", string(tmpRewardsJson))
 		}
+		tmpReward.Wallet = wallet
+		tmpReward.Timestamp = time.Now().Format(time.RFC3339)
+		tmpRewardsJson, _ := json.Marshal(tmpReward)
+		es.Bulk("2miners-reward", string(tmpRewardsJson))
 	}
 	c.String(200, "OK")
 
@@ -189,8 +188,8 @@ func ExtractPaymentInfo(c *gin.Context) {
 	result, wallet := RequestStorage(c)
 	for key, _ := range result["payments"].([]interface{}) {
 		payment := result["payments"].([]interface{})[key].(map[string]interface{})
+		tmpPayments := data.Payments{}
 		for StatKey, value := range payment {
-			tmpPayments := data.Payments{}
 			if StatKey == "amount" {
 				tmpPayments.Amount = value.(float64)
 			} else if StatKey == "tx" {
@@ -200,11 +199,11 @@ func ExtractPaymentInfo(c *gin.Context) {
 			} else if StatKey == "timestamp" {
 				tmpPayments.PaymentDate = time.Unix(int64(value.(float64)), 0).Format(time.RFC3339)
 			}
-			tmpPayments.Wallet = wallet
-			tmpPayments.Timestamp = time.Now().Format(time.RFC3339)
-			tmpPaymentsJson, _ := json.Marshal(tmpPayments)
-			es.Bulk("2miners-payment", string(tmpPaymentsJson))
 		}
+		tmpPayments.Wallet = wallet
+		tmpPayments.Timestamp = time.Now().Format(time.RFC3339)
+		tmpPaymentsJson, _ := json.Marshal(tmpPayments)
+		es.Bulk("2miners-payment", string(tmpPaymentsJson))
 	}
 	c.String(200, "OK")
 }
@@ -228,9 +227,9 @@ func ExtractStatInfo(c *gin.Context) {
 		} else if StatKey == "pending" {
 			tmpStat.Pending = value.(float64)
 		}
-		tmpStat.Wallet = wallet
-		tmpStat.Timestamp = time.Now().Format(time.RFC3339)
 	}
+	tmpStat.Wallet = wallet
+	tmpStat.Timestamp = time.Now().Format(time.RFC3339)
 	tmpStatJson, _ := json.Marshal(tmpStat)
 	es.Bulk("2miners-stat", string(tmpStatJson))
 	c.String(200, "OK")

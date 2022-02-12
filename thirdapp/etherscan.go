@@ -13,10 +13,12 @@ type AccountBalance struct {
 
 type BigInt big.Int
 
-var client = etherscan.New(etherscan.Mainnet, config.Cfg.APITokenEtherscan)
+func procEtherscanClient() *etherscan.Client {
+	return etherscan.New(etherscan.Mainnet, config.Cfg.APITokenEtherscan)
+}
 
 func GetAccountBalance(walletId string) *big.Int {
-	// check account balance
+	client := procEtherscanClient()
 	balance, err := client.AccountBalance(walletId)
 	if err != nil {
 		panic(err)
@@ -25,7 +27,7 @@ func GetAccountBalance(walletId string) *big.Int {
 }
 
 func GetTokenBalance(contractAdress, walletId string) *big.Int {
-	// check account balance
+	client := procEtherscanClient()
 	tokenBalance, err := client.TokenBalance("contractAddress", "holderAddress")
 	if err != nil {
 		panic(err)
@@ -34,7 +36,7 @@ func GetTokenBalance(contractAdress, walletId string) *big.Int {
 }
 
 func GetMultiAccountBalance(walletIds []string) []etherscan.AccountBalance {
-	// check account balance
+	client := procEtherscanClient()
 	balance, err := client.MultiAccountBalance(walletIds...)
 	if err != nil {
 		panic(err)

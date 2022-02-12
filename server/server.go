@@ -41,6 +41,7 @@ func engine() *gin.Engine {
 		serverMiner.GET("/stats/:wallet", handlers.ExtractStatInfo)
 		serverMiner.GET("/sumrewards/:wallet", handlers.ExtractSumrewardsInfo)
 	}
+	server.GET("/balances", handlers.GetWalletsBalance)
 
 	return server
 }

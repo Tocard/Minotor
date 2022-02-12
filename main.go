@@ -4,8 +4,8 @@ import (
 	"2miner-monitoring/cli"
 	"2miner-monitoring/config"
 	"2miner-monitoring/engine"
-	"2miner-monitoring/server"
 	"2miner-monitoring/redis"
+	"2miner-monitoring/server"
 	"github.com/go-co-op/gocron"
 	"time"
 )
@@ -21,6 +21,7 @@ func main() {
 		s.Every(1).Hours().Do(engine.HarvestMiners)
 		s.Every(1).Hours().Do(engine.HarvestFactory, "rewards")
 
+		s.Every(10).Minutes().Do(engine.HarvestBalance)
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "stats")
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "payments")
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "sumrewards")

@@ -43,3 +43,12 @@ func HarvestFactory(endpoint string) {
 
 	}
 }
+
+func HarvestBalance() {
+	url := fmt.Sprintf("%s:%d/balances", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

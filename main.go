@@ -26,6 +26,7 @@ func main() {
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "payments")
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "sumrewards")
 
+		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
 		s.Every(10).Seconds().Do(engine.HarvestFactory, "data")
 		s.Every(1).Second().Do(engine.HarvestFactory, "workers")
 		// you can start running the scheduler in two different ways:

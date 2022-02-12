@@ -39,6 +39,7 @@ type Config struct {
 	APIAdress             string   `yaml:"api_adress"`
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
+	CoinList              []string `yaml:"coin_list"`
 	Adresses
 }
 

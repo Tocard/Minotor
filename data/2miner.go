@@ -96,4 +96,5 @@ type PoolStats struct {
 	Difficulty float64 `json:"pool_hashrate"`
 	Hashrate   float64 `json:"pool_difficulty"`
 	Height     int64   `json:"pool_height"`
+	PoolName     string   `json:"pool_name"`
 }

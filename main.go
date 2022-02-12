@@ -22,7 +22,7 @@ func main() {
 		s.Every(1).Hours().Do(engine.HarvestFactory, "rewards")
 
 		s.Every(10).Minutes().Do(engine.HarvestBalance)
-		s.Every(10).Minutes().Do(engine.HarvestPoolStat)
+		s.Every(1).Seconds().Do(engine.HarvestPoolStat)
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "stats")
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "payments")
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "sumrewards")

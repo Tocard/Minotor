@@ -254,11 +254,12 @@ func ExtractPoolStatInfo(c *gin.Context) {
 	utils.HandleHttpError(err)
 	tmpStat := data.PoolStats{}
 	tmpStat.Hashrate = statsMap["hashrate"].(float64)
-	tmpStat.Hashrate = statsMap["hashrate"].(float64)
-	nodes := statsMap["nodes"].(map[string]interface{})
-	tmpStat.Difficulty = nodes["difficulty"].(float64)
-	tmpStat.Difficulty = nodes["height"].(float64)
+	nodes := statsMap["nodes"].([]interface{})
+	nodesRaw := nodes[0].(map[string]interface{})
+	tmpStat.Difficulty, _ = strconv.ParseFloat(nodesRaw["difficulty"].(string), 64)
+	tmpStat.Height, _ = strconv.ParseInt(nodesRaw["height"].(string), 10,  64)
 	tmpStat.Timestamp = time.Now().Format(time.RFC3339)
+	tmpStat.PoolName = "2miners-ETH"
 	tmpStatJson, _ := json.Marshal(tmpStat)
 	es.Bulk("2miners-poolstat", string(tmpStatJson))
 	c.String(200, "Ok")

@@ -7,8 +7,10 @@ import (
 	"2miner-monitoring/redis"
 	"2miner-monitoring/utils"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -210,7 +212,7 @@ func ExtractPaymentInfo(c *gin.Context) {
 
 func ExtractStatInfo(c *gin.Context) {
 	result, wallet := RequestStorage(c)
-	tmpStat := data.Stats{}
+	tmpStat := data.MinerStats{}
 	for StatKey, value := range result["stats"].(map[string]interface{}) {
 		if StatKey == "balance" {
 			tmpStat.Balance = value.(float64)
@@ -233,4 +235,31 @@ func ExtractStatInfo(c *gin.Context) {
 	tmpStatJson, _ := json.Marshal(tmpStat)
 	es.Bulk("2miners-stat", string(tmpStatJson))
 	c.String(200, "OK")
+}
+
+func ExtractPoolStatInfo(c *gin.Context) {
+	client := http.Client{
+		Timeout: 180 * time.Second,
+	}
+	url := fmt.Sprintf("%s/stats", config.Cfg.TwoMinersURL)
+	resp, err := client.Get(url)
+	defer resp.Body.Close()
+	if err != nil {
+		c.String(500, "unable to fetch 2miners pool stats")
+		return
+	}
+	stats, _ := ioutil.ReadAll(resp.Body)
+	var statsMap map[string]interface{}
+	err = json.Unmarshal(stats, &statsMap)
+	utils.HandleHttpError(err)
+	tmpStat := data.PoolStats{}
+	tmpStat.Hashrate = statsMap["hashrate"].(float64)
+	tmpStat.Hashrate = statsMap["hashrate"].(float64)
+	nodes := statsMap["nodes"].(map[string]interface{})
+	tmpStat.Difficulty = nodes["difficulty"].(float64)
+	tmpStat.Difficulty = nodes["height"].(float64)
+	tmpStat.Timestamp = time.Now().Format(time.RFC3339)
+	tmpStatJson, _ := json.Marshal(tmpStat)
+	es.Bulk("2miners-poolstat", string(tmpStatJson))
+	c.String(200, "Ok")
 }

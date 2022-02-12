@@ -53,6 +53,15 @@ func HarvestBalance() {
 	fmt.Println(resp)
 }
 
+func HarvestPoolStat() {
+	url := fmt.Sprintf("%s:%d/stats", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
 func HarvestCoinPrice() {
 	url := fmt.Sprintf("%s:%d/coins/price", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
 	resp, err := http.Get(url)

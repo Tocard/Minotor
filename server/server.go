@@ -45,6 +45,7 @@ func engine() *gin.Engine {
 	server.GET("/suscribe/:wallet", handlers.SuscribeWallet)
 	server.GET("/unsuscribe/:wallet", handlers.UnSuscribeWallet)
 	server.GET("/coins/price", handlers.GetCoinsPrice)
+	server.GET("/stats", handlers.ExtractPoolStatInfo)
 	return server
 }
 

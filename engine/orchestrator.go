@@ -3,16 +3,14 @@ package engine
 import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
-	"2miner-monitoring/es"
+	"2miner-monitoring/utils"
 	"fmt"
-	"log"
-	"time"
+	"net/http"
 )
 
 func Minertarget() []data.Miner {
 	var MinerList []data.Miner
 	if config.Cfg.MinerListing == "ALL" {
-		MinerList = getAllMiner()
 		return MinerList
 	} else {
 		for key := range config.Cfg.Adress {
@@ -24,35 +22,51 @@ func Minertarget() []data.Miner {
 	}
 }
 
-func GetTargetUrl(MinerList []data.Miner) map[string]string {
-	Urls := map[string]string{}
-	for key, _ := range MinerList {
-		url := fmt.Sprintf("%s/accounts/%s", config.Cfg.TwoMinersURL, MinerList[key].Adress)
-		Urls[MinerList[key].Adress] = url
-	}
-	return Urls
+func HarvestMiners() {
+	url := fmt.Sprintf("%s:%d/miners", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
 }
 
-func ShipToEs(Miner []data.MinerStat) {
-	for key, _ := range Miner {
-		es.Bulk("2miners-data", es.PrepareDataForEs(Miner[key]))
+func HarvestFactory(endpoint string) {
+	for key := range config.Cfg.Adress {
+		go func(wallet string) {
+			url := fmt.Sprintf("%s:%d/harvest/%s/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, endpoint, wallet)
+			resp, err := http.Get(url)
+			utils.HandleHttpError(err)
+			defer resp.Body.Close()
+			fmt.Println(resp)
+		}(config.Cfg.Adress[key])
+
 	}
 }
 
-func Life() {
-	es.Connection()
-	MinerList := Minertarget()
-	if MinerList == nil {
-		log.Fatal("Minerlist is empty, abort")
-	}
-	Urls := GetTargetUrl(MinerList)
-	for {
-		log.Printf("Collecting for clock %s.", data.Clock)
-		localTime := time.Now()
-		MinerInfo := HarvestMinerStat(Urls)
-		ShipToEs(MinerInfo)
-		duration := time.Since(localTime)
-		log.Printf("Collected & saved miner data. Duration :%f secondes", duration.Seconds())
-		time.Sleep(2 * time.Second)
-	}
+func HarvestBalance() {
+	url := fmt.Sprintf("%s:%d/balances", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func HarvestPoolStat() {
+	url := fmt.Sprintf("%s:%d/stats", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func HarvestCoinPrice() {
+	url := fmt.Sprintf("%s:%d/coins/price", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
 }

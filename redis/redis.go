@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-
+	"log"
 	"github.com/go-redis/redis"
 )
 
@@ -21,7 +21,7 @@ func InitRedis() {
 			select {
 			case <-time.Tick(1 * time.Second):
 				if err := Clis[0].Ping(); err.Err() != nil {
-					fmt.Println(err.Err())
+					log.Println(err.Err())
 					connect(0)
 				}
 			}
@@ -40,8 +40,15 @@ func connect(DbNum int) {
 
 }
 
-func WriteToRedis(DbNum int, key, value string) {
-	Clis[DbNum].Set(key, value, time.Duration(config.Cfg.RedisLifetime)*time.Second).Err() //TODO: Ajouter du logging et gestion d'erreur
+func WriteToRedis(DbNum int, key, value, lifetime string) {
+	if lifetime == "long" {
+		Clis[DbNum].Set(key, value, time.Duration(config.Cfg.RedisLongLifetime)*time.Second).Err() //TODO: Ajouter du logging et gestion d'erreur
+
+	} else if lifetime == "mid" {
+		Clis[DbNum].Set(key, value, time.Duration(config.Cfg.RedisMidLifetime)*time.Second).Err() //TODO: Ajouter du logging et gestion d'erreur
+	} else {
+		Clis[DbNum].Set(key, value, time.Duration(config.Cfg.RedisShortLifetime)*time.Second).Err() //TODO: Ajouter du logging et gestion d'erreur
+	}
 }
 
 func GetFromToRedis(DbNum int, key string) string {

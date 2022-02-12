@@ -1,7 +1,5 @@
 package data
 
-import "io"
-
 type TwoMiners struct {
 	Timestamp string `json:"@timestamp"`
 	Wallet    string `json:"wallet_keyword"`
@@ -28,7 +26,7 @@ type Worker struct {
 	SharesStale   float64 `json:"sharesStale"`
 }
 
-type Stats struct {
+type MinerStats struct {
 	TwoMiners
 	Balance     float64 `json:"balance"`
 	BlocksFound float64 `json:"blocksFound"`
@@ -93,7 +91,11 @@ type MinerInfo struct {
 	SharesValid      int     `json:"sharesValid"`
 }
 
-type MinerStat struct {
-	Json   io.ReadCloser
-	Wallet string
+type PoolStats struct {
+	Timestamp  string  `json:"@timestamp"`
+	Difficulty float64 `json:"pool_hashrate"`
+	Hashrate   float64 `json:"pool_difficulty"`
+	Height     int64   `json:"pool_height"`
+	PoolName   string  `json:"pool_name"`
+	BlockTime  float64 `json:"block_time"`
 }

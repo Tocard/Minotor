@@ -8,6 +8,10 @@ import (
 
 var Cfg *Config
 
+type Adresses struct {
+	Adress []string `yaml:"adress"`
+}
+
 type Config struct {
 	ElasticsearchUser     string   `yaml:"elasticsearch_user"`
 	ElasticsearchPassword string   `yaml:"elasticsearch_password"`
@@ -17,15 +21,26 @@ type Config struct {
 	LogLevel              string   `yaml:"log_level"`
 	CaPath                string   `yaml:"ca_path"`
 	TwoMinersURL          string   `yaml:"2miners_url"`
-	Adress                []string `yaml:"adress"`
 	RedisHost             string   `yaml:"redis_host"`
 	RedisPort             int      `yaml:"redis_port"`
 	RedisPassword         string   `yaml:"redis_password"`
-	RedisLifetime         int      `yaml:"redis_lifetime"`
+	RedisShortLifetime    int      `yaml:"redis_short_lifetime"`
+	RedisMidLifetime      int      `yaml:"redis_mid_lifetime"`
+	RedisLongLifetime     int      `yaml:"redis_long_lifetime"`
 	Factor                float64  `yaml:"factor"`
 	EthFactor             float64  `yaml:"ether_factor"`
 	GazFactor             float64  `yaml:"gaz_factor"`
 	MinerListing          string   `yaml:"miner_listing"`
+	APIPort               int      `yaml:"api_port"`
+	APIFrontPort          int      `yaml:"api_front_port"`
+	APILogFile            string   `yaml:"api_log_file"`
+	APIUsername           string   `yaml:"api_username"`
+	APIPassword           string   `yaml:"api_password"`
+	APIAdress             string   `yaml:"api_adress"`
+	AdressFilePath        string   `yaml:"adress_file_path"`
+	LockPath              string   `yaml:"lock_path"`
+	CoinList              []string `yaml:"coin_list"`
+	Adresses
 }
 
 func LoadYamlConfig(ConfigFilePath string) {
@@ -35,4 +50,10 @@ func LoadYamlConfig(ConfigFilePath string) {
 	err = yaml.Unmarshal(data, &t)
 	log2miner.Error(err)
 	Cfg = &t
+	data, err = ioutil.ReadFile(Cfg.AdressFilePath)
+	log2miner.Error(err)
+	a := Adresses{}
+	err = yaml.Unmarshal(data, &a)
+	log2miner.Error(err)
+	Cfg.Adress = a.Adress
 }

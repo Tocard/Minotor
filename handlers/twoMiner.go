@@ -257,7 +257,8 @@ func ExtractPoolStatInfo(c *gin.Context) {
 	nodes := statsMap["nodes"].([]interface{})
 	nodesRaw := nodes[0].(map[string]interface{})
 	tmpStat.Difficulty, _ = strconv.ParseFloat(nodesRaw["difficulty"].(string), 64)
-	tmpStat.Height, _ = strconv.ParseInt(nodesRaw["height"].(string), 10,  64)
+	tmpStat.BlockTime, _ = strconv.ParseFloat(nodesRaw["avgBlockTime"].(string), 64)
+	tmpStat.Height, _ = strconv.ParseInt(nodesRaw["height"].(string), 10, 64)
 	tmpStat.Timestamp = time.Now().Format(time.RFC3339)
 	tmpStat.PoolName = "2miners-ETH"
 	tmpStatJson, _ := json.Marshal(tmpStat)

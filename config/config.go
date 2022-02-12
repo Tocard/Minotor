@@ -8,6 +8,10 @@ import (
 
 var Cfg *Config
 
+type Adresses struct {
+	Adress []string `yaml:"adress"`
+}
+
 type Config struct {
 	ElasticsearchUser     string   `yaml:"elasticsearch_user"`
 	ElasticsearchPassword string   `yaml:"elasticsearch_password"`
@@ -17,7 +21,6 @@ type Config struct {
 	LogLevel              string   `yaml:"log_level"`
 	CaPath                string   `yaml:"ca_path"`
 	TwoMinersURL          string   `yaml:"2miners_url"`
-	Adress                []string `yaml:"adress"`
 	RedisHost             string   `yaml:"redis_host"`
 	RedisPort             int      `yaml:"redis_port"`
 	RedisPassword         string   `yaml:"redis_password"`
@@ -34,6 +37,9 @@ type Config struct {
 	APIUsername           string   `yaml:"api_username"`
 	APIPassword           string   `yaml:"api_password"`
 	APIAdress             string   `yaml:"api_adress"`
+	AdressFilePath        string   `yaml:"adress_file_path"`
+	LockPath              string   `yaml:"lock_path"`
+	Adresses
 }
 
 func LoadYamlConfig(ConfigFilePath string) {
@@ -43,4 +49,10 @@ func LoadYamlConfig(ConfigFilePath string) {
 	err = yaml.Unmarshal(data, &t)
 	log2miner.Error(err)
 	Cfg = &t
+	data, err = ioutil.ReadFile(Cfg.AdressFilePath)
+	log2miner.Error(err)
+	a := Adresses{}
+	err = yaml.Unmarshal(data, &a)
+	log2miner.Error(err)
+	Cfg.Adress = a.Adress
 }

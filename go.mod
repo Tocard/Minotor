@@ -8,8 +8,10 @@ require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-co-op/gocron v1.11.0
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/gofrs/flock v0.8.1
 	github.com/nanmu42/etherscan-api v1.6.0
 	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
 
 require (

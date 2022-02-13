@@ -46,6 +46,11 @@ func engine() *gin.Engine {
 	server.GET("/unsubscribe/:wallet", handlers.UnSuscribeWallet)
 	server.GET("/coins/price", handlers.GetCoinsPrice)
 	server.GET("/stats", handlers.ExtractPoolStatInfo)
+	server.GET("/transactions", handlers.GetLastTransaction)
+	serverETH := server.Group("/ETH")
+	{
+		serverETH.GET("/lastblock", handlers.GetLastBlock)
+	}
 	return server
 }
 

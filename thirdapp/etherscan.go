@@ -4,6 +4,8 @@ import (
 	"2miner-monitoring/config"
 	"github.com/nanmu42/etherscan-api"
 	"math/big"
+	"strconv"
+	"time"
 )
 
 type AccountBalance struct {
@@ -42,4 +44,24 @@ func GetMultiAccountBalance(walletIds []string) []etherscan.AccountBalance {
 		panic(err)
 	}
 	return balance
+}
+
+func GetLastBlock() int {
+	client := procEtherscanClient()
+	block, err := client.BlockNumber(time.Now().Unix(), "before")
+	if err != nil {
+		panic(err)
+	}
+	return block
+}
+
+func GetLastTx(blockstring, wallet string) []etherscan.NormalTx {
+	client := procEtherscanClient()
+	endBlock, _ := strconv.Atoi(blockstring)
+	startBlock := endBlock - 276
+	tx, err := client.NormalTxByAddress(wallet, &startBlock, &endBlock, 1, 1, true)
+	if err != nil {
+		panic(err)
+	}
+	return tx
 }

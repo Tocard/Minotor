@@ -4,9 +4,11 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
 	"2miner-monitoring/es"
+	"2miner-monitoring/redis"
 	"2miner-monitoring/thirdapp"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"time"
 )
 
@@ -20,6 +22,33 @@ func GetWalletsBalance(c *gin.Context) {
 		tmpBalanceJson, _ := json.Marshal(tmpBalance)
 		es.Bulk("2miners-balance", string(tmpBalanceJson))
 
+	}
+	c.String(200, "OK")
+
+}
+
+func GetLastBlock(c *gin.Context) {
+	block := redis.GetFromToRedis(0, "LastBlock")
+	if block == "" {
+		blockInt := thirdapp.GetLastBlock()
+		redis.WriteToRedis(0, "LastBlock", strconv.Itoa(blockInt), "mid")
+	}
+	c.String(200, "OK")
+
+}
+
+func GetLastTransaction(c *gin.Context) {
+	block := redis.GetFromToRedis(0, "LastBlock")
+	if block == "" {
+		blockInt := thirdapp.GetLastBlock()
+		block = strconv.Itoa(blockInt)
+		redis.WriteToRedis(0, "LastBlock", block, "mid")
+
+	}
+	for key, _ := range config.Wtw.Adress {
+		tx := thirdapp.GetLastTx(config.Wtw.Adress[key], block)
+		txJson, _ := json.Marshal(tx)
+		es.Bulk("2miners-tx", string(txJson))
 	}
 	c.String(200, "OK")
 

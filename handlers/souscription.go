@@ -13,13 +13,13 @@ func SuscribeWallet(c *gin.Context) {
 		return
 	}
 	isregister := false
-	for adressKey, _ := range config.Cfg.Adress {
-		if config.Cfg.Adress[adressKey] == wallet {
+	for adressKey, _ := range config.Wtw.Adress {
+		if config.Wtw.Adress[adressKey] == wallet {
 			isregister = true
 		}
 	}
 	if isregister == false {
-		config.Cfg.Adress = append(config.Cfg.Adress, wallet)
+		config.Wtw.Adress = append(config.Wtw.Adress, wallet)
 		if utils.WriteYaml() {
 			c.String(201, "Updated")
 		} else {
@@ -35,9 +35,9 @@ func UnSuscribeWallet(c *gin.Context) {
 		c.String(400, "Not a valid adress")
 		return
 	}
-	for key, val := range config.Cfg.Adress {
+	for key, val := range config.Wtw.Adress {
 		if val == wallet {
-			config.Cfg.Adress = append(config.Cfg.Adress[:key], config.Cfg.Adress[key+1:]...)
+			config.Wtw.Adress = append(config.Wtw.Adress[:key], config.Wtw.Adress[key+1:]...)
 			if utils.WriteYaml() {
 				c.String(200, "Deleted adresse")
 			} else {

@@ -11,7 +11,7 @@ import (
 )
 
 func GetWalletsBalance(c *gin.Context) {
-	balances := thirdapp.GetMultiAccountBalance(config.Cfg.Adress)
+	balances := thirdapp.GetMultiAccountBalance(config.Wtw.Adress)
 	for key, _ := range balances {
 		tmpBalance := data.Balance{}
 		tmpBalance.Balance = balances[key].Balance

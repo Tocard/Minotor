@@ -29,9 +29,7 @@ func IsValidAdresse(wallet string) bool {
 }
 
 func WriteYaml() bool {
-	tmpWalletToWatch := config.WalletToWatch{}
-	tmpWalletToWatch.Adress = config.Cfg.Adress
-	data, err := yaml.Marshal(tmpWalletToWatch)
+	data, err := yaml.Marshal(config.Wtw.Adress)
 	if err != nil {
 		log.Printf("Not able to Marshal Adress Config File")
 		return false

@@ -8,6 +8,8 @@ import (
 
 var Cfg *Config
 
+var Wtw *WalletToWatch
+
 type WalletToWatch struct {
 	Adress []string `yaml:"adress"`
 }
@@ -40,7 +42,6 @@ type Config struct {
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
 	CoinList              []string `yaml:"coin_list"`
-	WalletToWatch
 }
 
 func LoadYamlConfig(ConfigFilePath string) {
@@ -55,5 +56,5 @@ func LoadYamlConfig(ConfigFilePath string) {
 	a := WalletToWatch{}
 	err = yaml.Unmarshal(data, &a)
 	log2miner.Error(err)
-	Cfg.Adress = a.Adress
+	Wtw.Adress = a.Adress
 }

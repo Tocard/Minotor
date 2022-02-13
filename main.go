@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func main() {
+func zmain() {
 	cliFilled := cli.Cli()
 	config.LoadYamlConfig(cliFilled.FilePathConfig)
 	//log2miner.InitLogger("2miner.log2miner")

@@ -13,9 +13,9 @@ func Minertarget() []data.Miner {
 	if config.Cfg.MinerListing == "ALL" {
 		return MinerList
 	} else {
-		for key := range config.Cfg.Adress {
+		for key := range config.Wtw.Adress {
 			tmpMiner := data.Miner{}
-			tmpMiner.Adress = config.Cfg.Adress[key]
+			tmpMiner.Adress = config.Wtw.Adress[key]
 			MinerList = append(MinerList, tmpMiner)
 		}
 		return MinerList
@@ -32,14 +32,14 @@ func HarvestMiners() {
 }
 
 func HarvestFactory(endpoint string) {
-	for key := range config.Cfg.Adress {
+	for key := range config.Wtw.Adress {
 		go func(wallet string) {
 			url := fmt.Sprintf("%s:%d/harvest/%s/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, endpoint, wallet)
 			resp, err := http.Get(url)
 			utils.HandleHttpError(err)
 			defer resp.Body.Close()
 			fmt.Println(resp)
-		}(config.Cfg.Adress[key])
+		}(config.Wtw.Adress[key])
 
 	}
 }

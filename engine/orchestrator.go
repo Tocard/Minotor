@@ -38,8 +38,8 @@ func HarvestFactory(endpoint string) {
 			url := fmt.Sprintf("%s:%d/harvest/%s/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, endpoint, wallet)
 			resp, err := http.Get(url)
 			if err != nil {
-				log.Println("Error with wallet, unsuscribe")
-				url := fmt.Sprintf("%s:%d/unsuscribe/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, wallet)
+				log.Printf("Error with wallet %s, unsubscribe\n", wallet)
+				url := fmt.Sprintf("%s:%d/unsubscribe/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, wallet)
 				_, err := http.Get(url)
 				utils.HandleHttpError(err)
 			}

@@ -5,6 +5,7 @@ import (
 	"2miner-monitoring/data"
 	"2miner-monitoring/utils"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -36,7 +37,12 @@ func HarvestFactory(endpoint string) {
 		go func(wallet string) {
 			url := fmt.Sprintf("%s:%d/harvest/%s/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, endpoint, wallet)
 			resp, err := http.Get(url)
-			utils.HandleHttpError(err)
+			if err != nil {
+				log.Println("Error with wallet, unsuscribe")
+				url := fmt.Sprintf("%s:%d/unsuscribe/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, wallet)
+				_, err := http.Get(url)
+				utils.HandleHttpError(err)
+			}
 			defer resp.Body.Close()
 			fmt.Println(resp)
 		}(config.Wtw.Adress[key])

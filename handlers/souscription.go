@@ -34,7 +34,6 @@ func UnSuscribeWallet(c *gin.Context) {
 	for key, val := range config.Cfg.Adress {
 		if val == wallet {
 			config.Cfg.Adress = append(config.Cfg.Adress[:key], config.Cfg.Adress[key+1:]...)
-			utils.WriteYaml()
 			if utils.WriteYaml() {
 				c.String(200, "Deleted adresse")
 			} else {

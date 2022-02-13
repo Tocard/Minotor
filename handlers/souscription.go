@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"2miner-monitoring/config"
-	"2miner-monitoring/redis"
 	"2miner-monitoring/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -13,8 +12,13 @@ func SuscribeWallet(c *gin.Context) {
 		c.String(400, "Not a valid adress")
 		return
 	}
-	redisResult := redis.GetFromToRedis(0, wallet)
-	if redisResult == "" {
+	isregister := false
+	for adressKey, _ := range config.Cfg.Adress {
+		if config.Cfg.Adress[adressKey] == wallet {
+			isregister = true
+		}
+	}
+	if isregister == false {
 		config.Cfg.Adress = append(config.Cfg.Adress, wallet)
 		if utils.WriteYaml() {
 			c.String(201, "Updated")

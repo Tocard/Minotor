@@ -11,7 +11,7 @@ import (
 
 func HandleHttpError(err error) {
 	if err != nil {
-		log.Fatalln(err)
+		log.Printf("Error is %s", err)
 	}
 }
 

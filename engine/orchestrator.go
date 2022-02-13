@@ -41,7 +41,9 @@ func HarvestFactory(endpoint string) {
 				log.Printf("Error with wallet %s, unsubscribe\n", wallet)
 				url := fmt.Sprintf("%s:%d/unsubscribe/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, wallet)
 				_, err := http.Get(url)
-				utils.HandleHttpError(err)
+				if err != nil {
+					log.Printf("Unable to unsubscribe %s, err : %s", wallet, err)
+				}
 			}
 			defer resp.Body.Close()
 			fmt.Println(resp)

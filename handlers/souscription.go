@@ -40,8 +40,10 @@ func UnSuscribeWallet(c *gin.Context) {
 			config.Wtw.Adress = append(config.Wtw.Adress[:key], config.Wtw.Adress[key+1:]...)
 			if utils.WriteYaml() {
 				c.String(200, "Deleted adresse")
+				return
 			} else {
 				c.String(206, "Failed to Delete it persistently, but still unregister in runtime")
+				return
 			}
 		}
 	}

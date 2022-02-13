@@ -8,7 +8,7 @@ import (
 
 var Cfg *Config
 
-type Adresses struct {
+type WalletToWatch struct {
 	Adress []string `yaml:"adress"`
 }
 
@@ -40,7 +40,7 @@ type Config struct {
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
 	CoinList              []string `yaml:"coin_list"`
-	Adresses
+	WalletToWatch
 }
 
 func LoadYamlConfig(ConfigFilePath string) {
@@ -52,7 +52,7 @@ func LoadYamlConfig(ConfigFilePath string) {
 	Cfg = &t
 	data, err = ioutil.ReadFile(Cfg.AdressFilePath)
 	log2miner.Error(err)
-	a := Adresses{}
+	a := WalletToWatch{}
 	err = yaml.Unmarshal(data, &a)
 	log2miner.Error(err)
 	Cfg.Adress = a.Adress

@@ -59,6 +59,12 @@ func GetAllMiner(c *gin.Context) {
 
 func ExtractWorkerInfo(c *gin.Context) {
 	result, wallet := RequestStorage(c)
+	if result == nil {
+		log.Printf("Error : Wallet %s is not valid, aborted and unsubscribed", wallet)
+		url := fmt.Sprintf("%s:%d/unsubscribe/%s", config.Cfg.APIAdress, config.Cfg.APIFrontPort, wallet)
+		http.Get(url)
+		return
+	}
 	for key, _ := range result["workers"].(map[string]interface{}) {
 		miner := result["workers"].(map[string]interface{})[key].(map[string]interface{})
 		tmpMiner := data.Worker{}

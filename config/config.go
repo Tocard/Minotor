@@ -56,5 +56,6 @@ func LoadYamlConfig(ConfigFilePath string) {
 	a := WalletToWatch{}
 	err = yaml.Unmarshal(data, &a)
 	log2miner.Error(err)
+	Wtw = &a
 	Wtw.Adress = a.Adress
 }

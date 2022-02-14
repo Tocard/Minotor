@@ -78,3 +78,21 @@ func HarvestCoinPrice() {
 
 	fmt.Println(resp)
 }
+
+func GetLastEthBlock() {
+	url := fmt.Sprintf("%s:%d/ETH/lastblock", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func GetLastEthTx() {
+	url := fmt.Sprintf("%s:%d/transactions", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

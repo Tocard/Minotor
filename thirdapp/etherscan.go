@@ -2,6 +2,7 @@ package thirdapp
 
 import (
 	"2miner-monitoring/config"
+	"2miner-monitoring/data"
 	"2miner-monitoring/utils"
 	"encoding/json"
 	"fmt"
@@ -60,7 +61,7 @@ func GetLastBlock() int {
 	return block
 }
 
-func GetLastTx(blockstring, wallet string) {
+func GetLastTx(blockstring, wallet string) data.Tx {
 	endBlock, _ := strconv.Atoi(blockstring)
 	startBlock := endBlock - 276
 	client := http.Client{
@@ -68,12 +69,13 @@ func GetLastTx(blockstring, wallet string) {
 	}
 	url := fmt.Sprintf("https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=%d&endblock=%d&page=1&offset=10000&sort=asc&apikey=%s", wallet, startBlock, endBlock, config.Cfg.APITokenEtherscan)
 	resp, err := client.Get(url)
-	bulk, _ := ioutil.ReadAll(resp.Body)
-	var result map[string]interface{}
-	err = json.Unmarshal(bulk, &result)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
+	tx := data.Tx{}
+	err = json.Unmarshal(body, &tx)
 	utils.HandleHttpError(err)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(bulk))
+	return tx
 }

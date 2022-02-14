@@ -46,9 +46,11 @@ func GetLastTransaction(c *gin.Context) {
 
 	}
 	for key, _ := range config.Wtw.Adress {
-		tx := thirdapp.GetLastTx(config.Wtw.Adress[key], block)
-		txJson, _ := json.Marshal(tx)
-		es.Bulk("2miners-tx", string(txJson))
+		tx := thirdapp.GetLastTx(block, config.Wtw.Adress[key])
+		for key, _ := range tx.Result {
+			txRawJson, _ := json.Marshal(tx.Result[key])
+			es.Bulk("2miners-tx", string(txRawJson))
+		}
 	}
 	c.String(200, "OK")
 

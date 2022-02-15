@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/nanmu42/etherscan-api"
 	"io/ioutil"
+	"log"
 	"math/big"
 	"net/http"
 	"strconv"
@@ -69,13 +70,14 @@ func GetLastTx(blockstring, wallet string) data.Tx {
 	}
 	url := fmt.Sprintf("https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=%d&endblock=%d&page=1&offset=10000&sort=asc&apikey=%s", wallet, startBlock, endBlock, config.Cfg.APITokenEtherscan)
 	resp, err := client.Get(url)
+	tx := data.Tx{}
+	if err != nil {
+		log.Printf("%s error on GetLAstTx", err)
+		return tx
+	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	tx := data.Tx{}
 	err = json.Unmarshal(body, &tx)
 	utils.HandleHttpError(err)
-	if err != nil {
-		panic(err)
-	}
 	return tx
 }

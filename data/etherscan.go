@@ -12,7 +12,7 @@ type Tx struct {
 	Message string `json:"message"`
 	Result  []struct {
 		BlockNumber       string `json:"blockNumber"`
-		TimeStamp         int64 `json:"timeStamp"`
+		TimeStamp         string `json:"timeStamp"`
 		Hash              string `json:"hash"`
 		Nonce             string `json:"nonce"`
 		BlockHash         string `json:"blockHash"`
@@ -29,10 +29,9 @@ type Tx struct {
 		CumulativeGasUsed string `json:"cumulativeGasUsed"`
 		GasUsed           string `json:"gasUsed"`
 		Confirmations     string `json:"confirmations"`
-		Timestamp         string  `json:"@timestamp"`
+		Timestamp         string `json:"@timestamp"`
 	} `json:"result"`
 }
-
 
 type EsTx struct {
 	Status  string `json:"status"`

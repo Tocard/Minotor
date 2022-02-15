@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
-	"log"
 )
 
 func GetWalletsBalance(c *gin.Context) {

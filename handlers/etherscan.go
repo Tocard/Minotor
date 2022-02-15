@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
+	"log"
 )
 
 func GetWalletsBalance(c *gin.Context) {
@@ -49,10 +50,10 @@ func GetLastTransaction(c *gin.Context) {
 		tx := thirdapp.GetLastTx(block, config.Wtw.Adress[key])
 		for resultKey, _ := range tx.Result {
 			ts, _ := strconv.Atoi(tx.Result[resultKey].TimeStamp)
-			tx.Result[key].Timestamp = time.Unix(int64(ts), 0).Format(time.RFC3339)
+			tx.Result[resultKey].Timestamp = time.Unix(int64(ts), 0).Format(time.RFC3339)
 			txRawJson, _ := json.Marshal(tx.Result[resultKey])
 			es.Bulk("2miners-tx", string(txRawJson))
-		}
+				}
 	}
 	c.String(200, "OK")
 

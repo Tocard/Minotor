@@ -70,7 +70,7 @@ func GetLastTx(blockstring, wallet string) data.Tx {
 	url := fmt.Sprintf("https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=%d&endblock=%d&page=1&offset=10000&sort=asc&apikey=%s", wallet, startBlock, endBlock, config.Cfg.APITokenEtherscan)
 	resp, err := client.Get(url)
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body) // response body is []byte
+	body, err := ioutil.ReadAll(resp.Body)
 	tx := data.Tx{}
 	err = json.Unmarshal(body, &tx)
 	utils.HandleHttpError(err)

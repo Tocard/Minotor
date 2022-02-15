@@ -48,6 +48,7 @@ func GetLastTransaction(c *gin.Context) {
 	for key, _ := range config.Wtw.Adress {
 		tx := thirdapp.GetLastTx(block, config.Wtw.Adress[key])
 		for key, _ := range tx.Result {
+			tx.Result[key].Timestamp = time.Unix(tx.Result[key].TimeStamp, 0).Format(time.RFC3339)
 			txRawJson, _ := json.Marshal(tx.Result[key])
 			es.Bulk("2miners-tx", string(txRawJson))
 		}

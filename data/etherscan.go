@@ -7,10 +7,7 @@ type Balance struct {
 	Balance *etherscan.BigInt `json:"wallet_balance"`
 }
 
-type Tx struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-	Result  []struct {
+type Txinfo struct {
 		BlockNumber       string `json:"blockNumber"`
 		TimeStamp         string `json:"timeStamp"`
 		Hash              string `json:"hash"`
@@ -30,7 +27,13 @@ type Tx struct {
 		GasUsed           string `json:"gasUsed"`
 		Confirmations     string `json:"confirmations"`
 		Timestamp         string `json:"@timestamp"`
-	} `json:"result"`
+}
+
+type Tx struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Result []Txinfo `json:"result"`
+	
 }
 
 type EsTx struct {

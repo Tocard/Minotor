@@ -3,7 +3,6 @@ package thirdapp
 import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
-	"2miner-monitoring/utils"
 	"encoding/json"
 	"fmt"
 	"github.com/nanmu42/etherscan-api"
@@ -77,7 +76,6 @@ func GetLastTx(blockstring, wallet string) data.Tx {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, &tx)
-	utils.HandleHttpError(err)
+	json.Unmarshal(body, &tx)
 	return tx
 }

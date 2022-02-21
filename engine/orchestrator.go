@@ -96,3 +96,13 @@ func GetLastEthTx() {
 
 	fmt.Println(resp)
 }
+
+
+func GetHiveosFarm() {
+	url := fmt.Sprintf("%s:%d/farm", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

@@ -45,6 +45,8 @@ type Config struct {
 	HiveosUrl             string   `yaml:"hiveos_api_url"`
 	MinotorHiveOsUser     string   `yaml:"hiveos_minotor_user"`
 	MinotorHiveOsPass     string   `yaml:"hiveos_minotor_password"`
+	MinotorHiveosToken     string   `yaml:"hiveos_minotor_token"`
+
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

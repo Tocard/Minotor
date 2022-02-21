@@ -7,38 +7,38 @@ import (
 )
 
 func GetHiveosToken(c *gin.Context) {
-	thirdapp.HiveosGetAuthToken()
-	c.String(200, "OK")
+	code, res := thirdapp.HiveosGetAuthToken()
+	c.String(code, res)
 }
 
 func HiveosRefreshToken(c *gin.Context) {
-	thirdapp.HiveosRefreshToken()
-	c.String(200, "OK")
+	code, res := thirdapp.HiveosRefreshToken()
+	c.String(code, res)
 }
 
 func GetHiveosFarm(c *gin.Context) {
-	res := thirdapp.HiveosGetFarms()
-	c.String(200, res)
+	code, res := thirdapp.HiveosGetFarms()
+	c.String(code, res)
 }
 
 func GetHiveosWorkers(c *gin.Context) {
 	farmid := c.Param("farmid")
 	farmId, _ := strconv.Atoi(farmid)
-	res := thirdapp.HiveosGetWorkers(farmId)
-	c.String(200, res)
+	code, res := thirdapp.HiveosGetWorkers(farmId)
+	c.String(code, res)
 }
 
 func GetHiveosWorker(c *gin.Context) {
 	workerid := c.Param("workerid")
 	workerId, _ := strconv.Atoi(workerid)
 
-	res := thirdapp.HiveosGetWorker(0, workerId)
-	c.String(200, res)
+	code, res := thirdapp.HiveosGetWorker(0, workerId)
+	c.String(code, res)
 }
 
 func GetHiveosOc(c *gin.Context) {
 	farmid := c.Param("farmid")
 	farmId, _ := strconv.Atoi(farmid)
-	res := thirdapp.HiveosGetWorkers(farmId)
-	c.String(200, res)
+	code, res := thirdapp.HiveosGetOc(farmId)
+	c.String(code, res)
 }

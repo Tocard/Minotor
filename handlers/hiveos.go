@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"2miner-monitoring/data"
+	"2miner-monitoring/es"
 	"2miner-monitoring/thirdapp"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -16,12 +16,15 @@ func HiveosRefreshToken(c *gin.Context) {
 
 func GetHiveosFarm(c *gin.Context) {
 	code, res := thirdapp.HiveosGetFarms()
-	var Farm = data.Farm{}
-	err := json.Unmarshal(res, &Farm)
+	var Farms = data.Farm{}
+	err := json.Unmarshal(res, &Farms)
 	if err != nil {
 		c.String(500, err.Error())
 	}
-	fmt.Println(Farm)
+	for farm, _ := range Farms.Data {
+		farmJson, _ := json.Marshal(farm)
+		es.Bulk("2miners-hiveos-farm", string(farmJson))
+	}
 	c.String(code, "Farm harvested")
 }
 

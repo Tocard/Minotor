@@ -55,7 +55,10 @@ func engine() *gin.Engine {
 	{
 		hiveosServer.GET("/auth", handlers.GetHiveosToken)
 		hiveosServer.GET("/refresh_auth", handlers.HiveosRefreshToken)
-
+		hiveosServer.GET("/farms", handlers.GetHiveosFarm)
+		hiveosServer.GET("/workers/:farmid", handlers.GetHiveosWorkers)
+		hiveosServer.GET("/worker/:worker", handlers.GetHiveosWorker)
+		hiveosServer.GET("/oc/:farmid", handlers.GetHiveosOc)
 	}
 	return server
 }

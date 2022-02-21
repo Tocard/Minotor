@@ -110,8 +110,8 @@ type Farm struct {
 			Asr               float64 `json:"asr"`
 		} `json:"stats"`
 		Hashrates []struct {
-			Algo     string `json:"algo"`
-			Hashrate int    `json:"hashrate"`
+			Algo     string  `json:"algo"`
+			Hashrate float64 `json:"hashrate"`
 		} `json:"hashrates"`
 		HashratesByCoin []struct {
 			Coin     string `json:"coin"`

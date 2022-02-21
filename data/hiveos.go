@@ -116,7 +116,7 @@ type Farm struct {
 		HashratesByCoin []struct {
 			Coin     string `json:"coin"`
 			Algo     string `json:"algo"`
-			Hashrate int    `json:"hashrate"`
+			Hashrate float64    `json:"hashrate"`
 		} `json:"hashrates_by_coin"`
 		ChargeOnPool bool `json:"charge_on_pool"`
 	} `json:"data"`

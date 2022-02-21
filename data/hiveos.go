@@ -27,8 +27,8 @@ type Farm struct {
 		AsicRedFan         int           `json:"asic_red_fan"`
 		GpuRedAsr          int           `json:"gpu_red_asr"`
 		AsicRedAsr         int           `json:"asic_red_asr"`
-		GpuRedLa           int           `json:"gpu_red_la"`
-		AsicRedLa          int           `json:"asic_red_la"`
+		GpuRedLa           float64       `json:"gpu_red_la"`
+		AsicRedLa          float64       `json:"asic_red_la"`
 		GpuRedCPUTemp      int           `json:"gpu_red_cpu_temp"`
 		GpuRedMemTemp      int           `json:"gpu_red_mem_temp"`
 		AsicRedBoardTemp   int           `json:"asic_red_board_temp"`
@@ -52,18 +52,18 @@ type Farm struct {
 			IsPaid      bool    `json:"is_paid"`
 			IsFree      bool    `json:"is_free"`
 			PaidCause   string  `json:"paid_cause"`
-			Balance     int     `json:"balance"`
+			Balance     float64 `json:"balance"`
 			Discount    int     `json:"discount"`
 			DailyCost   float64 `json:"daily_cost"`
-			MonthlyCost int     `json:"monthly_cost"`
+			MonthlyCost float64 `json:"monthly_cost"`
 			DaysLeft    int     `json:"days_left"`
 			Overdraft   bool    `json:"overdraft"`
 			CostDetails []struct {
 				Type         int     `json:"type"`
 				TypeName     string  `json:"type_name"`
-				Amount       int     `json:"amount"`
-				MonthlyPrice int     `json:"monthly_price"`
-				MonthlyCost  int     `json:"monthly_cost"`
+				Amount       float64 `json:"amount"`
+				MonthlyPrice float64 `json:"monthly_price"`
+				MonthlyCost  float64 `json:"monthly_cost"`
 				DailyCost    float64 `json:"daily_cost"`
 			} `json:"cost_details"`
 			DailyPrice    float64 `json:"daily_price"`
@@ -107,7 +107,7 @@ type Farm struct {
 			DevicesOffline    int     `json:"devices_offline"`
 			PowerDraw         int     `json:"power_draw"`
 			PowerCost         float64 `json:"power_cost"`
-			Asr               int     `json:"asr"`
+			Asr               float64 `json:"asr"`
 		} `json:"stats"`
 		Hashrates []struct {
 			Algo     string `json:"algo"`

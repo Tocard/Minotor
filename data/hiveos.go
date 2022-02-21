@@ -2,9 +2,7 @@ package data
 
 type EsMinimal struct {
 	Timestamp string `json:"@timestamp"`
-	Owner     struct {
-		Name string `json:"name"`
-	} `json:"owner"`
+	HiveOwner string `json:"hive_owner"`
 }
 
 type Hashrates struct {

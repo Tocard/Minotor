@@ -64,13 +64,9 @@ func DoRequest(method, url string, data interface{}, token ...string) (*http.Res
 	b, _ := json.Marshal(data)
 	body := bytes.NewReader(b)
 	req, _ := http.NewRequest(method, url, body)
-	log.Printf("body Dorequest %s", body)
-
 	if len(token) > 0 {
 		req.Header.Add("Authorization", "Bearer "+token[0])
 	}
-	log.Printf("Req = %s", req)
-	log.Printf("doqurest token = %s", token[0])
 	client := http.Client{}
 	return client.Do(req)
 }

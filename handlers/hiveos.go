@@ -6,11 +6,6 @@ import (
 	"strconv"
 )
 
-func GetHiveosToken(c *gin.Context) {
-	code, res := thirdapp.HiveosGetAuthToken()
-	c.String(code, res)
-}
-
 func HiveosRefreshToken(c *gin.Context) {
 	code, res := thirdapp.HiveosRefreshToken()
 	c.String(code, res)

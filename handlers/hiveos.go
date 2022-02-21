@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"time"
 )
 
 func HiveosRefreshToken(c *gin.Context) {
@@ -17,12 +18,14 @@ func HiveosRefreshToken(c *gin.Context) {
 func GetHiveosFarm(c *gin.Context) {
 	code, res := thirdapp.HiveosGetFarms()
 	var Farms = data.Farm{}
+	FarmHarvestTime := time.Now().Format(time.RFC3339)
 	err := json.Unmarshal(res, &Farms)
 	if err != nil {
 		c.String(500, err.Error())
 	}
 	for farm, _ := range Farms.Data {
-		farmJson, _ := json.Marshal(farm)
+		Farms.Data[farm].Timestamp = FarmHarvestTime
+		farmJson, _ := json.Marshal(Farms.Data[farm])
 		es.Bulk("2miners-hiveos-farm", string(farmJson))
 	}
 	c.String(code, "Farm harvested")

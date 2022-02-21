@@ -27,7 +27,6 @@ func HiveosGetFarms() (int, []byte) {
 	url := fmt.Sprintf("%s/farms", config.Cfg.HiveosUrl)
 	resp, err := utils.DoRequest("GET", url, nil, config.Cfg.MinotorHiveosToken)
 	if err != nil {
-
 		return resp.StatusCode, []byte(fmt.Sprintf("%s error on HiveosGetFarms", err))
 	}
 	body, err := ioutil.ReadAll(resp.Body)

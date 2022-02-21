@@ -14,6 +14,8 @@ type HiveosToken struct {
 
 type Farm struct {
 	Data []struct {
+		Timestamp          string        `json:"@timestamp"`
+		Wallet             string        `json:"wallet_keyword"`
 		ID                 int           `json:"id"`
 		Name               string        `json:"name"`
 		Timezone           string        `json:"timezone"`
@@ -114,9 +116,9 @@ type Farm struct {
 			Hashrate float64 `json:"hashrate"`
 		} `json:"hashrates"`
 		HashratesByCoin []struct {
-			Coin     string `json:"coin"`
-			Algo     string `json:"algo"`
-			Hashrate float64    `json:"hashrate"`
+			Coin     string  `json:"coin"`
+			Algo     string  `json:"algo"`
+			Hashrate float64 `json:"hashrate"`
 		} `json:"hashrates_by_coin"`
 		ChargeOnPool bool `json:"charge_on_pool"`
 	} `json:"data"`

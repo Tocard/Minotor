@@ -1,5 +1,25 @@
 package data
 
+type EsMinimal struct {
+	Timestamp string `json:"@timestamp"`
+	Owner     struct {
+		Name string `json:"name"`
+	} `json:"owner"`
+}
+
+type Hashrates struct {
+	EsMinimal
+	Algo     string  `json:"algo"`
+	Hashrate float64 `json:"hashrate"`
+}
+
+type HashratesByCoin struct {
+	EsMinimal
+	Coin     string  `json:"coin"`
+	Algo     string  `json:"algo"`
+	Hashrate float64 `json:"hashrate"`
+}
+
 type HiveosAuth struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`
@@ -14,7 +34,7 @@ type HiveosToken struct {
 
 type Farm struct {
 	Data []struct {
-		Timestamp          string        `json:"@timestamp"`
+		EsMinimal
 		Wallet             string        `json:"wallet_keyword"`
 		ID                 int           `json:"id"`
 		Name               string        `json:"name"`

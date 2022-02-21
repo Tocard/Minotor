@@ -23,9 +23,28 @@ func GetHiveosFarm(c *gin.Context) {
 	if err != nil {
 		c.String(500, err.Error())
 	}
-	for farm, _ := range Farms.Data {
-		Farms.Data[farm].Timestamp = FarmHarvestTime
-		farmJson, _ := json.Marshal(Farms.Data[farm])
+	for _, farm := range Farms.Data {
+		farm.Timestamp = FarmHarvestTime
+		for _, item := range farm.HashratesByCoin {
+			var tmpHashratesByCoin = data.HashratesByCoin{}
+			tmpHashratesByCoin.Coin = item.Coin
+			tmpHashratesByCoin.Hashrate = item.Hashrate
+			tmpHashratesByCoin.Timestamp = FarmHarvestTime
+			tmpHashratesByCoin.Owner.Name = farm.Owner.Name
+			tmpHashratesByCoin.Algo = item.Algo
+			tmpHashratesByCoinJson, _ := json.Marshal(item)
+			es.Bulk("2miners-hiveos-hashrate-coin", string(tmpHashratesByCoinJson))
+		}
+		for _, item := range farm.Hashrates {
+			var tmpHashrates = data.Hashrates{}
+			tmpHashrates.Hashrate = item.Hashrate
+			tmpHashrates.Timestamp = FarmHarvestTime
+			tmpHashrates.Owner.Name = farm.Owner.Name
+			tmpHashrates.Algo = item.Algo
+			tmpHashratesJson, _ := json.Marshal(item)
+			es.Bulk("2miners-hiveos-hashrate", string(tmpHashratesJson))
+		}
+		farmJson, _ := json.Marshal(farm)
 		es.Bulk("2miners-hiveos-farm", string(farmJson))
 	}
 	c.String(code, "Farm harvested")

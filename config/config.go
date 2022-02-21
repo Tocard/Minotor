@@ -43,6 +43,8 @@ type Config struct {
 	LockPath              string   `yaml:"lock_path"`
 	CoinList              []string `yaml:"coin_list"`
 	HiveosUrl             string   `yaml:"hiveos_api_url"`
+	MinotorHiveOsUser     string   `yaml:"hiveos_minotor_user"`
+	MinotorHiveOsPass     string   `yaml:"hiveos_minotor_password"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

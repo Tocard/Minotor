@@ -33,7 +33,7 @@ func GetHiveosFarm(c *gin.Context) {
 			tmpHashratesByCoin.Timestamp = FarmHarvestTime
 			tmpHashratesByCoin.HiveOwner = farm.Owner.Name
 			tmpHashratesByCoin.Algo = item.Algo
-			tmpHashratesByCoinJson, _ := json.Marshal(item)
+			tmpHashratesByCoinJson, _ := json.Marshal(tmpHashratesByCoin)
 			es.Bulk("2miners-hiveos-hashrate-coin", string(tmpHashratesByCoinJson))
 		}
 		for _, item := range farm.Hashrates {
@@ -42,7 +42,7 @@ func GetHiveosFarm(c *gin.Context) {
 			tmpHashrates.Timestamp = FarmHarvestTime
 			tmpHashrates.HiveOwner = farm.Owner.Name
 			tmpHashrates.Algo = item.Algo
-			tmpHashratesJson, _ := json.Marshal(item)
+			tmpHashratesJson, _ := json.Marshal(tmpHashrates)
 			es.Bulk("2miners-hiveos-hashrate", string(tmpHashratesJson))
 		}
 		farmJson, _ := json.Marshal(farm)

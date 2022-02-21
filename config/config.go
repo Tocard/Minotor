@@ -42,6 +42,7 @@ type Config struct {
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
 	CoinList              []string `yaml:"coin_list"`
+	HiveosUrl             string   `yaml:"hiveos_api_url"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

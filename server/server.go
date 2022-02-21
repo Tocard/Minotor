@@ -51,6 +51,12 @@ func engine() *gin.Engine {
 	{
 		serverETH.GET("/lastblock", handlers.GetLastBlock)
 	}
+	hiveosServer := server.Group("/hiveos")
+	{
+		hiveosServer.GET("/auth", handlers.GetHiveosToken)
+		hiveosServer.GET("/refresh_auth", handlers.HiveosRefreshToken)
+
+	}
 	return server
 }
 

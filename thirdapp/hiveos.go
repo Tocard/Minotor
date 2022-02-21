@@ -26,7 +26,7 @@ func HiveosRefreshToken() {
 
 func HiveosGetAuthToken() {
 	url := fmt.Sprintf("%s/auth/login", config.Cfg.HiveosUrl)
-	payload := data.HiveosAuth{Login: "test", Password: "test"}
+	payload := data.HiveosAuth{Login: config.Cfg.MinotorHiveOsUser, Password: config.Cfg.MinotorHiveOsPass}
 	resp, err := utils.DoRequest("POST", url, payload)
 	if err != nil {
 		log.Printf("%s error on HiveosGetAuthToken", err)

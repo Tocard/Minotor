@@ -23,14 +23,15 @@ func HiveosRefreshToken() (int, string) {
 	return 200, "Auth Hiveos OK"
 }
 
-func HiveosGetFarms() (int, string) {
+func HiveosGetFarms() (int, []byte) {
 	url := fmt.Sprintf("%s/farms", config.Cfg.HiveosUrl)
 	resp, err := utils.DoRequest("GET", url, nil, config.Cfg.MinotorHiveosToken)
 	if err != nil {
-		return resp.StatusCode, fmt.Sprintf("%s error on HiveosGetFarms", err)
+
+		return resp.StatusCode, []byte(fmt.Sprintf("%s error on HiveosGetFarms", err))
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	return resp.StatusCode, string(body)
+	return resp.StatusCode, body
 }
 
 func HiveosGetWorkers(farmrId int) (int, string) {

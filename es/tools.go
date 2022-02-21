@@ -118,9 +118,9 @@ func Bulk(index, data string) {
 				res esutil.BulkIndexerResponseItem, err error,
 			) {
 				if err != nil {
-					log.Printf("ERROR: %s", err)
+					log.Printf("ERROR: %s on index %s with data %s", err, index, data)
 				} else {
-					log.Printf("ERROR: %s: %s", res.Error.Type, res.Error.Reason)
+					log.Printf("ERROR: %s: %s on index %s with data %s", res.Error.Type, res.Error.Reason, index, data)
 				}
 			},
 		})

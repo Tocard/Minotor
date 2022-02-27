@@ -7,15 +7,15 @@ type EsMinimal struct {
 
 type Hashrates struct {
 	EsMinimal
-	Algo     string  `json:"algo"`
-	Hashrate float64 `json:"hashrate"`
+	Algo     string  `json:"extract_algo"`
+	Hashrate float64 `json:"extract_hashrate"`
 }
 
 type HashratesByCoin struct {
 	EsMinimal
-	Coin     string  `json:"coin"`
-	Algo     string  `json:"algo"`
-	Hashrate float64 `json:"hashrate"`
+	Coin     string  `json:"extract_coin"`
+	Algo     string  `json:"extract_coin_algo"`
+	Hashrate float64 `json:"extract_coin_hashrate"`
 }
 
 type HiveosAuth struct {

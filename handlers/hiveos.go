@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"strconv"
 	"time"
-	"log"
 )
 
 func HiveosRefreshToken(c *gin.Context) {
@@ -60,7 +60,7 @@ func GetHiveosWorkers(c *gin.Context) {
 	farmid := c.Param("farmid") //TODO: change harvest from redis or from this param
 	farmId, _ := strconv.Atoi(farmid)
 	code, res := thirdapp.HiveosGetWorkers(farmId)
-	log.Printf("%s",res) 
+	log.Printf("%s", res)
 	workers := data.Workers{}
 	err := json.Unmarshal(res, &workers)
 	if err != nil {
@@ -72,6 +72,21 @@ func GetHiveosWorkers(c *gin.Context) {
 		worker.Timestamp = WorkerHarvestTime
 		farmId := fmt.Sprintf("%d", worker.FarmID)
 		worker.HiveOwner = redis.GetFromToRedis(0, farmId) //TODO: linked to first todo
+		for _, flightsheet := range worker.FlightSheet.Items {
+			esflight := data.EsFlightSheet{}
+			esflight.FarmID = worker.FlightSheet.FarmID
+			esflight.Timestamp = WorkerHarvestTime
+			esflight.HiveOwner = redis.GetFromToRedis(0, farmId) //TODO: linked to first todo
+			esflight.Name = worker.Name
+			esflight.Coin = flightsheet.Coin
+			esflight.Miner = flightsheet.Miner
+			esflight.MinerAlt = flightsheet.MinerAlt
+			esflight.Pool = flightsheet.Pool
+			esflight.WalID = flightsheet.WalID
+			esflightJson, _ := json.Marshal(esflight)
+			es.Bulk("2miners-hiveos-flightsheet", string(esflightJson))
+		}
+		//TODO: delete flighshett from original data to avoid double insert
 		workerJson, _ := json.Marshal(worker)
 		es.Bulk("2miners-hiveos-worker", string(workerJson))
 	}

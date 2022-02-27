@@ -164,7 +164,6 @@ type Overclock struct {
 	} `json:"tweakers"`
 }
 
-
 type Overclocks struct {
 	Overclock `json:"amd,nvidia"`
 }
@@ -180,6 +179,17 @@ type FlightSheet struct {
 		MinerAlt string `json:"miner_alt,omitempty"`
 		WalID    int    `json:"wal_id"`
 	} `json:"items"`
+}
+
+type EsFlightSheet struct {
+	EsMinimal
+	FarmID   int    `json:"farm_id"`
+	Name     string `json:"name"`
+	Coin     string `json:"coin"`
+	Pool     string `json:"pool"`
+	Miner    string `json:"miner"`
+	MinerAlt string `json:"miner_alt,omitempty"`
+	WalID    int    `json:"wal_id"`
 }
 
 type Workers struct {
@@ -253,14 +263,14 @@ type Workers struct {
 		HasAmd        bool `json:"has_amd"`
 		HasNvidia     bool `json:"has_nvidia"`
 		FlightSheet   `json:"flight_sheet"`
-		Overclocks     `json:"overclock"`
+		Overclocks    `json:"overclock"`
 		MinersSummary struct {
 			Hashrates []struct {
-				Miner  string `json:"miner"`
-				Ver    string `json:"ver"`
-				Algo   string `json:"algo"`
-				Coin   string `json:"coin"`
-				Hash   float64    `json:"hash"`
+				Miner  string  `json:"miner"`
+				Ver    string  `json:"ver"`
+				Algo   string  `json:"algo"`
+				Coin   string  `json:"coin"`
+				Hash   float64 `json:"hash"`
 				Shares struct {
 					Accepted int `json:"accepted"`
 					Rejected int `json:"rejected"`
@@ -272,13 +282,13 @@ type Workers struct {
 		} `json:"miners_summary"`
 		MinersStats struct {
 			Hashrates []struct {
-				Miner      string `json:"miner"`
-				Algo       string `json:"algo"`
-				Coin       string `json:"coin"`
-				Hashes     []float64  `json:"hashes"`
-				Temps      []int  `json:"temps"`
-				Fans       []int  `json:"fans,omitempty"`
-				BusNumbers []int  `json:"bus_numbers,omitempty"`
+				Miner      string    `json:"miner"`
+				Algo       string    `json:"algo"`
+				Coin       string    `json:"coin"`
+				Hashes     []float64 `json:"hashes"`
+				Temps      []int     `json:"temps"`
+				Fans       []int     `json:"fans,omitempty"`
+				BusNumbers []int     `json:"bus_numbers,omitempty"`
 			} `json:"hashrates"`
 		} `json:"miners_stats"`
 		Watchdog struct {
@@ -293,9 +303,9 @@ type Workers struct {
 			Options         struct {
 				ByMiner []interface{} `json:"by_miner"`
 				ByAlgo  []struct {
-					Algo    string `json:"algo"`
-					Minhash float64    `json:"minhash"`
-					Units   string `json:"units"`
+					Algo    string  `json:"algo"`
+					Minhash float64 `json:"minhash"`
+					Units   string  `json:"units"`
 				} `json:"by_algo"`
 			} `json:"options"`
 		} `json:"watchdog,omitempty"`
@@ -308,14 +318,14 @@ type Workers struct {
 			MaxFan  int `json:"max_fan"`
 		} `json:"gpu_summary"`
 		GpuStats []struct {
-			BusID     string `json:"bus_id"`
-			BusNumber int    `json:"bus_number"`
-			BusNum    int    `json:"bus_num"`
-			Temp      int    `json:"temp"`
-			Fan       int    `json:"fan"`
-			Power     int    `json:"power"`
-			Memtemp   int    `json:"memtemp"`
-			Hash      float64    `json:"hash"`
+			BusID     string  `json:"bus_id"`
+			BusNumber int     `json:"bus_number"`
+			BusNum    int     `json:"bus_num"`
+			Temp      int     `json:"temp"`
+			Fan       int     `json:"fan"`
+			Power     int     `json:"power"`
+			Memtemp   int     `json:"memtemp"`
+			Hash      float64 `json:"hash"`
 		} `json:"gpu_stats"`
 		GpuInfo []struct {
 			BusID     string `json:"bus_id"`

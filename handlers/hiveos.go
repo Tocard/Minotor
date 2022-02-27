@@ -3,8 +3,10 @@ package handlers
 import (
 	"2miner-monitoring/data"
 	"2miner-monitoring/es"
+	"2miner-monitoring/redis"
 	"2miner-monitoring/thirdapp"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
@@ -25,6 +27,8 @@ func GetHiveosFarm(c *gin.Context) {
 	}
 	for _, farm := range Farms.Data {
 		farm.Timestamp = FarmHarvestTime
+		farmId := fmt.Sprintf("%d", farm.ID)
+		redis.WriteToRedis(0, farmId, farm.Owner.Name, "long")
 		farm.HiveOwner = farm.Owner.Name
 		for _, item := range farm.HashratesByCoin {
 			var tmpHashratesByCoin = data.HashratesByCoin{}
@@ -52,10 +56,23 @@ func GetHiveosFarm(c *gin.Context) {
 }
 
 func GetHiveosWorkers(c *gin.Context) {
-	farmid := c.Param("farmid")
+	farmid := c.Param("farmid") //TODO: change harvest from redis or from this param
 	farmId, _ := strconv.Atoi(farmid)
 	code, res := thirdapp.HiveosGetWorkers(farmId)
-	c.String(code, res)
+	workers := data.Workers{}
+	err := json.Unmarshal(res, &workers)
+	if err != nil {
+		c.String(500, err.Error())
+	}
+	WorkerHarvestTime := time.Now().Format(time.RFC3339)
+	for _, worker := range workers.Data {
+		worker.Timestamp = WorkerHarvestTime
+		farmId := fmt.Sprintf("%d", worker.FarmID)
+		worker.HiveOwner = redis.GetFromToRedis(0, farmId) //TODO: linked to first todo
+		workerJson, _ := json.Marshal(worker)
+		es.Bulk("2miners-hiveos-worker", string(workerJson))
+		c.String(code, "Workers Harvested")
+	}
 }
 
 func GetHiveosWorker(c *gin.Context) {

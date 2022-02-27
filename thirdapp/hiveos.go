@@ -18,7 +18,7 @@ func HiveosRefreshToken() (int, string) {
 	}
 	token := data.HiveosToken{}
 	body, err := ioutil.ReadAll(resp.Body)
-	json.Unmarshal(body, &token)
+	_ = json.Unmarshal(body, &token)
 	redis.WriteToRedis(0, "token", token.AccessToken, "long")
 	return 200, "Auth Hiveos OK"
 }
@@ -33,14 +33,14 @@ func HiveosGetFarms() (int, []byte) {
 	return resp.StatusCode, body
 }
 
-func HiveosGetWorkers(farmrId int) (int, string) {
+func HiveosGetWorkers(farmrId int) (int, []byte) {
 	url := fmt.Sprintf("%s/farms/%d/workers", config.Cfg.HiveosUrl, farmrId)
 	resp, err := utils.DoRequest("GET", url, nil, config.Cfg.MinotorHiveosToken)
 	if err != nil {
-		return resp.StatusCode, fmt.Sprintf("%s error on HiveosGetWorkers", err)
+		return resp.StatusCode, []byte(fmt.Sprintf("%s error on HiveosGetFarms", err))
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	return resp.StatusCode, string(body)
+	return resp.StatusCode, body
 }
 
 func HiveosGetWorker(farmrId, workerId int) (int, string) {

@@ -55,13 +55,13 @@ type Farm struct {
 		AutocreateHash     string        `json:"autocreate_hash"`
 		Locked             bool          `json:"locked"`
 		PowerPrice         float64       `json:"power_price"`
-		TagIds             []interface{} `json:"tag_ids"`
 		AutoTags           bool          `json:"auto_tags"`
 		WorkersCount       int           `json:"workers_count"`
 		RigsCount          int           `json:"rigs_count"`
 		AsicsCount         int           `json:"asics_count"`
 		DisabledRigsCount  int           `json:"disabled_rigs_count"`
 		DisabledAsicsCount int           `json:"disabled_asics_count"`
+		TagIds             []interface{} `json:"tag_ids"`
 		Owner              struct {
 			ID    int    `json:"id"`
 			Login string `json:"login"`
@@ -71,13 +71,13 @@ type Farm struct {
 		Money struct {
 			IsPaid      bool    `json:"is_paid"`
 			IsFree      bool    `json:"is_free"`
+			Overdraft   bool    `json:"overdraft"`
 			PaidCause   string  `json:"paid_cause"`
-			Balance     float64 `json:"balance"`
 			Discount    int     `json:"discount"`
+			DaysLeft    int     `json:"days_left"`
+			Balance     float64 `json:"balance"`
 			DailyCost   float64 `json:"daily_cost"`
 			MonthlyCost float64 `json:"monthly_cost"`
-			DaysLeft    int     `json:"days_left"`
-			Overdraft   bool    `json:"overdraft"`
 			CostDetails []struct {
 				Type         int     `json:"type"`
 				TypeName     string  `json:"type_name"`
@@ -144,15 +144,14 @@ type Farm struct {
 }
 
 type Overclock struct {
-	EsMinimal
+	Aggressive bool   `json:"aggressive"`
+	LogoOff    bool   `json:"logo_off"`
 	MemMvdd    string `json:"mem_mvdd"`
 	CoreVddc   string `json:"core_vddc"`
 	FanSpeed   string `json:"fan_speed"`
 	MemClock   string `json:"mem_clock"`
 	MemVddci   string `json:"mem_vddci"`
 	CoreClock  string `json:"core_clock"`
-	Aggressive bool   `json:"aggressive"`
-	LogoOff    bool   `json:"logo_off"`
 	PowerLimit string `json:"power_limit"`
 	CoreState  string `json:"core_state"`
 	Tweakers   struct {
@@ -165,17 +164,21 @@ type Overclock struct {
 	} `json:"tweakers"`
 }
 
+
+type Overclocks struct {
+	Overclock `json:"amd,nvidia"`
+}
+
 type FlightSheet struct {
-	EsMinimal
 	ID     int    `json:"id"`
 	FarmID int    `json:"farm_id"`
 	Name   string `json:"name"`
 	Items  []struct {
 		Coin     string `json:"coin"`
 		Pool     string `json:"pool"`
-		WalID    int    `json:"wal_id"`
 		Miner    string `json:"miner"`
 		MinerAlt string `json:"miner_alt,omitempty"`
+		WalID    int    `json:"wal_id"`
 	} `json:"items"`
 }
 
@@ -250,14 +253,14 @@ type Workers struct {
 		HasAmd        bool `json:"has_amd"`
 		HasNvidia     bool `json:"has_nvidia"`
 		FlightSheet   `json:"flight_sheet"`
-		Overclock     `json:"overclock"`
+		Overclocks     `json:"overclock"`
 		MinersSummary struct {
 			Hashrates []struct {
 				Miner  string `json:"miner"`
 				Ver    string `json:"ver"`
 				Algo   string `json:"algo"`
 				Coin   string `json:"coin"`
-				Hash   int    `json:"hash"`
+				Hash   float64    `json:"hash"`
 				Shares struct {
 					Accepted int `json:"accepted"`
 					Rejected int `json:"rejected"`
@@ -272,7 +275,7 @@ type Workers struct {
 				Miner      string `json:"miner"`
 				Algo       string `json:"algo"`
 				Coin       string `json:"coin"`
-				Hashes     []int  `json:"hashes"`
+				Hashes     []float64  `json:"hashes"`
 				Temps      []int  `json:"temps"`
 				Fans       []int  `json:"fans,omitempty"`
 				BusNumbers []int  `json:"bus_numbers,omitempty"`
@@ -291,7 +294,7 @@ type Workers struct {
 				ByMiner []interface{} `json:"by_miner"`
 				ByAlgo  []struct {
 					Algo    string `json:"algo"`
-					Minhash int    `json:"minhash"`
+					Minhash float64    `json:"minhash"`
 					Units   string `json:"units"`
 				} `json:"by_algo"`
 			} `json:"options"`
@@ -312,7 +315,7 @@ type Workers struct {
 			Fan       int    `json:"fan"`
 			Power     int    `json:"power"`
 			Memtemp   int    `json:"memtemp"`
-			Hash      int    `json:"hash"`
+			Hash      float64    `json:"hash"`
 		} `json:"gpu_stats"`
 		GpuInfo []struct {
 			BusID     string `json:"bus_id"`

@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
+	"log"
 )
 
 func HiveosRefreshToken(c *gin.Context) {
@@ -59,10 +60,12 @@ func GetHiveosWorkers(c *gin.Context) {
 	farmid := c.Param("farmid") //TODO: change harvest from redis or from this param
 	farmId, _ := strconv.Atoi(farmid)
 	code, res := thirdapp.HiveosGetWorkers(farmId)
+	log.Printf("%s",res) 
 	workers := data.Workers{}
 	err := json.Unmarshal(res, &workers)
 	if err != nil {
 		c.String(500, err.Error())
+		return
 	}
 	WorkerHarvestTime := time.Now().Format(time.RFC3339)
 	for _, worker := range workers.Data {
@@ -71,8 +74,8 @@ func GetHiveosWorkers(c *gin.Context) {
 		worker.HiveOwner = redis.GetFromToRedis(0, farmId) //TODO: linked to first todo
 		workerJson, _ := json.Marshal(worker)
 		es.Bulk("2miners-hiveos-worker", string(workerJson))
-		c.String(code, "Workers Harvested")
 	}
+	c.String(code, "Workers Harvested")
 }
 
 func GetHiveosWorker(c *gin.Context) {

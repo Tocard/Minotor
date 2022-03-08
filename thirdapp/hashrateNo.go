@@ -4,13 +4,13 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
 	"2miner-monitoring/es"
+	"encoding/json"
 	"fmt"
 	"github.com/gocolly/colly"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
-	"encoding/json"
 	"time"
 )
 
@@ -33,12 +33,6 @@ func DualType(e *colly.HTMLElement) {
 		DualCrawled.Timestamp = time.Now().Format(time.RFC3339)
 		JsonDualCrawled, _ := json.Marshal(DualCrawled)
 		es.Bulk("2miners-hashrate_no", string(JsonDualCrawled))
-
-		//		for index, elem := range data.CardsResult.CardHarvested {
-		//	if elem.Name == e.Request.URL.Path[1:] {
-		//			data.CardsResult.CardHarvested[index].DualCoin = append(data.CardsResult.CardHarvested[index].DualCoin, DualCrawled)
-		//	}
-		//	}
 	}
 }
 
@@ -57,11 +51,6 @@ func Singletype(e *colly.HTMLElement) {
 		SingleCrawled.Timestamp = time.Now().Format(time.RFC3339)
 		JsonSingleCrawled, _ := json.Marshal(SingleCrawled)
 		es.Bulk("2miners-hashrate_no", string(JsonSingleCrawled))
-		//	for index, elem := range data.CardsResult.CardHarvested {
-		//	if elem.Name == e.Request.URL.Path[1:] {
-		//		data.CardsResult.CardHarvested[index].SingleCoin = append(data.CardsResult.CardHarvested[index].SingleCoin, SingleCrawled)
-		//	}
-		//	}
 	}
 }
 
@@ -70,7 +59,7 @@ func DispatchType(e *colly.HTMLElement) {
 	Singletype(e)
 }
 
-func RunCrawler() {
+func RunCrawler() (int, string) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("www.hashrate.no", "hashrate.no"),
 	)
@@ -90,4 +79,5 @@ func RunCrawler() {
 		url := fmt.Sprintf("https://www.hashrate.no/%s", elem)
 		c.Visit(url)
 	}
+	return 200, "Card Stats harvested"
 }

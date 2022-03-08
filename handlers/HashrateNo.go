@@ -6,7 +6,7 @@ import (
 )
 
 func ScrapHashrateNo(c *gin.Context) {
-	thirdapp.RunCrawler()
-	c.String(200, "OK")
+	code, status := thirdapp.RunCrawler()
+	c.String(code, status)
 
 }

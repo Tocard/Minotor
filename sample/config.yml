@@ -1,0 +1,46 @@
+# Sample of main config file
+
+elasticsearch_user: ""
+elasticsearch_password: ""
+elasticsearch_hosts:  [""]
+elasticsearch_port: 9200
+api_token_etherscan: ""
+log_level: INFO # CRITICAL => ERROR => WARNING => INFO => DEBUG
+ca_path: ""
+2miners_url: "https://eth.2miners.com/api"
+
+miner_listing: ADDR #ALL is used to get all miners from 2miners, ADDR is used for adress variable
+adress_file_path: "/etc/minotor/adress.yml"
+lock_path: ".minotor.lock"
+
+redis_host: 127.0.0.1
+redis_port:
+redis_password:
+redis_short_lifetime: 10
+redis_mid_lifetime: 600
+redis_long_lifetime: 36000
+
+
+factor: 0.000001
+ether_factor: 0.000000000000000001
+gas_factor: 0.000000001
+
+api_adress:
+api_port:             # run the api on the port given in api_port
+api_front_port:             # run the api on the port given in api_port
+api_log_file:         # if set to "", stdout is used, otherwise use the path given in api_log_file
+api_username:      # user used to auth yourself on the api
+api_password:  # password combined with user on the api
+
+coin_list:
+  - "ethereum"
+  - "the-open-network"
+  - "zelcash"
+  - "cosmos"
+  - "osmosis"
+  - "raptoreum"
+
+hiveos_api_url: "https://api2.hiveos.farm/api/v2"
+hiveos_minotor_user: ""
+hiveos_minotor_password: ""
+hiveos_minotor_token: ""

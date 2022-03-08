@@ -59,6 +59,7 @@ func engine() *gin.Engine {
 		hiveosServer.GET("/worker/:worker", handlers.GetHiveosWorker)
 		hiveosServer.GET("/oc/:farmid", handlers.GetHiveosOc)
 	}
+	server.GET("/hashrateNo", handlers.ScrapHashrateNo)
 	return server
 }
 

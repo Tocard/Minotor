@@ -34,8 +34,8 @@ func main() {
 		s.Every(1).Minutes().Do(engine.GetHiveosWorker)
 		s.Every(1).Minutes().Do(engine.GetLastEthBlock)
 		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
-
 		s.Every(1).Minutes().Do(engine.ScrapHashrateNo)
+		
 		s.Every(10).Seconds().Do(engine.HarvestFactory, "data")
 
 		s.Every(1).Second().Do(engine.HarvestFactory, "workers")

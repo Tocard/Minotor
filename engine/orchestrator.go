@@ -97,9 +97,17 @@ func GetLastEthTx() {
 	fmt.Println(resp)
 }
 
-
 func GetHiveosFarm() {
 	url := fmt.Sprintf("%s:%d/hiveos/farms", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func GetHiveosWorker() {
+	url := fmt.Sprintf("%s:%d/hiveos/workers", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()

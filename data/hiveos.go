@@ -238,10 +238,6 @@ type Workers struct {
 			Disk struct {
 				Model string `json:"model"`
 			} `json:"disk"`
-			NetInterfaces []struct {
-				Mac   string `json:"mac"`
-				Iface string `json:"iface"`
-			} `json:"net_interfaces"`
 		} `json:"hardware_info"`
 		HardwareStats struct {
 			Df      string    `json:"df"`

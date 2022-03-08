@@ -30,6 +30,7 @@ func main() {
 		s.Every(5).Minutes().Do(engine.GetLastEthTx)
 
 		s.Every(1).Minutes().Do(engine.GetHiveosFarm)
+		s.Every(1).Minutes().Do(engine.GetHiveosWorker)
 		s.Every(1).Minutes().Do(engine.GetLastEthBlock)
 		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
 

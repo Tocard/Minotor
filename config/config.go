@@ -8,7 +8,9 @@ import (
 
 var Cfg *Config
 
-type Adresses struct {
+var Wtw *WalletToWatch
+
+type WalletToWatch struct {
 	Adress []string `yaml:"adress"`
 }
 
@@ -40,7 +42,11 @@ type Config struct {
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
 	CoinList              []string `yaml:"coin_list"`
-	Adresses
+	HiveosUrl             string   `yaml:"hiveos_api_url"`
+	MinotorHiveOsUser     string   `yaml:"hiveos_minotor_user"`
+	MinotorHiveOsPass     string   `yaml:"hiveos_minotor_password"`
+	MinotorHiveosToken     string   `yaml:"hiveos_minotor_token"`
+
 }
 
 func LoadYamlConfig(ConfigFilePath string) {
@@ -52,8 +58,9 @@ func LoadYamlConfig(ConfigFilePath string) {
 	Cfg = &t
 	data, err = ioutil.ReadFile(Cfg.AdressFilePath)
 	log2miner.Error(err)
-	a := Adresses{}
+	a := WalletToWatch{}
 	err = yaml.Unmarshal(data, &a)
 	log2miner.Error(err)
-	Cfg.Adress = a.Adress
+	Wtw = &a
+	Wtw.Adress = a.Adress
 }

@@ -2,8 +2,16 @@ package thirdapp
 
 import (
 	"2miner-monitoring/config"
+	"2miner-monitoring/data"
+	"encoding/json"
+	"fmt"
 	"github.com/nanmu42/etherscan-api"
+	"io/ioutil"
+	"log"
 	"math/big"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 type AccountBalance struct {
@@ -42,4 +50,32 @@ func GetMultiAccountBalance(walletIds []string) []etherscan.AccountBalance {
 		panic(err)
 	}
 	return balance
+}
+
+func GetLastBlock() int {
+	client := procEtherscanClient()
+	block, err := client.BlockNumber(time.Now().Unix(), "before")
+	if err != nil {
+		panic(err)
+	}
+	return block
+}
+
+func GetLastTx(blockstring, wallet string) data.Tx {
+	endBlock, _ := strconv.Atoi(blockstring)
+	startBlock := endBlock - 276
+	client := http.Client{
+		Timeout: 180 * time.Second,
+	}
+	url := fmt.Sprintf("https://api.etherscan.io/api?module=account&action=txlist&address=%s&startblock=%d&endblock=%d&page=1&offset=10000&sort=asc&apikey=%s", wallet, startBlock, endBlock, config.Cfg.APITokenEtherscan)
+	resp, err := client.Get(url)
+	tx := data.Tx{}
+	if err != nil {
+		log.Printf("%s error on GetLAstTx", err)
+		return tx
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(body, &tx)
+	return tx
 }

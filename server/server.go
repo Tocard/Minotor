@@ -42,10 +42,23 @@ func engine() *gin.Engine {
 		serverMiner.GET("/sumrewards/:wallet", handlers.ExtractSumrewardsInfo)
 	}
 	server.GET("/balances", handlers.GetWalletsBalance)
-	server.GET("/suscribe/:wallet", handlers.SuscribeWallet)
-	server.GET("/unsuscribe/:wallet", handlers.UnSuscribeWallet)
+	server.GET("/subscribe/:wallet", handlers.SuscribeWallet)
+	server.GET("/unsubscribe/:wallet", handlers.UnSuscribeWallet)
 	server.GET("/coins/price", handlers.GetCoinsPrice)
 	server.GET("/stats", handlers.ExtractPoolStatInfo)
+	server.GET("/transactions", handlers.GetLastTransaction)
+	serverETH := server.Group("/ETH")
+	{
+		serverETH.GET("/lastblock", handlers.GetLastBlock)
+	}
+	hiveosServer := server.Group("/hiveos")
+	{
+		hiveosServer.GET("/refresh_auth", handlers.HiveosRefreshToken)
+		hiveosServer.GET("/farms", handlers.GetHiveosFarm)
+		hiveosServer.GET("/workers/:farmid", handlers.GetHiveosWorkers)
+		hiveosServer.GET("/worker/:worker", handlers.GetHiveosWorker)
+		hiveosServer.GET("/oc/:farmid", handlers.GetHiveosOc)
+	}
 	return server
 }
 

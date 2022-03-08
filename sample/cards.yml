@@ -1,0 +1,6 @@
+# sample of cards config file
+cards:
+  - 3060
+  - 3070
+  - 3080
+  - RX580

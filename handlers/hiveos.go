@@ -26,10 +26,10 @@ func GetHiveosFarm(c *gin.Context) {
 	if err != nil {
 		c.String(500, err.Error())
 	}
+	var Farmids []int
 	for _, farm := range Farms.Data {
 		farm.Timestamp = FarmHarvestTime
-		farmId := fmt.Sprintf("%d", farm.ID)
-		redis.WriteToRedis(0, farmId, farm.Owner.Name, "long")
+		Farmids = append(Farmids, farm.ID)
 		farm.HiveOwner = farm.Owner.Name
 		for _, item := range farm.HashratesByCoin {
 			var tmpHashratesByCoin = data.HashratesByCoin{}
@@ -53,11 +53,13 @@ func GetHiveosFarm(c *gin.Context) {
 		farmJson, _ := json.Marshal(farm)
 		es.Bulk("2miners-hiveos-farm", string(farmJson))
 	}
+	jsonFarmID, _ := json.Marshal(Farmids)
+	redis.WriteToRedis(0, "listFarmids", string(jsonFarmID), "long")
 	c.String(code, "Farm harvested")
 }
 
 func GetHiveosWorkers(c *gin.Context) {
-	farmid := c.Param("farmid") //TODO: change harvest from redis or from this param
+	farmid := c.Param("farmid")
 	farmId, _ := strconv.Atoi(farmid)
 	code, res := thirdapp.HiveosGetWorkers(farmId)
 	log.Printf("%s", res)
@@ -106,4 +108,10 @@ func GetHiveosOc(c *gin.Context) {
 	farmId, _ := strconv.Atoi(farmid)
 	code, res := thirdapp.HiveosGetOc(farmId)
 	c.String(code, res)
+}
+
+func GetTest(c *gin.Context) {
+	test := es.EsSearch()
+
+	c.String(200, test.String())
 }

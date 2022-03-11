@@ -3,6 +3,7 @@ package main
 import (
 	"2miner-monitoring/cli"
 	"2miner-monitoring/config"
+	"2miner-monitoring/data"
 	"2miner-monitoring/engine"
 	"2miner-monitoring/redis"
 	"2miner-monitoring/server"
@@ -14,6 +15,7 @@ func main() {
 	cliFilled := cli.Cli()
 	config.LoadYamlConfig(cliFilled.FilePathConfig)
 	config.LoadCardYamlConfig()
+	data.InitHiveosControl()
 	//log2miner.InitLogger("2miner.log2miner")
 	redis.InitRedis()
 	go func() {
@@ -31,7 +33,7 @@ func main() {
 		s.Every(5).Minutes().Do(engine.GetLastEthTx)
 
 		s.Every(1).Minutes().Do(engine.GetHiveosFarm)
-		s.Every(1).Minutes().Do(engine.GetHiveosWorker)
+		s.Every(1).Minutes().Do(engine.GetHiveosWorkers)
 		s.Every(1).Minutes().Do(engine.GetLastEthBlock)
 		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
 		s.Every(1).Minutes().Do(engine.ScrapHashrateNo)

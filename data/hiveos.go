@@ -1,5 +1,11 @@
 package data
 
+var HiveOsController *HiveosControl
+
+type HiveosControl struct {
+	Id []int
+}
+
 type EsMinimal struct {
 	Timestamp string `json:"@timestamp"`
 	HiveOwner string `json:"hive_owner"`
@@ -367,4 +373,9 @@ type Workers struct {
 		WorkersCount int         `json:"workers_count"`
 		FarmsCount   interface{} `json:"farms_count"`
 	} `json:"tags"`
+}
+
+func InitHiveosControl() {
+	HiveosTmpControl := HiveosControl{}
+	HiveOsController = &HiveosTmpControl
 }

@@ -129,8 +129,22 @@ func Bulk(index, data string) {
 }
 
 func EsSearch() *esapi.Response {
-	body := `{"find": "terms", "field": "id", "query": "id:*"}`
-	indx := []string{"2miners"}
+	body := `{
+  "query": {
+    "exists":{ 
+      "field":"id"
+      }
+  },
+  "aggs": {
+    "by_id": {
+      "terms": {
+        "field": "id"
+        , "size": 1
+      }
+    }
+  }
+}`
+	indx := []string{"2miners-hiveos-farm"}
 	req := esapi.SearchRequest{
 		Index:   indx,
 		Body:    strings.NewReader(body),

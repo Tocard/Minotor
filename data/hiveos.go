@@ -272,13 +272,13 @@ type Workers struct {
 				Ver    string  `json:"ver"`
 				Algo   string  `json:"algo"`
 				Coin   string  `json:"coin"`
-				Hash   float64 `json:"hash"`
+				//	Hash   float64 `json:"hash"`
 				Shares struct {
 					Accepted int `json:"accepted"`
 					Rejected int `json:"rejected"`
 					Invalid  int `json:"invalid"`
 					Total    int `json:"total"`
-					Ratio    int `json:"ratio"`
+					Ratio    float64 `json:"ratio"`
 				} `json:"shares,omitempty"`
 			} `json:"hashrates"`
 		} `json:"miners_summary"`

@@ -63,8 +63,7 @@ func GetHiveosFarm(c *gin.Context) {
 
 func GetHiveosWorkers(c *gin.Context) {
 	for _, farmid := range data.HiveOsController.Id {
-		code, res := thirdapp.HiveosGetWorkers(farmid)
-		log.Printf("%s", res)
+		_, res := thirdapp.HiveosGetWorkers(farmid)
 		workers := data.Workers{}
 		err := json.Unmarshal(res, &workers)
 		if err != nil {
@@ -92,10 +91,11 @@ func GetHiveosWorkers(c *gin.Context) {
 			}
 			//TODO: delete flighshett from original data to avoid double insert
 			workerJson, _ := json.Marshal(worker)
+			log.Printf(string(workerJson))
 			es.Bulk("2miners-hiveos-worker", string(workerJson))
 		}
-		c.String(code, "Workers Harvested")
 	}
+	c.String(200, "Workers Harvested")
 }
 
 func GetHiveosWorker(c *gin.Context) {

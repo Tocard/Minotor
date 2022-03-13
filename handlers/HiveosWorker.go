@@ -142,14 +142,14 @@ func GetHiveosWorkers(c *gin.Context) {
 			farmOwner := redis.GetFromToRedis(0, farmId)
 			worker.HiveOwner = farmOwner
 			setHiveosWorkerFlightsheet(worker.FlightSheet, WorkerHarvestTime, worker.Name, farmOwner)
-			worker.FlightSheet = data.FlightSheet{}
 			setHiveosWorkerGpusInfo(worker.GpuStats, worker.GpuInfo, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
-			worker.GpuInfo = data.GpuInfo{}
-			worker.GpuStats = data.GpuStats{}
 			setHiveosWorkerGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
-			worker.GpuSummary.Gpus = data.Gpus{}
 			setHiveosWorkerOverclock(worker.Overclock, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
 			worker.Overclock = data.Overclock{}
+			worker.FlightSheet = data.FlightSheet{}
+			worker.GpuSummary.Gpus = data.Gpus{}
+			worker.GpuInfo = data.GpuInfo{}
+			worker.GpuStats = data.GpuStats{}
 			workerJson, _ := json.Marshal(worker)
 			es.Bulk("2miners-hiveos-worker", string(workerJson))
 		}

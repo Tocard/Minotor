@@ -75,6 +75,11 @@ func GetHiveosOc(c *gin.Context) {
 	c.String(code, res)
 }
 
+func GetHiveosGpu(c *gin.Context) {
+	code, res := thirdapp.HiveosGetGpu(1362947)
+	c.String(code, res)
+}
+
 func GetTest(c *gin.Context) {
 	test := es.EsSearch()
 

@@ -62,3 +62,13 @@ func HiveosGetOc(farmrId int) (int, string) {
 	body, err := ioutil.ReadAll(resp.Body)
 	return resp.StatusCode, string(body)
 }
+
+func HiveosGetGpu(farmrId int) (int, string) {
+	url := fmt.Sprintf("%s/farms/%d/workers/gpus", config.Cfg.HiveosUrl, farmrId)
+	resp, err := utils.DoRequest("GET", url, nil, config.Cfg.MinotorHiveosToken)
+	if err != nil {
+		return resp.StatusCode, fmt.Sprintf("%s error on HiveosGetOc", err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	return resp.StatusCode, string(body)
+}

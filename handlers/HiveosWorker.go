@@ -72,6 +72,7 @@ func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner stri
 }
 
 func setHiveosOverclock(Overclocks data.Overclocks, WorkerHarvestTime, workerName, farmOwner string) {
+	log.Println(Overclocks)
 	Overclocks.Timestamp = WorkerHarvestTime
 	Overclocks.WorkerName = workerName
 	Overclocks.HiveOwner = farmOwner
@@ -80,7 +81,8 @@ func setHiveosOverclock(Overclocks data.Overclocks, WorkerHarvestTime, workerNam
 }
 
 func GetHiveosWorkers(c *gin.Context) {
-	for _, farmid := range data.HiveOsController.Id {
+	tmpHiveOsController := data.HiveOsController.Id
+	for _, farmid := range tmpHiveOsController {
 		_, res := thirdapp.HiveosGetWorkers(farmid)
 		workers := data.Workers{}
 		err := json.Unmarshal(res, &workers)

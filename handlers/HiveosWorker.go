@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -72,7 +73,7 @@ func setHiveosWorkerGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwne
 	}
 }
 
-func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName, farmOwner string, CardControlIndex *data.HiveosCardLinker) {
+func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.HiveosCardLinker) {
 	esOverclock := data.HiveosOverclock{}
 	//TODO: find another way to make it work with rig composed with AMD & NVIDIA
 	// CardControlIndex & thoses loop beyond are broken is this case
@@ -86,10 +87,10 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, worke
 			if len(CoreClock) < i {
 				k = 0
 			}
-			esOverclock.Nvidia.MemClock = MemClock[k]
-			esOverclock.Nvidia.CoreClock = CoreClock[k]
-			esOverclock.Nvidia.PowerLimit = PowerLimit[k]
-			esOverclock.Nvidia.FanSpeed = FanSpeed[i]
+			esOverclock.Nvidia.MemClock, _ = strconv.Atoi(MemClock[k])
+			esOverclock.Nvidia.CoreClock, _ = strconv.Atoi(CoreClock[k])
+			esOverclock.Nvidia.PowerLimit, _ = strconv.Atoi(PowerLimit[k])
+			esOverclock.Nvidia.FanSpeed, _ = strconv.Atoi(FanSpeed[i])
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
 			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
 			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
@@ -109,13 +110,13 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, worke
 			if len(CoreClock) < i {
 				k = 0
 			}
-			esOverclock.Amd.MemMvdd = MemMvdd[k]
-			esOverclock.Amd.CoreVddc = CoreVddc[k]
-			esOverclock.Amd.MemClock = MemClock[k]
-			esOverclock.Amd.MemVddci = MemVddci[k]
-			esOverclock.Amd.CoreClock = CoreClock[k]
-			esOverclock.Amd.CoreState = CoreState[k]
-			esOverclock.Amd.FanSpeed = FanSpeed[i]
+			esOverclock.Amd.MemMvdd, _ = strconv.Atoi(MemMvdd[k])
+			esOverclock.Amd.CoreVddc, _ = strconv.Atoi(CoreVddc[k])
+			esOverclock.Amd.MemClock, _ = strconv.Atoi(MemClock[k])
+			esOverclock.Amd.MemVddci, _ = strconv.Atoi(MemVddci[k])
+			esOverclock.Amd.CoreClock, _ = strconv.Atoi(CoreClock[k])
+			esOverclock.Amd.CoreState, _ = strconv.Atoi(CoreState[k])
+			esOverclock.Amd.FanSpeed, _ = strconv.Atoi(FanSpeed[i])
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
 			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
 			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
@@ -144,7 +145,7 @@ func GetHiveosWorkers(c *gin.Context) {
 			setHiveosWorkerFlightsheet(worker.FlightSheet, WorkerHarvestTime, worker.Name, farmOwner)
 			setHiveosWorkerGpusInfo(worker.GpuStats, worker.GpuInfo, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
 			setHiveosWorkerGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
-			setHiveosWorkerOverclock(worker.Overclock, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
+			setHiveosWorkerOverclock(worker.Overclock, &CarWorkerLinker)
 			worker.Overclock = data.Overclock{}
 			worker.FlightSheet = data.FlightSheet{}
 			worker.GpuSummary.Gpus = data.Gpus{}

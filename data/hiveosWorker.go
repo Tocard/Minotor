@@ -106,21 +106,21 @@ type Gpus []struct {
 
 type HiveosOverclock struct {
 	Nvidia struct {
-		LogoOff    bool   `json:"logo_off,omitempty"`
-		FanSpeed   string `json:"fan_speed,omitempty"`
-		MemClock   string `json:"mem_clock,omitempty"`
-		CoreClock  string `json:"core_clock,omitempty"`
-		PowerLimit string `json:"power_limit,omitempty"`
+		LogoOff    bool `json:"logo_off,omitempty"`
+		FanSpeed   int  `json:"fan_speed,omitempty"`
+		MemClock   int  `json:"mem_clock,omitempty"`
+		CoreClock  int  `json:"core_clock,omitempty"`
+		PowerLimit int  `json:"power_limit,omitempty"`
 	} `json:"nvidia,omitempty"`
 	Amd struct {
-		MemMvdd    string `json:"mem_mvdd,omitempty"`
-		CoreVddc   string `json:"core_vddc,omitempty"`
-		FanSpeed   string `json:"fan_speed,omitempty"`
-		MemClock   string `json:"mem_clock,omitempty"`
-		MemVddci   string `json:"mem_vddci,omitempty"`
-		Aggressive bool   `json:"aggressive,omitempty"`
-		CoreClock  string `json:"core_clock,omitempty"`
-		CoreState  string `json:"core_state,omitempty"`
+		MemMvdd    int  `json:"mem_mvdd,omitempty"`
+		CoreVddc   int  `json:"core_vddc,omitempty"`
+		FanSpeed   int  `json:"fan_speed,omitempty"`
+		MemClock   int  `json:"mem_clock,omitempty"`
+		MemVddci   int  `json:"mem_vddci,omitempty"`
+		Aggressive bool `json:"aggressive,omitempty"`
+		CoreClock  int  `json:"core_clock,omitempty"`
+		CoreState  int  `json:"core_state,omitempty"`
 	} `json:"amd,omitempty"`
 	Tweakers struct {
 		Amdmemtweak []struct {

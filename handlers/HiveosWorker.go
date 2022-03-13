@@ -72,6 +72,7 @@ func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner stri
 }
 
 func setHiveosOverclock(Overclocks data.Overclocks, WorkerHarvestTime, workerName, farmOwner string) {
+	log.Println("Marker")
 	log.Println(Overclocks)
 	Overclocks.Timestamp = WorkerHarvestTime
 	Overclocks.WorkerName = workerName
@@ -107,7 +108,6 @@ func GetHiveosWorkers(c *gin.Context) {
 			worker.Overclocks = data.Overclocks{}
 			//TODO: delete flighshett from original data to avoid double insert
 			workerJson, _ := json.Marshal(worker)
-			log.Printf(string(workerJson))
 			es.Bulk("2miners-hiveos-worker", string(workerJson))
 		}
 	}

@@ -58,8 +58,6 @@ func engine() *gin.Engine {
 		hiveosServer.GET("/test", handlers.GetTest)
 		hiveosServer.GET("/workers", handlers.GetHiveosWorkers)
 		hiveosServer.GET("/worker/:worker", handlers.GetHiveosWorker)
-		hiveosServer.GET("/oc/:farmid", handlers.GetHiveosOc)
-		hiveosServer.GET("/gpus", handlers.GetHiveosGpu)
 	}
 	server.GET("/hashrateNo", handlers.ScrapHashrateNo)
 	return server

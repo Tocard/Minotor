@@ -91,8 +91,8 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, worke
 			esOverclock.Nvidia.PowerLimit = PowerLimit[k]
 			esOverclock.Nvidia.FanSpeed = FanSpeed[i]
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
-			esOverclockJson, _ := json.Marshal(esOverclock)
-			es.Bulk("2miners-hiveos-gpu-total-info", string(esOverclockJson))
+			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
+			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
 		}
 	}
 	if Overclock.Amd.FanSpeed != "" {
@@ -117,8 +117,8 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, worke
 			esOverclock.Amd.CoreState = CoreState[k]
 			esOverclock.Amd.FanSpeed = FanSpeed[i]
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
-			esOverclockJson, _ := json.Marshal(esOverclock)
-			es.Bulk("2miners-hiveos-gpu-total-info", string(esOverclockJson))
+			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
+			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
 		}
 	}
 

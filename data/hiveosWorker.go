@@ -7,7 +7,12 @@ type HiveOsWorkerMinimal struct {
 }
 
 type HiveosCardLinker struct {
-	busID int
+	GPU []EsHiveOsWorkerGpu
+}
+
+type HiveosGpuMinimal struct {
+	BusID     string `json:"bus_id,omitempty"`
+	BusNumber int    `json:"bus_number,omitempty"`
 }
 
 type FlightSheet struct {
@@ -36,8 +41,8 @@ type EsFlightSheet struct {
 
 type EsHiveOsWorkerGpu struct {
 	HiveOsWorkerMinimal
-	BusID     string  `json:"bus_id,omitempty"`
-	BusNumber int     `json:"bus_number,omitempty"`
+	HiveosGpuMinimal
+	HiveosOverclock
 	BusNum    int     `json:"bus_num,omitempty"`
 	Temp      int     `json:"temp,omitempty"`
 	Fan       int     `json:"fan,omitempty"`
@@ -100,7 +105,6 @@ type Gpus []struct {
 }
 
 type HiveosOverclock struct {
-	HiveOsWorkerMinimal
 	Nvidia struct {
 		LogoOff    bool   `json:"logo_off,omitempty"`
 		FanSpeed   string `json:"fan_speed,omitempty"`

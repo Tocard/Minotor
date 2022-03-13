@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func setHiveosFlightsheet(FlightSheet data.FlightSheet, WorkerHarvestTime, Name, farmOwner string) {
+func setHiveosWorkerFlightsheet(FlightSheet data.FlightSheet, WorkerHarvestTime, Name, farmOwner string) {
 	for _, flightsheet := range FlightSheet.Items {
 		esflight := data.EsFlightSheet{}
 		esflight.FarmID = FlightSheet.FarmID
@@ -29,7 +29,7 @@ func setHiveosFlightsheet(FlightSheet data.FlightSheet, WorkerHarvestTime, Name,
 	}
 }
 
-func setHiveosWorkerUnit(GpuStats data.GpuStats, GpuInfo data.GpuInfo, WorkerHarvestTime, name, farmOwner string) {
+func setHiveosWorkerGpusInfo(GpuStats data.GpuStats, GpuInfo data.GpuInfo, WorkerHarvestTime, name, farmOwner string, CardControlIndex *data.HiveosCardLinker) {
 	for _, TmpGpuStats := range GpuStats {
 		for _, TmpGpuInfo := range GpuInfo {
 			if TmpGpuInfo.BusID == TmpGpuStats.BusID {
@@ -50,15 +50,16 @@ func setHiveosWorkerUnit(GpuStats data.GpuStats, GpuInfo data.GpuInfo, WorkerHar
 				HiveosWorkerGpu.Model = TmpGpuInfo.Model
 				HiveosWorkerGpu.ShortName = TmpGpuInfo.ShortName
 				HiveosWorkerGpu.Details = TmpGpuInfo.Details
-				esHiveosWorkerGpuJson, _ := json.Marshal(HiveosWorkerGpu)
-				es.Bulk("2miners-hiveos-worker-gpu-info", string(esHiveosWorkerGpuJson))
+				//				esHiveosWorkerGpuJson, _ := json.Marshal(HiveosWorkerGpu)
+				//				es.Bulk("2miners-hiveos-worker-gpu-info", string(esHiveosWorkerGpuJson))
+				CardControlIndex.GPU = append(CardControlIndex.GPU, HiveosWorkerGpu)
 				break
 			}
 		}
 	}
 }
 
-func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner string) {
+func setHiveosWorkerGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner string) {
 	for _, Gpu := range Gpus {
 		esGpu := data.HiveoOsGpus{}
 		esGpu.Timestamp = WorkerHarvestTime
@@ -71,23 +72,27 @@ func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner stri
 	}
 }
 
-func setHiveosOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName, farmOwner string) {
+func setHiveosWorkerOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName, farmOwner string, CardControlIndex *data.HiveosCardLinker) {
 	esOverclock := data.HiveosOverclock{}
-	esOverclock.Timestamp = WorkerHarvestTime
-	esOverclock.WorkerName = workerName
-	esOverclock.HiveOwner = farmOwner
+	//TODO: find another way to make it work with rig composed with AMD & NVIDIA
+	// CardControlIndex & thoses loop beyond are broken is this case
 	if Overclock.Nvidia.FanSpeed != "" {
 		FanSpeed := strings.Split(Overclock.Nvidia.FanSpeed, " ")
 		MemClock := strings.Split(Overclock.Nvidia.MemClock, " ")
 		CoreClock := strings.Split(Overclock.Nvidia.CoreClock, " ")
 		PowerLimit := strings.Split(Overclock.Nvidia.PowerLimit, " ")
-		for i, _ := range FanSpeed {
+		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
+			k := i
+			if len(CoreClock) < i {
+				k = 0
+			}
+			esOverclock.Nvidia.MemClock = MemClock[k]
+			esOverclock.Nvidia.CoreClock = CoreClock[k]
+			esOverclock.Nvidia.PowerLimit = PowerLimit[k]
 			esOverclock.Nvidia.FanSpeed = FanSpeed[i]
-			esOverclock.Nvidia.MemClock = MemClock[i]
-			esOverclock.Nvidia.CoreClock = CoreClock[i]
-			esOverclock.Nvidia.PowerLimit = PowerLimit[i]
+			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
 			esOverclockJson, _ := json.Marshal(esOverclock)
-			es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
+			es.Bulk("2miners-hiveos-gpu-total-info", string(esOverclockJson))
 		}
 	}
 	if Overclock.Amd.FanSpeed != "" {
@@ -99,16 +104,21 @@ func setHiveosOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName,
 		CoreClock := strings.Split(Overclock.Amd.CoreClock, " ")
 		CoreState := strings.Split(Overclock.Amd.CoreState, " ")
 		esOverclock.Amd.Aggressive = Overclock.Amd.Aggressive
-		for i, _ := range FanSpeed {
-			esOverclock.Amd.MemMvdd = MemMvdd[i]
-			esOverclock.Amd.CoreVddc = CoreVddc[i]
+		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
+			k := i
+			if len(CoreClock) < i {
+				k = 0
+			}
+			esOverclock.Amd.MemMvdd = MemMvdd[k]
+			esOverclock.Amd.CoreVddc = CoreVddc[k]
+			esOverclock.Amd.MemClock = MemClock[k]
+			esOverclock.Amd.MemVddci = MemVddci[k]
+			esOverclock.Amd.CoreClock = CoreClock[k]
+			esOverclock.Amd.CoreState = CoreState[k]
 			esOverclock.Amd.FanSpeed = FanSpeed[i]
-			esOverclock.Amd.MemClock = MemClock[i]
-			esOverclock.Amd.MemVddci = MemVddci[i]
-			esOverclock.Amd.CoreClock = CoreClock[i]
-			esOverclock.Amd.CoreState = CoreState[i]
+			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
 			esOverclockJson, _ := json.Marshal(esOverclock)
-			es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
+			es.Bulk("2miners-hiveos-gpu-total-info", string(esOverclockJson))
 		}
 	}
 
@@ -126,20 +136,20 @@ func GetHiveosWorkers(c *gin.Context) {
 		}
 		WorkerHarvestTime := time.Now().Format(time.RFC3339)
 		for _, worker := range workers.Data {
+			CarWorkerLinker := data.HiveosCardLinker{}
 			worker.Timestamp = WorkerHarvestTime
 			farmId := fmt.Sprintf("%d", worker.FarmID)
 			farmOwner := redis.GetFromToRedis(0, farmId)
 			worker.HiveOwner = farmOwner
-			setHiveosFlightsheet(worker.FlightSheet, WorkerHarvestTime, worker.Name, farmOwner)
+			setHiveosWorkerFlightsheet(worker.FlightSheet, WorkerHarvestTime, worker.Name, farmOwner)
 			worker.FlightSheet = data.FlightSheet{}
-			setHiveosWorkerUnit(worker.GpuStats, worker.GpuInfo, WorkerHarvestTime, worker.Name, farmOwner)
+			setHiveosWorkerGpusInfo(worker.GpuStats, worker.GpuInfo, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
 			worker.GpuInfo = data.GpuInfo{}
 			worker.GpuStats = data.GpuStats{}
-			setHiveosGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
+			setHiveosWorkerGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
 			worker.GpuSummary.Gpus = data.Gpus{}
-			setHiveosOverclock(worker.Overclock, WorkerHarvestTime, worker.Name, farmOwner)
+			setHiveosWorkerOverclock(worker.Overclock, WorkerHarvestTime, worker.Name, farmOwner, &CarWorkerLinker)
 			worker.Overclock = data.Overclock{}
-			//TODO: delete flighshett from original data to avoid double insert
 			workerJson, _ := json.Marshal(worker)
 			es.Bulk("2miners-hiveos-worker", string(workerJson))
 		}

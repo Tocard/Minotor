@@ -6,14 +6,8 @@ type HiveOsWorkerMinimal struct {
 	WorkerName string `json:"worker_name,omitempty"`
 }
 
-type HiveosOsOverclocks struct {
-	HiveOsWorkerMinimal
-	Overclock `json:"amd,nvidia,omitempty"`
-}
-
-type Overclocks struct {
-	HiveOsWorkerMinimal
-	Overclock `json:"amd,nvidia,omitempty"`
+type HiveosCardLinker struct {
+	busID int
 }
 
 type FlightSheet struct {
@@ -105,7 +99,7 @@ type Gpus []struct {
 	Amount int    `json:"amount,omitempty"`
 }
 
-type Overclock struct {
+type HiveosOverclock struct {
 	HiveOsWorkerMinimal
 	Nvidia struct {
 		LogoOff    bool   `json:"logo_off,omitempty"`
@@ -125,6 +119,33 @@ type Overclock struct {
 		CoreState  string `json:"core_state,omitempty"`
 	} `json:"amd,omitempty"`
 	Tweakers struct {
+		Amdmemtweak []struct {
+			Params struct {
+				Ref string `json:"ref,omitempty"`
+			} `json:"params,omitempty"`
+		} `json:"amdmemtweak,omitempty"`
+	} `json:"tweakers,omitempty"`
+}
+
+type Overclock struct {
+	Nvidia struct {
+		LogoOff    bool   `json:"logo_off,omitempty"`
+		FanSpeed   string `json:"fan_speed,omitempty"`
+		MemClock   string `json:"mem_clock,omitempty"`
+		CoreClock  string `json:"core_clock,omitempty"`
+		PowerLimit string `json:"power_limit,omitempty"`
+	} `json:"nvidia,omitempty"`
+	Amd struct {
+		MemMvdd    string `json:"mem_mvdd,omitempty"`
+		CoreVddc   string `json:"core_vddc,omitempty"`
+		FanSpeed   string `json:"fan_speed,omitempty"`
+		MemClock   string `json:"mem_clock,omitempty"`
+		MemVddci   string `json:"mem_vddci,omitempty"`
+		Aggressive bool   `json:"aggressive,omitempty"`
+		CoreClock  string `json:"core_clock,omitempty"`
+		CoreState  string `json:"core_state,omitempty"`
+	} `json:"amd,omitempty"`
+	Tweakers struct { //TODO: Handle it
 		Amdmemtweak []struct {
 			Gpus   []int `json:"gpus,omitempty"`
 			Params struct {

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strings"
 	"time"
 )
 
@@ -71,11 +72,46 @@ func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner stri
 }
 
 func setHiveosOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName, farmOwner string) {
-	Overclock.Timestamp = WorkerHarvestTime
-	Overclock.WorkerName = workerName
-	Overclock.HiveOwner = farmOwner
-	esOverclockJson, _ := json.Marshal(Overclock)
-	es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
+	esOverclock := data.HiveosOverclock{}
+	esOverclock.Timestamp = WorkerHarvestTime
+	esOverclock.WorkerName = workerName
+	esOverclock.HiveOwner = farmOwner
+	if Overclock.Nvidia.FanSpeed != "" {
+		FanSpeed := strings.Split(Overclock.Nvidia.FanSpeed, " ")
+		MemClock := strings.Split(Overclock.Nvidia.MemClock, " ")
+		CoreClock := strings.Split(Overclock.Nvidia.CoreClock, " ")
+		PowerLimit := strings.Split(Overclock.Nvidia.PowerLimit, " ")
+		for i, _ := range FanSpeed {
+			esOverclock.Nvidia.FanSpeed = FanSpeed[i]
+			esOverclock.Nvidia.MemClock = MemClock[i]
+			esOverclock.Nvidia.CoreClock = CoreClock[i]
+			esOverclock.Nvidia.PowerLimit = PowerLimit[i]
+			esOverclockJson, _ := json.Marshal(esOverclock)
+			es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
+		}
+	}
+	if Overclock.Amd.FanSpeed != "" {
+		MemMvdd := strings.Split(Overclock.Amd.MemMvdd, " ")
+		CoreVddc := strings.Split(Overclock.Amd.CoreVddc, " ")
+		FanSpeed := strings.Split(Overclock.Amd.FanSpeed, " ")
+		MemClock := strings.Split(Overclock.Amd.MemClock, " ")
+		MemVddci := strings.Split(Overclock.Amd.MemVddci, " ")
+		CoreClock := strings.Split(Overclock.Amd.CoreClock, " ")
+		CoreState := strings.Split(Overclock.Amd.CoreState, " ")
+		esOverclock.Amd.Aggressive = Overclock.Amd.Aggressive
+		for i, _ := range FanSpeed {
+			esOverclock.Amd.MemMvdd = MemMvdd[i]
+			esOverclock.Amd.CoreVddc = CoreVddc[i]
+			esOverclock.Amd.FanSpeed = FanSpeed[i]
+			esOverclock.Amd.MemClock = MemClock[i]
+			esOverclock.Amd.MemVddci = MemVddci[i]
+			esOverclock.Amd.CoreClock = CoreClock[i]
+			esOverclock.Amd.CoreState = CoreState[i]
+			esOverclockJson, _ := json.Marshal(esOverclock)
+			es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
+		}
+	}
+
 }
 
 func GetHiveosWorkers(c *gin.Context) {

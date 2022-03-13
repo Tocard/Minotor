@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"time"
 )
 
@@ -71,13 +70,11 @@ func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner stri
 	}
 }
 
-func setHiveosOverclock(Overclocks data.Overclocks, WorkerHarvestTime, workerName, farmOwner string) {
-	log.Println("Marker")
-	log.Println(Overclocks)
-	Overclocks.Timestamp = WorkerHarvestTime
-	Overclocks.WorkerName = workerName
-	Overclocks.HiveOwner = farmOwner
-	esOverclockJson, _ := json.Marshal(Overclocks)
+func setHiveosOverclock(Overclock data.Overclock, WorkerHarvestTime, workerName, farmOwner string) {
+	Overclock.Timestamp = WorkerHarvestTime
+	Overclock.WorkerName = workerName
+	Overclock.HiveOwner = farmOwner
+	esOverclockJson, _ := json.Marshal(Overclock)
 	es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
 }
 
@@ -104,8 +101,8 @@ func GetHiveosWorkers(c *gin.Context) {
 			worker.GpuStats = data.GpuStats{}
 			setHiveosGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
 			worker.GpuSummary.Gpus = data.Gpus{}
-			setHiveosOverclock(worker.Overclocks, WorkerHarvestTime, worker.Name, farmOwner)
-			worker.Overclocks = data.Overclocks{}
+			setHiveosOverclock(worker.Overclock, WorkerHarvestTime, worker.Name, farmOwner)
+			worker.Overclock = data.Overclock{}
 			//TODO: delete flighshett from original data to avoid double insert
 			workerJson, _ := json.Marshal(worker)
 			es.Bulk("2miners-hiveos-worker", string(workerJson))

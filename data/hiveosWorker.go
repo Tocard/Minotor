@@ -16,27 +16,6 @@ type Overclocks struct {
 	Overclock `json:"amd,nvidia,omitempty"`
 }
 
-type Overclock struct {
-	Aggressive bool   `json:"aggressive,omitempty"`
-	LogoOff    bool   `json:"logo_off,omitempty"`
-	MemMvdd    string `json:"mem_mvdd,omitempty"`
-	CoreVddc   string `json:"core_vddc,omitempty"`
-	FanSpeed   string `json:"fan_speed,omitempty"`
-	MemClock   string `json:"mem_clock,omitempty"`
-	MemVddci   string `json:"mem_vddci,omitempty"`
-	CoreClock  string `json:"core_clock,omitempty"`
-	PowerLimit string `json:"power_limit,omitempty"`
-	CoreState  string `json:"core_state,omitempty"`
-	Tweakers   struct {
-		Amdmemtweak []struct {
-			Gpus   []int `json:"gpus,omitempty"`
-			Params struct {
-				Ref string `json:"ref,omitempty"`
-			} `json:"params,omitempty"`
-		} `json:"amdmemtweak,omitempty"`
-	} `json:"tweakers,omitempty"`
-}
-
 type FlightSheet struct {
 	ID     int    `json:"id"`
 	FarmID int    `json:"farm_id"`
@@ -126,6 +105,35 @@ type Gpus []struct {
 	Amount int    `json:"amount,omitempty"`
 }
 
+type Overclock struct {
+	HiveOsWorkerMinimal
+	Nvidia struct {
+		LogoOff    bool   `json:"logo_off,omitempty"`
+		FanSpeed   string `json:"fan_speed,omitempty"`
+		MemClock   string `json:"mem_clock,omitempty"`
+		CoreClock  string `json:"core_clock,omitempty"`
+		PowerLimit string `json:"power_limit,omitempty"`
+	} `json:"nvidia,omitempty"`
+	Amd struct {
+		MemMvdd    string `json:"mem_mvdd,omitempty"`
+		CoreVddc   string `json:"core_vddc,omitempty"`
+		FanSpeed   string `json:"fan_speed,omitempty"`
+		MemClock   string `json:"mem_clock,omitempty"`
+		MemVddci   string `json:"mem_vddci,omitempty"`
+		Aggressive bool   `json:"aggressive,omitempty"`
+		CoreClock  string `json:"core_clock,omitempty"`
+		CoreState  string `json:"core_state,omitempty"`
+	} `json:"amd,omitempty"`
+	Tweakers struct {
+		Amdmemtweak []struct {
+			Gpus   []int `json:"gpus,omitempty"`
+			Params struct {
+				Ref string `json:"ref,omitempty"`
+			} `json:"params,omitempty"`
+		} `json:"amdmemtweak,omitempty"`
+	} `json:"tweakers,omitempty"`
+}
+
 type Workers struct {
 	Data []struct {
 		EsMinimal
@@ -193,7 +201,7 @@ type Workers struct {
 		HasAmd        bool `json:"has_amd"`
 		HasNvidia     bool `json:"has_nvidia"`
 		FlightSheet   `json:"flight_sheet"`
-		Overclocks    `json:"overclock"`
+		Overclock     `json:"overclock"`
 		MinersSummary struct {
 			Hashrates []struct { //TODO: Parse it to harvest miner info
 				Miner string `json:"miner"`

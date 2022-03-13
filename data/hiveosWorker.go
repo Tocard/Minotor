@@ -1,13 +1,40 @@
 package data
 
 type HiveOsWorkerMinimal struct {
-	Timestamp  string `json:"@timestamp"`
-	HiveOwner  string `json:"hive_owner"`
-	WorkerName string `json:"worker_name"`
+	Timestamp  string `json:"@timestamp,omitempty"`
+	HiveOwner  string `json:"hive_owner,omitempty"`
+	WorkerName string `json:"worker_name,omitempty"`
+}
+
+type HiveosOsOverclocks struct {
+	HiveOsWorkerMinimal
+	Overclock `json:"amd,nvidia,omitempty"`
 }
 
 type Overclocks struct {
-	Overclock `json:"amd,nvidia"`
+	HiveOsWorkerMinimal
+	Overclock `json:"amd,nvidia,omitempty"`
+}
+
+type Overclock struct {
+	Aggressive bool   `json:"aggressive,omitempty"`
+	LogoOff    bool   `json:"logo_off,omitempty"`
+	MemMvdd    string `json:"mem_mvdd,omitempty"`
+	CoreVddc   string `json:"core_vddc,omitempty"`
+	FanSpeed   string `json:"fan_speed,omitempty"`
+	MemClock   string `json:"mem_clock,omitempty"`
+	MemVddci   string `json:"mem_vddci,omitempty"`
+	CoreClock  string `json:"core_clock,omitempty"`
+	PowerLimit string `json:"power_limit,omitempty"`
+	CoreState  string `json:"core_state,omitempty"`
+	Tweakers   struct {
+		Amdmemtweak []struct {
+			Gpus   []int `json:"gpus,omitempty"`
+			Params struct {
+				Ref string `json:"ref,omitempty"`
+			} `json:"params,omitempty"`
+		} `json:"amdmemtweak,omitempty"`
+	} `json:"tweakers,omitempty"`
 }
 
 type FlightSheet struct {
@@ -86,6 +113,17 @@ type GpuInfo []struct {
 		Subvendor string `json:"subvendor,omitempty"`
 		Oem       string `json:"oem,omitempty"`
 	} `json:"details,omitempty"`
+}
+
+type HiveoOsGpus struct {
+	HiveOsWorkerMinimal
+	Name   string `json:"name"`
+	Amount int    `json:"amount"`
+}
+
+type Gpus []struct {
+	Name   string `json:"name,omitempty"`
+	Amount int    `json:"amount,omitempty"`
 }
 
 type Workers struct {
@@ -182,7 +220,7 @@ type Workers struct {
 				Fans       []int     `json:"fans,omitempty"`
 				BusNumbers []int     `json:"bus_numbers,omitempty"`
 			} `json:"hashrates"`
-		} `json:"miners_stats"`
+		} `json:"miners_stats"` //TODO: Parse it to harvest hashrate stats
 		Watchdog struct {
 			Enabled         bool   `json:"enabled"`
 			RestartTimeout  int    `json:"restart_timeout"`
@@ -201,11 +239,8 @@ type Workers struct {
 				} `json:"by_algo"`
 			} `json:"options"`
 		} `json:"watchdog,omitempty"`
-		GpuSummary struct { //TODO: Parse it to harvest gpu
-			Gpus []struct {
-				Name   string `json:"name"`
-				Amount int    `json:"amount"`
-			} `json:"gpus"`
+		GpuSummary struct {
+			Gpus    `json:"gpus"`
 			MaxTemp int `json:"max_temp"`
 			MaxFan  int `json:"max_fan"`
 		} `json:"gpu_summary"`

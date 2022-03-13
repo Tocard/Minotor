@@ -51,11 +51,32 @@ func setHiveosWorkerUnit(GpuStats data.GpuStats, GpuInfo data.GpuInfo, WorkerHar
 				HiveosWorkerGpu.ShortName = TmpGpuInfo.ShortName
 				HiveosWorkerGpu.Details = TmpGpuInfo.Details
 				esHiveosWorkerGpuJson, _ := json.Marshal(HiveosWorkerGpu)
-				es.Bulk("2miners-hiveos-worker-gpu", string(esHiveosWorkerGpuJson))
+				es.Bulk("2miners-hiveos-worker-gpu-info", string(esHiveosWorkerGpuJson))
 				break
 			}
 		}
 	}
+}
+
+func setHiveosGpus(Gpus data.Gpus, WorkerHarvestTime, workerName, farmOwner string) {
+	for _, Gpu := range Gpus {
+		esGpu := data.HiveoOsGpus{}
+		esGpu.Timestamp = WorkerHarvestTime
+		esGpu.HiveOwner = farmOwner
+		esGpu.Name = Gpu.Name
+		esGpu.Amount = Gpu.Amount
+		esGpu.WorkerName = workerName
+		esGpuJson, _ := json.Marshal(esGpu)
+		es.Bulk("2miners-hiveos-gpu", string(esGpuJson))
+	}
+}
+
+func setHiveosOverclock(Overclocks data.Overclocks, WorkerHarvestTime, workerName, farmOwner string) {
+	Overclocks.Timestamp = WorkerHarvestTime
+	Overclocks.WorkerName = workerName
+	Overclocks.HiveOwner = farmOwner
+	esOverclockJson, _ := json.Marshal(Overclocks)
+	es.Bulk("2miners-hiveos-gpu-overclock", string(esOverclockJson))
 }
 
 func GetHiveosWorkers(c *gin.Context) {
@@ -78,6 +99,10 @@ func GetHiveosWorkers(c *gin.Context) {
 			setHiveosWorkerUnit(worker.GpuStats, worker.GpuInfo, WorkerHarvestTime, worker.Name, farmOwner)
 			worker.GpuInfo = data.GpuInfo{}
 			worker.GpuStats = data.GpuStats{}
+			setHiveosGpus(worker.GpuSummary.Gpus, WorkerHarvestTime, worker.Name, farmOwner)
+			worker.GpuSummary.Gpus = data.Gpus{}
+			setHiveosOverclock(worker.Overclocks, WorkerHarvestTime, worker.Name, farmOwner)
+			worker.Overclocks = data.Overclocks{}
 			//TODO: delete flighshett from original data to avoid double insert
 			workerJson, _ := json.Marshal(worker)
 			log.Printf(string(workerJson))

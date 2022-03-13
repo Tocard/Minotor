@@ -149,27 +149,6 @@ type Farm struct {
 	Tags []interface{} `json:"tags"`
 }
 
-type Overclock struct {
-	Aggressive bool   `json:"aggressive"`
-	LogoOff    bool   `json:"logo_off"`
-	MemMvdd    string `json:"mem_mvdd"`
-	CoreVddc   string `json:"core_vddc"`
-	FanSpeed   string `json:"fan_speed"`
-	MemClock   string `json:"mem_clock"`
-	MemVddci   string `json:"mem_vddci"`
-	CoreClock  string `json:"core_clock"`
-	PowerLimit string `json:"power_limit"`
-	CoreState  string `json:"core_state"`
-	Tweakers   struct {
-		Amdmemtweak []struct {
-			Gpus   []int `json:"gpus"`
-			Params struct {
-				Ref string `json:"ref"`
-			} `json:"params"`
-		} `json:"amdmemtweak"`
-	} `json:"tweakers"`
-}
-
 func InitHiveosControl() {
 	HiveosTmpControl := HiveosControl{}
 	HiveOsController = &HiveosTmpControl

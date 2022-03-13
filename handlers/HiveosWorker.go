@@ -84,7 +84,7 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 		PowerLimit := strings.Split(Overclock.Nvidia.PowerLimit, " ")
 		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
 			k := i
-			if len(CoreClock) < i {
+			if i + 1 > len(CoreClock) {
 				k = 0
 			}
 			esOverclock.Nvidia.MemClock, _ = strconv.Atoi(MemClock[k])
@@ -92,8 +92,8 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 			esOverclock.Nvidia.PowerLimit, _ = strconv.Atoi(PowerLimit[k])
 			esOverclock.Nvidia.FanSpeed, _ = strconv.Atoi(FanSpeed[i])
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
-			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
-			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
+			EsCardInfoJson, _ := json.Marshal(CardControlIndex.GPU[i])
+			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCardInfoJson))
 		}
 	}
 	if Overclock.Amd.FanSpeed != "" {
@@ -107,7 +107,7 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 		esOverclock.Amd.Aggressive = Overclock.Amd.Aggressive
 		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
 			k := i
-			if len(CoreClock) < i {
+			if i + 1 > len(CoreClock) {
 				k = 0
 			}
 			esOverclock.Amd.MemMvdd, _ = strconv.Atoi(MemMvdd[k])
@@ -118,8 +118,8 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 			esOverclock.Amd.CoreState, _ = strconv.Atoi(CoreState[k])
 			esOverclock.Amd.FanSpeed, _ = strconv.Atoi(FanSpeed[i])
 			CardControlIndex.GPU[i].HiveosOverclock = esOverclock
-			EsCarInfoJson, _ := json.Marshal(CardControlIndex.GPU[i].HiveosOverclock)
-			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCarInfoJson))
+			EsCardInfoJson, _ := json.Marshal(CardControlIndex.GPU[i])
+			es.Bulk("2miners-hiveos-gpu-total-info", string(EsCardInfoJson))
 		}
 	}
 

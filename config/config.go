@@ -17,24 +17,13 @@ type WalletToWatch struct {
 type Config struct {
 	ElasticsearchUser     string   `yaml:"elasticsearch_user"`
 	ElasticsearchPassword string   `yaml:"elasticsearch_password"`
-	ElasticsearchHosts    []string `yaml:"elasticsearch_hosts"`
-	ElasticsearchPort     int      `yaml:"elasticsearch_port"`
 	APITokenEtherscan     string   `yaml:"api_token_etherscan"`
 	LogLevel              string   `yaml:"log_level"`
 	CaPath                string   `yaml:"ca_path"`
 	TwoMinersURL          string   `yaml:"2miners_url"`
 	RedisHost             string   `yaml:"redis_host"`
-	RedisPort             int      `yaml:"redis_port"`
 	RedisPassword         string   `yaml:"redis_password"`
-	RedisShortLifetime    int      `yaml:"redis_short_lifetime"`
-	RedisMidLifetime      int      `yaml:"redis_mid_lifetime"`
-	RedisLongLifetime     int      `yaml:"redis_long_lifetime"`
-	Factor                float64  `yaml:"factor"`
-	EthFactor             float64  `yaml:"ether_factor"`
-	GazFactor             float64  `yaml:"gaz_factor"`
 	MinerListing          string   `yaml:"miner_listing"`
-	APIPort               int      `yaml:"api_port"`
-	APIFrontPort          int      `yaml:"api_front_port"`
 	APILogFile            string   `yaml:"api_log_file"`
 	APIUsername           string   `yaml:"api_username"`
 	APIPassword           string   `yaml:"api_password"`
@@ -42,11 +31,22 @@ type Config struct {
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
 	CardsConfigFile       string   `yaml:"cards_config_file"`
-	CoinList              []string `yaml:"coin_list"`
 	HiveosUrl             string   `yaml:"hiveos_api_url"`
 	MinotorHiveOsUser     string   `yaml:"hiveos_minotor_user"`
 	MinotorHiveOsPass     string   `yaml:"hiveos_minotor_password"`
 	MinotorHiveosToken    string   `yaml:"hiveos_minotor_token"`
+	CoinList              []string `yaml:"coin_list"`
+	ElasticsearchHosts    []string `yaml:"elasticsearch_hosts"`
+	ElasticsearchPort     int      `yaml:"elasticsearch_port"`
+	RedisPort             int      `yaml:"redis_port"`
+	RedisShortLifetime    int      `yaml:"redis_short_lifetime"`
+	RedisMidLifetime      int      `yaml:"redis_mid_lifetime"`
+	RedisLongLifetime     int      `yaml:"redis_long_lifetime"`
+	APIPort               int      `yaml:"api_port"`
+	APIFrontPort          int      `yaml:"api_front_port"`
+	Factor                float64  `yaml:"factor"`
+	EthFactor             float64  `yaml:"ether_factor"`
+	GazFactor             float64  `yaml:"gaz_factor"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

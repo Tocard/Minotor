@@ -128,6 +128,40 @@ func Bulk(index, data string) {
 
 }
 
+func EsSearch() *esapi.Response {
+	body := `{
+  "query": {
+    "exists":{ 
+      "field":"id"
+      }
+  },
+  "aggs": {
+    "by_id": {
+      "terms": {
+        "field": "id"
+        , "size": 1
+      }
+    }
+  }
+}`
+	indx := []string{"2miners-hiveos-farm"}
+	req := esapi.SearchRequest{
+		Index:   indx,
+		Body:    strings.NewReader(body),
+		Size:    esapi.IntPtr(25),
+		Pretty:  true,
+		Timeout: 100,
+	}
+	Esdata, err := req.Do(context.Background(), client)
+	if err != nil {
+		log.Fatalf("Unexpected error when getting a response: %s", err)
+	} else {
+		log.Printf("%s", Esdata)
+		return Esdata
+	}
+	return nil
+}
+
 //func Bulk(index, bulkData string) {
 //	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
 //		Client:     client,

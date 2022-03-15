@@ -106,7 +106,7 @@ func GetHiveosFarm() {
 	fmt.Println(resp)
 }
 
-func GetHiveosWorker() {
+func GetHiveosWorkers() {
 	url := fmt.Sprintf("%s:%d/hiveos/workers", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)

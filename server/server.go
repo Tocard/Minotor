@@ -61,8 +61,6 @@ func engine() *gin.Engine {
 	}
 	FluxServer := server.Group("/flux")
 	{
-		FluxServer.GET("/nodes_data", routes.HarvestNodesInfo)
-		FluxServer.GET("/blocs_data", routes.HarvestBlocksInfo)
 		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
 	}
 

@@ -1,4 +1,4 @@
-package handlers
+package routes
 
 import (
 	"2miner-monitoring/config"
@@ -52,7 +52,7 @@ func GetLastTransaction(c *gin.Context) {
 			tx.Result[resultKey].Timestamp = time.Unix(int64(ts), 0).Format(time.RFC3339)
 			txRawJson, _ := json.Marshal(tx.Result[resultKey])
 			es.Bulk("2miners-tx", string(txRawJson))
-				}
+		}
 	}
 	c.String(200, "OK")
 

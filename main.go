@@ -7,6 +7,7 @@ import (
 	"2miner-monitoring/engine"
 	"2miner-monitoring/redis"
 	"2miner-monitoring/server"
+	"2miner-monitoring/utils"
 	"github.com/go-co-op/gocron"
 	"time"
 )
@@ -16,6 +17,7 @@ func main() {
 	config.LoadYamlConfig(cliFilled.FilePathConfig)
 	config.LoadCardYamlConfig()
 	data.InitHiveosControl()
+	utils.CreateNodes()
 	//log2miner.InitLogger("2miner.log2miner")
 	redis.InitRedis()
 	go func() {
@@ -24,6 +26,7 @@ func main() {
 		s.Every(1).Hours().Do(engine.HarvestMiners)
 		s.Every(1).Hours().Do(engine.HarvestFactory, "rewards")
 
+		s.Every(10).Minutes().Do(engine.FluxNodeRentability)
 		s.Every(10).Minutes().Do(engine.HarvestBalance)
 		s.Every(10).Minutes().Do(engine.HarvestPoolStat)
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "stats")

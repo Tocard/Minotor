@@ -3,7 +3,7 @@ package server
 import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/es"
-	"2miner-monitoring/handlers"
+	"2miner-monitoring/routes"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -29,37 +29,42 @@ func engine() *gin.Engine {
 		)
 	}))
 	server.Use(gin.Recovery())
-	server.GET("/miners", handlers.GetAllMiner)
-	server.GET("/health", handlers.Health)
+	server.GET("/miners", routes.GetAllMiner)
+	server.GET("/health", routes.Health)
 
 	serverMiner := server.Group("/harvest")
 	{
-		serverMiner.GET("/payments/:wallet", handlers.ExtractPaymentInfo)
-		serverMiner.GET("/rewards/:wallet", handlers.ExtractRewardInfo)
-		serverMiner.GET("/workers/:wallet", handlers.ExtractWorkerInfo)
-		serverMiner.GET("/data/:wallet", handlers.ExtractSimpleField)
-		serverMiner.GET("/stats/:wallet", handlers.ExtractStatInfo)
-		serverMiner.GET("/sumrewards/:wallet", handlers.ExtractSumrewardsInfo)
+		serverMiner.GET("/payments/:wallet", routes.ExtractPaymentInfo)
+		serverMiner.GET("/rewards/:wallet", routes.ExtractRewardInfo)
+		serverMiner.GET("/workers/:wallet", routes.ExtractWorkerInfo)
+		serverMiner.GET("/data/:wallet", routes.ExtractSimpleField)
+		serverMiner.GET("/stats/:wallet", routes.ExtractStatInfo)
+		serverMiner.GET("/sumrewards/:wallet", routes.ExtractSumrewardsInfo)
 	}
-	server.GET("/balances", handlers.GetWalletsBalance)
-	server.GET("/subscribe/:wallet", handlers.SuscribeWallet)
-	server.GET("/unsubscribe/:wallet", handlers.UnSuscribeWallet)
-	server.GET("/coins/price", handlers.GetCoinsPrice)
-	server.GET("/stats", handlers.ExtractPoolStatInfo)
-	server.GET("/transactions", handlers.GetLastTransaction)
+	server.GET("/balances", routes.GetWalletsBalance)
+	server.GET("/subscribe/:wallet", routes.SuscribeWallet)
+	server.GET("/unsubscribe/:wallet", routes.UnSuscribeWallet)
+	server.GET("/coins/price", routes.GetCoinsPrice)
+	server.GET("/stats", routes.ExtractPoolStatInfo)
+	server.GET("/transactions", routes.GetLastTransaction)
 	serverETH := server.Group("/ETH")
 	{
-		serverETH.GET("/lastblock", handlers.GetLastBlock)
+		serverETH.GET("/lastblock", routes.GetLastBlock)
 	}
 	hiveosServer := server.Group("/hiveos")
 	{
-		hiveosServer.GET("/refresh_auth", handlers.HiveosRefreshToken)
-		hiveosServer.GET("/farms", handlers.GetHiveosFarm)
-		hiveosServer.GET("/test", handlers.GetTest)
-		hiveosServer.GET("/workers", handlers.GetHiveosWorkers)
-		hiveosServer.GET("/worker/:worker", handlers.GetHiveosWorker)
+		hiveosServer.GET("/refresh_auth", routes.HiveosRefreshToken)
+		hiveosServer.GET("/farms", routes.GetHiveosFarm)
+		hiveosServer.GET("/test", routes.GetTest)
+		hiveosServer.GET("/workers", routes.GetHiveosWorkers)
+		hiveosServer.GET("/worker/:worker", routes.GetHiveosWorker)
 	}
-	server.GET("/hashrateNo", handlers.ScrapHashrateNo)
+	FluxServer := server.Group("/flux")
+	{
+		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
+	}
+
+	server.GET("/hashrateNo", routes.ScrapHashrateNo)
 	return server
 }
 

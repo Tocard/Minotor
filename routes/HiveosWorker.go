@@ -1,4 +1,4 @@
-package handlers
+package routes
 
 import (
 	"2miner-monitoring/data"
@@ -84,7 +84,7 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 		PowerLimit := strings.Split(Overclock.Nvidia.PowerLimit, " ")
 		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
 			k := i
-			if i + 1 > len(CoreClock) {
+			if i+1 > len(CoreClock) {
 				k = 0
 			}
 			esOverclock.Nvidia.MemClock, _ = strconv.Atoi(MemClock[k])
@@ -107,7 +107,7 @@ func setHiveosWorkerOverclock(Overclock data.Overclock, CardControlIndex *data.H
 		esOverclock.Amd.Aggressive = Overclock.Amd.Aggressive
 		for i, _ := range FanSpeed { //Some value exepct Fan speed seems to be packed sometimes...
 			k := i
-			if i + 1 > len(CoreClock) {
+			if i+1 > len(CoreClock) {
 				k = 0
 			}
 			esOverclock.Amd.MemMvdd, _ = strconv.Atoi(MemMvdd[k])

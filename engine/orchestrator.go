@@ -123,3 +123,12 @@ func ScrapHashrateNo() {
 
 	fmt.Println(resp)
 }
+
+func FluxNodeRentability() {
+	url := fmt.Sprintf("%s:%d/flux/calcul_nodes_rentability", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

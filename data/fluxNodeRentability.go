@@ -4,12 +4,12 @@ import (
 	"2miner-monitoring/es"
 	"encoding/json"
 	"time"
-
 )
 
 type Rentability struct {
-	Timestamp string `json:"@timestamp"`
+	Timestamp                 string `json:"@timestamp"`
 	NodesDefault              `json:"nodes_default"`
+	FluxNodeNumber            float64 `json:"flux_node_number,omitempty"`
 	FluxReward                float64 `json:"flux_reward,omitempty"`
 	FluxInstantPaReward       float64 `json:"flux_instant_pa_reward,omitempty"`
 	FluxLaterPaReward         float64 `json:"flux_later_pa_reward,omitempty"`
@@ -58,6 +58,7 @@ func CalCulRentability(nodes Nodes, stats FluxBlocsStats) (int, string) {
 	for _, NodeList := range NodesList {
 		RentabilityNode := Rentability{}
 		RentabilityNode.NodesDefault = NodeList
+		RentabilityNode.FluxNodeNumber = getNodeCount(NodeList, nodes)
 		RentabilityNode.FluxReward = FluxRewardPerBlock * NodeList.Reward / 100
 		RentabilityNode.FluxInstantPaReward = FluxRewardPerBlock * NodeList.Reward / 100 / 2
 		RentabilityNode.FluxLaterPaReward = RentabilityNode.FluxInstantPaReward
@@ -89,7 +90,6 @@ func CalCulRentability(nodes Nodes, stats FluxBlocsStats) (int, string) {
 		RentabilityNode.FluxLaterPaReward365Day = RentabilityNode.FluxLaterPaReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes
 		RentabilityNode.FluxTotalReward365Day = RentabilityNode.FluxLaterPaReward365Day + RentabilityNode.FluxReward365Day + RentabilityNode.FluxInstantPaReward365Day
 		RentabilityNode.Timestamp = time.Now().Format(time.RFC3339)
-
 
 		RentabilityNodeJson, err := json.Marshal(RentabilityNode)
 		if err != nil {

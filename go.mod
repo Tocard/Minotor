@@ -1,6 +1,6 @@
 module 2miner-monitoring
 
-go 1.17
+go 1.18
 
 require (
 	github.com/elastic/elastic-transport-go/v8 v8.0.0-alpha
@@ -11,6 +11,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/gofrs/flock v0.8.1
 	github.com/nanmu42/etherscan-api v1.6.0
+	github.com/olivere/elastic/v7 v7.0.32
 	github.com/superoo7/go-gecko v1.0.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
@@ -27,16 +28,19 @@ require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect

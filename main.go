@@ -34,6 +34,7 @@ func main() {
 		s.Every(10).Minutes().Do(engine.HarvestFactory, "sumrewards")
 
 		s.Every(5).Minutes().Do(engine.GetLastEthTx)
+		s.Every(5).Minutes().Do(engine.FluxNodesOverview)
 
 		s.Every(1).Minutes().Do(engine.GetHiveosFarm)
 		s.Every(1).Minutes().Do(engine.GetHiveosWorkers)

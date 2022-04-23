@@ -62,6 +62,7 @@ func engine() *gin.Engine {
 	FluxServer := server.Group("/flux")
 	{
 		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
+		FluxServer.GET("/flux_nodes_overview", routes.GetNodesOverwiew)
 	}
 
 	server.GET("/hashrateNo", routes.ScrapHashrateNo)
@@ -70,6 +71,7 @@ func engine() *gin.Engine {
 
 func GoGinServer() {
 	es.Connection()
+	//es.CreatebulkIndexer()
 	server := engine()
 	server.Use(gin.Logger())
 	if err := engine().Run(":" + fmt.Sprint(config.Cfg.APIPort)); err != nil {

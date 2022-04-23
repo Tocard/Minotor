@@ -132,3 +132,12 @@ func FluxNodeRentability() {
 
 	fmt.Println(resp)
 }
+
+func FluxNodesOverview() {
+	url := fmt.Sprintf("%s:%d/flux/flux_nodes_overview", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

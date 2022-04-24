@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func DualType(e *colly.HTMLElement) {
+func DualType(e *colly.HTMLElement) []byte {
 	var dual = regexp.MustCompile(`([a-zA-Z]{0,}?\+[a-zA-Z]{0,})([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/s)([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/s)([0-9]{0,})w([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,})([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/w)([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/w)\$([0-9]{0,}?\.[0-9]{0,})\$([0-9]{0,}?\.[0-9]{0,}) ([0-9]{0,}) ([a-zA-Z]{0,})([0-9]{0,}) ([a-zA-Z]{0,})`)
 	if dual.MatchString(e.Text) {
 		DualCrawled := data.Card{}
@@ -32,11 +32,12 @@ func DualType(e *colly.HTMLElement) {
 		DualCrawled.Card = e.Request.URL.Path[1:]
 		DualCrawled.Timestamp = time.Now().Format(time.RFC3339)
 		JsonDualCrawled, _ := json.Marshal(DualCrawled)
-		es.Bulk("2miners-hashrate_no", string(JsonDualCrawled))
+		return JsonDualCrawled
 	}
+	return nil
 }
 
-func Singletype(e *colly.HTMLElement) {
+func Singletype(e *colly.HTMLElement) []byte {
 	var single = regexp.MustCompile(`([a-zA-Z]{0,})([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/s)([0-9]{0,})w([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,})([0-9]{0,}?\.[0-9]{0,}) ([a-zA-Z]{0,}\/w)\$([0-9]{0,}?\.[0-9]{0,})\$([0-9]{0,}?\.[0-9]{0,}) ([0-9]{0,}) ([a-zA-Z]{0,})([0-9]{0,}) ([a-zA-Z]{0,})`)
 	if single.MatchString(e.Text) {
 		SingleCrawled := data.Card{}
@@ -50,16 +51,21 @@ func Singletype(e *colly.HTMLElement) {
 		SingleCrawled.Card = e.Request.URL.Path[1:]
 		SingleCrawled.Timestamp = time.Now().Format(time.RFC3339)
 		JsonSingleCrawled, _ := json.Marshal(SingleCrawled)
-		es.Bulk("2miners-hashrate_no", string(JsonSingleCrawled))
+		return JsonSingleCrawled
 	}
+	return nil
 }
 
-func DispatchType(e *colly.HTMLElement) {
-	DualType(e)
-	Singletype(e)
+func DispatchType(e *colly.HTMLElement) []byte {
+	res := DualType(e)
+	if res == nil {
+		res = Singletype(e)
+	}
+	return res
 }
 
 func RunCrawler() (int, string) {
+	var CardsInfo [][]byte
 	c := colly.NewCollector(
 		colly.AllowedDomains("www.hashrate.no", "hashrate.no"),
 	)
@@ -67,7 +73,10 @@ func RunCrawler() (int, string) {
 		log.Println("Houston nous avons un problème : ", err)
 	})
 	c.OnHTML("tr", func(e *colly.HTMLElement) {
-		DispatchType(e)
+		cardInfo := DispatchType(e)
+		if cardInfo != nil {
+			CardsInfo = append(CardsInfo, cardInfo)
+		}
 	})
 	c.OnRequest(func(r *colly.Request) {
 		log.Printf("harvesting : %s", r.URL.String())
@@ -79,5 +88,6 @@ func RunCrawler() (int, string) {
 		url := fmt.Sprintf("https://www.hashrate.no/%s", elem)
 		c.Visit(url)
 	}
+	es.BulkData("2miners-hashrate_no", CardsInfo)
 	return 200, "Card Stats harvested"
 }

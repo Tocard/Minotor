@@ -22,7 +22,6 @@ func main() {
 	//log2miner.InitLogger("2miner.log2miner")
 	redis.InitRedis()
 	es.Connection()
-	es.CreatebulkIndexer()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		// cron expressions supported

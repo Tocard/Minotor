@@ -9,6 +9,7 @@ import (
 )
 
 func BulkData(indexName string, DataToShip [][]byte) {
+	CreateIndexer(indexName)
 	var (
 		countSuccessful uint64
 	)

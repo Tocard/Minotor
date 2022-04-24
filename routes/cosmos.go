@@ -36,11 +36,11 @@ func GetCosmosMarket(c *gin.Context) {
 	Now := time.Now().Format(time.RFC3339)
 
 	Body := thirdapp.GetCoinsMarket()
-	err := json.Unmarshal(Body, &GeckoAdvanceCoins)
-	if err != nil {
-		c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err))
-		return
-	}
+	json.Unmarshal(Body, &GeckoAdvanceCoins)
+	//	if err != nil { #TODO: understand why this error is triggered
+	//	c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err.Error()))
+	//	return
+	//}
 	for _, CosmosToken := range GeckoAdvanceCoins {
 		CosmosToken.Timestamp = Now
 		CosmosTokenJson, _ := json.Marshal(CosmosToken)

@@ -42,7 +42,7 @@ func GetCoinsMarket() []byte {
 	ids := []string{"terra-luna", "cosmos"}
 	perPage := 10
 	page := 1
-	sparkline := true
+	sparkline := false
 	pcp := geckoTypes.PriceChangePercentageObject
 	priceChangePercentage := []string{pcp.PCP1h, pcp.PCP24h, pcp.PCP7d, pcp.PCP14d, pcp.PCP30d, pcp.PCP200d, pcp.PCP1y}
 	order := geckoTypes.OrderTypeObject.MarketCapDesc

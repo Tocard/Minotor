@@ -2,7 +2,6 @@ package server
 
 import (
 	"2miner-monitoring/config"
-	"2miner-monitoring/es"
 	"2miner-monitoring/routes"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -64,14 +63,16 @@ func engine() *gin.Engine {
 		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
 		FluxServer.GET("/flux_nodes_overview", routes.GetNodesOverwiew)
 	}
+	CosmosServer := server.Group("/cosmos/get_tokens", routes.GetCosmosTokens)
+	{
+		CosmosServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
+	}
 
 	server.GET("/hashrateNo", routes.ScrapHashrateNo)
 	return server
 }
 
 func GoGinServer() {
-	es.Connection()
-	//es.CreatebulkIndexer()
 	server := engine()
 	server.Use(gin.Logger())
 	if err := engine().Run(":" + fmt.Sprint(config.Cfg.APIPort)); err != nil {

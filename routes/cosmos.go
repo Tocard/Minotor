@@ -29,3 +29,23 @@ func GetCosmosTokens(c *gin.Context) {
 	es.BulkData("minotor-cosmos-token", CosmosTokensByte)
 	c.String(code, string(Body))
 }
+
+func GetCosmosMarket(c *gin.Context) {
+	var GeckoAdvanceCoinsByte [][]byte
+	GeckoAdvanceCoins := data.GeckoAdvanceCoins{}
+	Now := time.Now().Format(time.RFC3339)
+
+	Body := thirdapp.GetCoinsMarket()
+	err := json.Unmarshal(Body, &GeckoAdvanceCoins)
+	if err != nil {
+		c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err))
+		return
+	}
+	for _, CosmosToken := range GeckoAdvanceCoins {
+		CosmosToken.Timestamp = Now
+		CosmosTokenJson, _ := json.Marshal(CosmosToken)
+		GeckoAdvanceCoinsByte = append(GeckoAdvanceCoinsByte, CosmosTokenJson)
+	}
+	es.BulkData("minotor-cosmos-market", GeckoAdvanceCoinsByte)
+	c.String(200, string(Body))
+}

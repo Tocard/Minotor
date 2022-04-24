@@ -66,6 +66,8 @@ func engine() *gin.Engine {
 	CosmosServer := server.Group("/cosmos")
 	{
 		CosmosServer.GET("/get_tokens", routes.GetCosmosTokens)
+		CosmosServer.GET("/get_market", routes.GetCosmosMarket)
+
 	}
 
 	server.GET("/hashrateNo", routes.ScrapHashrateNo)

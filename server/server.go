@@ -63,9 +63,9 @@ func engine() *gin.Engine {
 		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
 		FluxServer.GET("/flux_nodes_overview", routes.GetNodesOverwiew)
 	}
-	CosmosServer := server.Group("/cosmos/get_tokens", routes.GetCosmosTokens)
+	CosmosServer := server.Group("/cosmos")
 	{
-		CosmosServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
+		CosmosServer.GET("/get_tokens", routes.GetCosmosTokens)
 	}
 
 	server.GET("/hashrateNo", routes.ScrapHashrateNo)

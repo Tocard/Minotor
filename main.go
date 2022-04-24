@@ -37,8 +37,8 @@ func main() {
 
 		s.Every(5).Minutes().Do(engine.GetLastEthTx)
 		s.Every(5).Minutes().Do(engine.FluxNodesOverview)
-		s.Every(5).Minutes().Do(engine.GetCosmosTokens)
 
+		s.Every(1).Minutes().Do(engine.GetCosmosTokens)
 		s.Every(1).Minutes().Do(engine.GetHiveosFarm)
 		s.Every(1).Minutes().Do(engine.GetHiveosWorkers)
 		s.Every(1).Minutes().Do(engine.GetLastEthBlock)

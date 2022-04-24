@@ -13,7 +13,7 @@ func AddIemIndexer(bi esutil.BulkIndexer, data []byte, countSuccessful *uint64) 
 	err := bi.Add(
 		context.Background(),
 		esutil.BulkIndexerItem{
-			Action: "index",
+			Action: "create",
 			Body:   bytes.NewReader(data),
 
 			// OnSuccess is called for each successful operation

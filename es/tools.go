@@ -1,60 +1,13 @@
 package es
 
 import (
-	"2miner-monitoring/config"
 	"context"
 	"fmt"
-	"github.com/elastic/elastic-transport-go/v8/elastictransport"
-	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
-	"io/ioutil"
 	"log"
-	"os"
 	"strings"
-	"time"
 )
-
-var (
-	client   *elasticsearch.Client
-	Indexers = make(map[string]esutil.BulkIndexer, 20)
-)
-
-func Connection() {
-	cert, err := ioutil.ReadFile(config.Cfg.CaPath)
-	if err != nil {
-		log.Fatalf("ERROR: Unable to read CA from %q: %s", config.Cfg.CaPath, err)
-	}
-	client, err = elasticsearch.NewClient(elasticsearch.Config{
-		Addresses:     config.Cfg.ElasticsearchHosts,
-		Username:      config.Cfg.ElasticsearchUser,
-		Password:      config.Cfg.ElasticsearchPassword,
-		CACert:        cert,
-		Logger:        &elastictransport.TextLogger{Output: os.Stdout},
-		RetryOnStatus: []int{502, 503, 504, 429},
-		RetryBackoff:  func(i int) time.Duration { return time.Duration(i) * 100 * time.Millisecond },
-		MaxRetries:    5,
-	})
-
-	if err != nil {
-		log.Fatalf("ERROR: Unable to create client: %s", err)
-	}
-
-	res, err := client.Info()
-	if err != nil {
-		log.Fatalf("ERROR: Unable to get response: %s", err)
-	}
-
-	log.Println(res)
-}
-
-func Health() {
-	res, err := client.Info()
-	if err != nil {
-		log.Fatalf("ERROR: Unable to get response: %s", err)
-	}
-	log.Println(res)
-}
 
 //func Write(index string) {
 //	for i := range []string{"Test One", "Test Two"} {
@@ -104,7 +57,7 @@ func Health() {
 
 func Bulk(index, data string) {
 	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
-		Client:        client,
+		Client:        EsClient,
 		Index:         index,
 		NumWorkers:    4,
 		FlushBytes:    10000000,
@@ -191,7 +144,7 @@ func EsSearch() *esapi.Response {
 		Pretty:  true,
 		Timeout: 100,
 	}
-	Esdata, err := req.Do(context.Background(), client)
+	Esdata, err := req.Do(context.Background(), EsClient)
 	if err != nil {
 		log.Fatalf("Unexpected error when getting a response: %s", err)
 	} else {
@@ -202,18 +155,19 @@ func EsSearch() *esapi.Response {
 }
 
 func CreatebulkIndexer() {
-	Indexs := []string{"2miners-flux-node", "2miners-balance", "2miners-tx", "flux-node-overview", "2miners-coins",
+	/*	Indexs := []string{"2miners-flux-node", "2miners-balance", "2miners-tx", "flux-node-overview", "2miners-coins",
 		"2miners-hiveos-hashrate-coin", "2miners-hiveos-hashrate", "2miners-hiveos-farm", "2miners-hiveos-flightsheet",
 		"2miners-hiveos-gpu", "2miners-hiveos-gpu-total-info", "2miners-hiveos-worker", "2miners-worker",
 		"2miners-data", "2miners-sumreward", "2miners-reward", "2miners-payment", "2miners-stat", "2miners-poolstat",
-		"2miners-hashrate_no"}
+		"2miners-hashrate_no"}*/
 
+	Indexs := []string{"minotor-cosmos-token", "flux-node-overview"}
 	for _, index := range Indexs {
 		bulkindexer, err := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
-			Client:        client, // The Elasticsearch client
-			Index:         index,  // The default index name
-			NumWorkers:    4,      // The number of worker goroutines (default: number of CPUs)
-			FlushBytes:    5e+6,   // The flush threshold in bytes (default: 5M)
+			Client:        EsClient, // The Elasticsearch client
+			Index:         index,    // The default index name
+			NumWorkers:    4,        // The number of worker goroutines (default: number of CPUs)
+			FlushBytes:    5e+6,     // The flush threshold in bytes (default: 5M)
 			FlushInterval: 60,
 		})
 		if err != nil {

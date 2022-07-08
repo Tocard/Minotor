@@ -5,6 +5,7 @@ import (
 	"2miner-monitoring/config"
 	"2miner-monitoring/data"
 	"2miner-monitoring/engine"
+	"2miner-monitoring/es"
 	"2miner-monitoring/redis"
 	"2miner-monitoring/server"
 	"2miner-monitoring/utils"
@@ -20,6 +21,7 @@ func main() {
 	utils.CreateNodes()
 	//log2miner.InitLogger("2miner.log2miner")
 	redis.InitRedis()
+	es.Connection()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		// cron expressions supported
@@ -36,6 +38,8 @@ func main() {
 		s.Every(5).Minutes().Do(engine.GetLastEthTx)
 		s.Every(5).Minutes().Do(engine.FluxNodesOverview)
 
+		s.Every(1).Minutes().Do(engine.GetCosmosTokens)
+		s.Every(1).Minutes().Do(engine.GetCosmosMarket)
 		s.Every(1).Minutes().Do(engine.GetHiveosFarm)
 		s.Every(1).Minutes().Do(engine.GetHiveosWorkers)
 		s.Every(1).Minutes().Do(engine.GetLastEthBlock)

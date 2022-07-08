@@ -141,3 +141,21 @@ func FluxNodesOverview() {
 
 	fmt.Println(resp)
 }
+
+func GetCosmosTokens() {
+	url := fmt.Sprintf("%s:%d/cosmos/get_tokens", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func GetCosmosMarket() {
+	url := fmt.Sprintf("%s:%d/cosmos/get_market", config.Cfg.APIAdress, config.Cfg.APIFrontPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

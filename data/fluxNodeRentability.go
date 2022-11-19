@@ -95,7 +95,7 @@ func CalCulRentability(nodes Nodes, stats FluxBlocsStats) (int, string) {
 		if err != nil {
 			return 500, err.Error()
 		}
-		es.Bulk("2miners-flux-node", string(RentabilityNodeJson))
+		es.Bulk("flux-node", string(RentabilityNodeJson))
 	}
 	return 201, "All node Inseted"
 }

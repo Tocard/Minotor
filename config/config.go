@@ -1,9 +1,9 @@
 package config
 
 import (
-	"2miner-monitoring/log2miner"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 )
 
 var Cfg *Config
@@ -20,7 +20,6 @@ type Config struct {
 	APITokenEtherscan     string   `yaml:"api_token_etherscan"`
 	LogLevel              string   `yaml:"log_level"`
 	CaPath                string   `yaml:"ca_path"`
-	TwoMinersURL          string   `yaml:"2miners_url"`
 	RedisHost             string   `yaml:"redis_host"`
 	RedisPassword         string   `yaml:"redis_password"`
 	MinerListing          string   `yaml:"miner_listing"`
@@ -52,15 +51,12 @@ type Config struct {
 func LoadYamlConfig(ConfigFilePath string) {
 	t := Config{}
 	data, err := ioutil.ReadFile(ConfigFilePath)
-	log2miner.Error(err)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	err = yaml.Unmarshal(data, &t)
-	log2miner.Error(err)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	Cfg = &t
-	data, err = ioutil.ReadFile(Cfg.AdressFilePath)
-	log2miner.Error(err)
-	a := WalletToWatch{}
-	err = yaml.Unmarshal(data, &a)
-	log2miner.Error(err)
-	Wtw = &a
-	Wtw.Adress = a.Adress
 }

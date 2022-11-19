@@ -20,7 +20,7 @@ func GetWalletsBalance(c *gin.Context) {
 		tmpBalance.Wallet = balances[key].Account
 		tmpBalance.Timestamp = time.Now().Format(time.RFC3339)
 		tmpBalanceJson, _ := json.Marshal(tmpBalance)
-		es.Bulk("2miners-balance", string(tmpBalanceJson))
+		es.Bulk("defi-balance", string(tmpBalanceJson))
 
 	}
 	c.String(200, "OK")
@@ -51,7 +51,7 @@ func GetLastTransaction(c *gin.Context) {
 			ts, _ := strconv.Atoi(tx.Result[resultKey].TimeStamp)
 			tx.Result[resultKey].Timestamp = time.Unix(int64(ts), 0).Format(time.RFC3339)
 			txRawJson, _ := json.Marshal(tx.Result[resultKey])
-			es.Bulk("2miners-tx", string(txRawJson))
+			es.Bulk("defi-tx", string(txRawJson))
 		}
 	}
 	c.String(200, "OK")

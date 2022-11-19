@@ -3,8 +3,9 @@ package data
 import "github.com/nanmu42/etherscan-api"
 
 type Balance struct {
-	TwoMiners
-	Balance *etherscan.BigInt `json:"wallet_balance"`
+	Timestamp string            `json:"@timestamp"`
+	Wallet    string            `json:"wallet"`
+	Balance   *etherscan.BigInt `json:"wallet_balance"`
 }
 
 type Tx struct {

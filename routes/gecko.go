@@ -23,7 +23,7 @@ func GetCoinsPrice(c *gin.Context) {
 		TmpGecko.EUR = ResponseCoin["eur"]
 		TmpGecko.Timestamp = time.Now().Format(time.RFC3339)
 		tmpGeckoJson, _ := json.Marshal(TmpGecko)
-		es.Bulk("2miners-coins", string(tmpGeckoJson))
+		es.Bulk("defi-coins", string(tmpGeckoJson))
 
 	}
 	c.String(200, "OK")

@@ -3,7 +3,6 @@ package es
 import (
 	"context"
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"log"
 	"strings"
@@ -120,46 +119,7 @@ func Bulk(index, data string) {
 
 }
 
-func EsSearch() *esapi.Response {
-	body := `{
-  "query": {
-    "exists":{ 
-      "field":"id"
-      }
-  },
-  "aggs": {
-    "by_id": {
-      "terms": {
-        "field": "id"
-        , "size": 1
-      }
-    }
-  }
-}`
-	indx := []string{"2miners-hiveos-farm"}
-	req := esapi.SearchRequest{
-		Index:   indx,
-		Body:    strings.NewReader(body),
-		Size:    esapi.IntPtr(25),
-		Pretty:  true,
-		Timeout: 100,
-	}
-	Esdata, err := req.Do(context.Background(), EsClient)
-	if err != nil {
-		log.Fatalf("Unexpected error when getting a response: %s", err)
-	} else {
-		log.Printf("%s", Esdata)
-		return Esdata
-	}
-	return nil
-}
-
 func CreatebulkIndexer() {
-	/*	Indexs := []string{"2miners-flux-node", "2miners-balance", "2miners-tx", "flux-node-overview", "2miners-coins",
-		"2miners-hiveos-hashrate-coin", "2miners-hiveos-hashrate", "2miners-hiveos-farm", "2miners-hiveos-flightsheet",
-		"2miners-hiveos-gpu", "2miners-hiveos-gpu-total-info", "2miners-hiveos-worker", "2miners-worker",
-		"2miners-data", "2miners-sumreward", "2miners-reward", "2miners-payment", "2miners-stat", "2miners-poolstat",
-		"2miners-hashrate_no"}*/
 
 	Indexs := []string{"minotor-cosmos-token", "flux-node-overview"}
 	for _, index := range Indexs {

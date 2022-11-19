@@ -1,7 +1,7 @@
 package data
 
 import (
-	"2miner-monitoring/es"
+	"minotor/es"
 	"encoding/json"
 	"time"
 )

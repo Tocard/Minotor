@@ -1,8 +1,8 @@
 package server
 
 import (
-	"2miner-monitoring/config"
-	"2miner-monitoring/routes"
+	"minotor/config"
+	"minotor/routes"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"

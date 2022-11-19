@@ -1,7 +1,7 @@
 package thirdapp
 
 import (
-	"2miner-monitoring/utils"
+	"minotor/utils"
 	"fmt"
 	"io/ioutil"
 	"log"

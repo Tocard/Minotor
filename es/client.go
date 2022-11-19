@@ -1,7 +1,7 @@
 package es
 
 import (
-	"2miner-monitoring/config"
+	"minotor/config"
 	"github.com/cenkalti/backoff/v4"
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v8"

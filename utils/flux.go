@@ -1,6 +1,6 @@
 package utils
 
-import "2miner-monitoring/data"
+import "minotor/data"
 
 func CreateNodes() {
 	data.Cumulus = &data.NodesDefault{

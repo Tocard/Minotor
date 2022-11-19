@@ -1,4 +1,4 @@
-module 2miner-monitoring
+module minotor
 
 go 1.18
 

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"2miner-monitoring/cli"
-	"2miner-monitoring/config"
-	"2miner-monitoring/engine"
-	"2miner-monitoring/es"
-	"2miner-monitoring/redis"
-	"2miner-monitoring/server"
-	"2miner-monitoring/utils"
+	"minotor/cli"
+	"minotor/config"
+	"minotor/engine"
+	"minotor/es"
+	"minotor/redis"
+	"minotor/server"
+	"minotor/utils"
 	"github.com/go-co-op/gocron"
 	"time"
 )

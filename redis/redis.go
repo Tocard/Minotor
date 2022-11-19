@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"2miner-monitoring/config"
+	"minotor/config"
 	"fmt"
 	"strconv"
 	"time"

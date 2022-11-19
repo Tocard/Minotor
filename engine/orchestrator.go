@@ -1,8 +1,8 @@
 package engine
 
 import (
-	"2miner-monitoring/config"
-	"2miner-monitoring/utils"
+	"minotor/config"
+	"minotor/utils"
 	"fmt"
 	"net/http"
 )

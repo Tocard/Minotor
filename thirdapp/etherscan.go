@@ -1,8 +1,8 @@
 package thirdapp
 
 import (
-	"2miner-monitoring/config"
-	"2miner-monitoring/data"
+	"minotor/config"
+	"minotor/data"
 	"encoding/json"
 	"fmt"
 	"github.com/nanmu42/etherscan-api"

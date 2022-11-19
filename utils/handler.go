@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"2miner-monitoring/config"
+	"minotor/config"
 	"bytes"
 	"encoding/json"
 	"github.com/gofrs/flock"

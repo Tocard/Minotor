@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"2miner-monitoring/config"
-	"2miner-monitoring/data"
-	"2miner-monitoring/es"
-	"2miner-monitoring/thirdapp"
+	"minotor/config"
+	"minotor/data"
+	"minotor/es"
+	"minotor/thirdapp"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"time"

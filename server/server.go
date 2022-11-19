@@ -28,35 +28,19 @@ func engine() *gin.Engine {
 		)
 	}))
 	server.Use(gin.Recovery())
-	server.GET("/miners", routes.GetAllMiner)
 	server.GET("/health", routes.Health)
 
-	serverMiner := server.Group("/harvest")
+	DefiExperience := server.Group("/DeFi")
 	{
-		serverMiner.GET("/payments/:wallet", routes.ExtractPaymentInfo)
-		serverMiner.GET("/rewards/:wallet", routes.ExtractRewardInfo)
-		serverMiner.GET("/workers/:wallet", routes.ExtractWorkerInfo)
-		serverMiner.GET("/data/:wallet", routes.ExtractSimpleField)
-		serverMiner.GET("/stats/:wallet", routes.ExtractStatInfo)
-		serverMiner.GET("/sumrewards/:wallet", routes.ExtractSumrewardsInfo)
+		DefiExperience.GET("/balances", routes.GetWalletsBalance)
+		DefiExperience.GET("/subscribe/:wallet", routes.SuscribeWallet)
+		DefiExperience.GET("/unsubscribe/:wallet", routes.UnSuscribeWallet)
+		DefiExperience.GET("/coins/price", routes.GetCoinsPrice)
+		DefiExperience.GET("/transactions", routes.GetLastTransaction)
 	}
-	server.GET("/balances", routes.GetWalletsBalance)
-	server.GET("/subscribe/:wallet", routes.SuscribeWallet)
-	server.GET("/unsubscribe/:wallet", routes.UnSuscribeWallet)
-	server.GET("/coins/price", routes.GetCoinsPrice)
-	server.GET("/stats", routes.ExtractPoolStatInfo)
-	server.GET("/transactions", routes.GetLastTransaction)
 	serverETH := server.Group("/ETH")
 	{
 		serverETH.GET("/lastblock", routes.GetLastBlock)
-	}
-	hiveosServer := server.Group("/hiveos")
-	{
-		hiveosServer.GET("/refresh_auth", routes.HiveosRefreshToken)
-		hiveosServer.GET("/farms", routes.GetHiveosFarm)
-		hiveosServer.GET("/test", routes.GetTest)
-		hiveosServer.GET("/workers", routes.GetHiveosWorkers)
-		hiveosServer.GET("/worker/:worker", routes.GetHiveosWorker)
 	}
 	FluxServer := server.Group("/flux")
 	{
@@ -69,8 +53,6 @@ func engine() *gin.Engine {
 		CosmosServer.GET("/get_market", routes.GetCosmosMarket)
 
 	}
-
-	server.GET("/hashrateNo", routes.ScrapHashrateNo)
 	return server
 }
 

@@ -8,12 +8,6 @@ import (
 
 var Cfg *Config
 
-var Wtw *WalletToWatch
-
-type WalletToWatch struct {
-	Adress []string `yaml:"adress"`
-}
-
 type Config struct {
 	ElasticsearchUser     string   `yaml:"elasticsearch_user"`
 	ElasticsearchPassword string   `yaml:"elasticsearch_password"`
@@ -29,11 +23,6 @@ type Config struct {
 	APIAdress             string   `yaml:"api_adress"`
 	AdressFilePath        string   `yaml:"adress_file_path"`
 	LockPath              string   `yaml:"lock_path"`
-	CardsConfigFile       string   `yaml:"cards_config_file"`
-	HiveosUrl             string   `yaml:"hiveos_api_url"`
-	MinotorHiveOsUser     string   `yaml:"hiveos_minotor_user"`
-	MinotorHiveOsPass     string   `yaml:"hiveos_minotor_password"`
-	MinotorHiveosToken    string   `yaml:"hiveos_minotor_token"`
 	CoinList              []string `yaml:"coin_list"`
 	ElasticsearchHosts    []string `yaml:"elasticsearch_hosts"`
 	ElasticsearchPort     int      `yaml:"elasticsearch_port"`

@@ -32,15 +32,7 @@ func engine() *gin.Engine {
 
 	DefiExperience := server.Group("/DeFi")
 	{
-		DefiExperience.GET("/balances", routes.GetWalletsBalance)
-		DefiExperience.GET("/subscribe/:wallet", routes.SuscribeWallet)
-		DefiExperience.GET("/unsubscribe/:wallet", routes.UnSuscribeWallet)
 		DefiExperience.GET("/coins/price", routes.GetCoinsPrice)
-		DefiExperience.GET("/transactions", routes.GetLastTransaction)
-	}
-	serverETH := server.Group("/ETH")
-	{
-		serverETH.GET("/lastblock", routes.GetLastBlock)
 	}
 	FluxServer := server.Group("/flux")
 	{

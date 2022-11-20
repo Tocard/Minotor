@@ -143,13 +143,15 @@ func GetCosmosUnBounding(c *gin.Context) {
 			log.Println(err.Error())
 		}
 		for _, Res := range Balance.Result {
-			Res.Timestamp = time.Now().Format(time.RFC3339)
-			Res.Wallet = Wallet.Wallet
-			Res.GovCoin = coin
-			Res.Height = Balance.Height
-			Res.Factor = data.GetFactor(coin)
-			ResJson, _ := json.Marshal(Res)
-			CosmosUnBounding = append(CosmosUnBounding, ResJson)
+			for _, Entry := range Res.Entries {
+				Entry.Timestamp = time.Now().Format(time.RFC3339)
+				Entry.Wallet = Wallet.Wallet
+				Entry.GovCoin = coin
+				Entry.Height = Balance.Height
+				Entry.Factor = data.GetFactor(coin)
+				EntryJson, _ := json.Marshal(Entry)
+				CosmosUnBounding = append(CosmosUnBounding, EntryJson)
+			}
 		}
 	}
 	es.BulkData("cosmos-undelegation", CosmosUnBounding)

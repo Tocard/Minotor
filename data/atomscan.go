@@ -75,19 +75,19 @@ type CosmosBalance struct {
 type CosmosUnDelegation struct {
 	Height string `json:"height"`
 	Result []struct {
-		DelegatorAddress string  `json:"delegator_address"`
-		ValidatorAddress string  `json:"validator_address"`
-		Coin             string  `json:"coin"`
-		Wallet           string  `json:"wallet"`
-		Timestamp        string  `json:"@timestamp"`
-		Height           string  `json:"height"`
-		GovCoin          string  `json:"gov_coin"`
-		Factor           float64 `json:"factor"`
+		DelegatorAddress string `json:"delegator_address"`
+		ValidatorAddress string `json:"validator_address"`
 		Entries          []struct {
 			CreationHeight string    `json:"creation_height"`
 			CompletionTime time.Time `json:"completion_time"`
 			InitialBalance float64   `json:"initial_balance,string"`
 			Balance        float64   `json:"balance,string"`
+			Coin           string    `json:"coin"`
+			Wallet         string    `json:"wallet"`
+			Timestamp      string    `json:"@timestamp"`
+			Height         string    `json:"height"`
+			GovCoin        string    `json:"gov_coin"`
+			Factor         float64   `json:"factor"`
 		} `json:"entries"`
 	} `json:"result"`
 }

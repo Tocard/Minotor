@@ -61,12 +61,12 @@ func GetCosmosMarket(c *gin.Context) {
 // price URL de requête: https://proxy.atomscan.com/prices
 
 func WrapAllCosmosEndpoint(c *gin.Context) {
-	wallet := c.Param("wallet")
-	url := fmt.Sprintf("%s:%d/cosmos/GetBalance/%s", config.Cfg.APIAdress, config.Cfg.APIPort, wallet)
+
+	url := fmt.Sprintf("%s:%d/cosmos/GetBalance", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
-	url = fmt.Sprintf("%s:%d/cosmos/GetDelegation/%s", config.Cfg.APIAdress, config.Cfg.APIPort, wallet)
+	url = fmt.Sprintf("%s:%d/cosmos/GetDelegation", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err = http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
@@ -97,9 +97,9 @@ func GetCosmosWallet(c *gin.Context) {
 			ResJson, _ := json.Marshal(Res)
 			CosmosWallet = append(CosmosWallet, ResJson)
 		}
-		es.BulkData("cosmos-balance", CosmosWallet)
-		c.String(200, string(balance))
 	}
+	es.BulkData("cosmos-balance", CosmosWallet)
+	c.String(200, "Harvest all wallet adresse")
 }
 
 func GetCosmosBounding(c *gin.Context) {
@@ -109,6 +109,7 @@ func GetCosmosBounding(c *gin.Context) {
 	if dbErr != nil {
 		log.Println(dbErr.Error())
 	}
+	log.Println(Wallets)
 	for _, Wallet := range Wallets {
 		_, balance, coin := thirdapp.GetCosmosBounding(Wallet.Wallet)
 		Balance := data.CosmosDelegation{}
@@ -127,9 +128,9 @@ func GetCosmosBounding(c *gin.Context) {
 			ResJson, _ := json.Marshal(Res)
 			CosmosBounding = append(CosmosBounding, ResJson)
 		}
-		es.BulkData("cosmos-delegation", CosmosBounding)
-		c.String(200, string(balance))
 	}
+	es.BulkData("cosmos-delegation", CosmosBounding)
+	c.String(200, "Harvest all bound")
 }
 
 func RegisterWallet(c *gin.Context) {

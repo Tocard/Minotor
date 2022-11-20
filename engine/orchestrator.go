@@ -2,9 +2,7 @@ package engine
 
 import (
 	"fmt"
-	"log"
 	"minotor/config"
-	"minotor/db"
 	"minotor/utils"
 	"net/http"
 )
@@ -19,17 +17,11 @@ func HarvestCoinPrice() {
 }
 
 func HarvestComsosWallet() {
-	Wallets, dbErr := db.GetAllWallets()
-	if dbErr != nil {
-		log.Println(dbErr.Error())
-	}
-	for _, Wallet := range Wallets {
-		url := fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, Wallet.Wallet)
-		resp, err := http.Get(url)
-		utils.HandleHttpError(err)
-		defer resp.Body.Close()
-	}
-	log.Println("Harvested", Wallets)
+
+	url := fmt.Sprintf("%s:%d/cosmos/wrapper/", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
 }
 
 func FluxNodeRentability() {

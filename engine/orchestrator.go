@@ -1,9 +1,9 @@
 package engine
 
 import (
+	"fmt"
 	"minotor/config"
 	"minotor/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -16,22 +16,12 @@ func HarvestCoinPrice() {
 	fmt.Println(resp)
 }
 
-func GetLastEthBlock() {
-	url := fmt.Sprintf("%s:%d/ETH/lastblock", config.Cfg.APIAdress, config.Cfg.APIPort)
+func HarvestComsosWallet() {
+
+	url := fmt.Sprintf("%s:%d/cosmos/wrapper/", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
-
-	fmt.Println(resp)
-}
-
-func GetLastEthTx() {
-	url := fmt.Sprintf("%s:%d/transactions", config.Cfg.APIAdress, config.Cfg.APIPort)
-	resp, err := http.Get(url)
-	utils.HandleHttpError(err)
-	defer resp.Body.Close()
-
-	fmt.Println(resp)
 }
 
 func FluxNodeRentability() {

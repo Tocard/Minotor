@@ -1,9 +1,9 @@
 package engine
 
 import (
+	"fmt"
 	"minotor/config"
 	"minotor/utils"
-	"fmt"
 	"net/http"
 )
 
@@ -16,18 +16,19 @@ func HarvestCoinPrice() {
 	fmt.Println(resp)
 }
 
-func GetLastEthBlock() {
-	url := fmt.Sprintf("%s:%d/ETH/lastblock", config.Cfg.APIAdress, config.Cfg.APIPort)
+func HarvestComsosWallet() {
+	url := fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "evmos18477p09j434edhcrvczraneu7rlrz6fsf7tgd9")
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
-	defer resp.Body.Close()
 
 	fmt.Println(resp)
-}
+	url = fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "cosmos10nhs553a5g2ve7mh72je7f7zeeg9az7qdmglsj")
+	resp, err = http.Get(url)
+	utils.HandleHttpError(err)
 
-func GetLastEthTx() {
-	url := fmt.Sprintf("%s:%d/transactions", config.Cfg.APIAdress, config.Cfg.APIPort)
-	resp, err := http.Get(url)
+	fmt.Println(resp)
+	url = fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "osmo10nhs553a5g2ve7mh72je7f7zeeg9az7q9qm0xq")
+	resp, err = http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
 

@@ -11,30 +11,18 @@ var Cfg *Config
 type Config struct {
 	ElasticsearchUser     string   `yaml:"elasticsearch_user"`
 	ElasticsearchPassword string   `yaml:"elasticsearch_password"`
-	APITokenEtherscan     string   `yaml:"api_token_etherscan"`
+	ElasticsearchHosts    []string `yaml:"elasticsearch_hosts"`
 	LogLevel              string   `yaml:"log_level"`
 	CaPath                string   `yaml:"ca_path"`
-	RedisHost             string   `yaml:"redis_host"`
-	RedisPassword         string   `yaml:"redis_password"`
-	MinerListing          string   `yaml:"miner_listing"`
-	APILogFile            string   `yaml:"api_log_file"`
-	APIUsername           string   `yaml:"api_username"`
-	APIPassword           string   `yaml:"api_password"`
-	APIAdress             string   `yaml:"api_adress"`
-	AdressFilePath        string   `yaml:"adress_file_path"`
-	LockPath              string   `yaml:"lock_path"`
-	CoinList              []string `yaml:"coin_list"`
-	ElasticsearchHosts    []string `yaml:"elasticsearch_hosts"`
-	ElasticsearchPort     int      `yaml:"elasticsearch_port"`
-	RedisPort             int      `yaml:"redis_port"`
-	RedisShortLifetime    int      `yaml:"redis_short_lifetime"`
-	RedisMidLifetime      int      `yaml:"redis_mid_lifetime"`
-	RedisLongLifetime     int      `yaml:"redis_long_lifetime"`
-	APIPort               int      `yaml:"api_port"`
-	APIFrontPort          int      `yaml:"api_front_port"`
-	Factor                float64  `yaml:"factor"`
-	EthFactor             float64  `yaml:"ether_factor"`
-	GazFactor             float64  `yaml:"gaz_factor"`
+	TokenWatcher          []string `yaml:"token_watcher"`
+	UrlTokenWatcher       []string `yaml:"url_token_watcher"`
+
+	APIAdress      string   `yaml:"api_adress"`
+	APIPort        int      `yaml:"api_port"`
+	CoinList       []string `yaml:"coin_list"`
+	FluxNodeAPIURL string   `yaml:"flux_node_api_url"`
+	Taddr          string   `yaml:"taddr"`
+	Zelid          string   `yaml:"zelid"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

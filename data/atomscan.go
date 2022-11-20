@@ -72,14 +72,17 @@ type CosmosBalance struct {
 	} `json:"result"`
 }
 
-type unbounding struct {
-	Timestamp string `json:"@timestamp"`
-	Height    string `json:"height"`
-	Coin      string `json:"coin"`
-	Wallet    string `json:"wallet"`
-	Result    []struct {
-		DelegatorAddress string `json:"delegator_address"`
-		ValidatorAddress string `json:"validator_address"`
+type CosmosUnDelegation struct {
+	Height string `json:"height"`
+	Result []struct {
+		DelegatorAddress string  `json:"delegator_address"`
+		ValidatorAddress string  `json:"validator_address"`
+		Coin             string  `json:"coin"`
+		Wallet           string  `json:"wallet"`
+		Timestamp        string  `json:"@timestamp"`
+		Height           string  `json:"height"`
+		GovCoin          string  `json:"gov_coin"`
+		Factor           float64 `json:"factor"`
 		Entries          []struct {
 			CreationHeight string    `json:"creation_height"`
 			CompletionTime time.Time `json:"completion_time"`

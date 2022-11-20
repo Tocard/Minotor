@@ -159,7 +159,7 @@ func UnRegisterWallet(c *gin.Context) {
 		resp := fmt.Sprintf("Unable to delete wallet %s, contact admin", wallet)
 		c.String(503, resp)
 	} else {
-		resp := fmt.Sprintf("something went wrong while registered %s", wallet)
+		resp := fmt.Sprintf("wallet %s succefully removed", wallet)
 		c.String(200, resp)
 	}
 }

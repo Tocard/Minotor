@@ -46,8 +46,9 @@ func engine() *gin.Engine {
 		CosmosServer.GET("/wrapper/", routes.WrapAllCosmosEndpoint)
 		CosmosServer.GET("/GetBalance/", routes.GetCosmosWallet)
 		CosmosServer.GET("/GetDelegation/", routes.GetCosmosBounding)
+		CosmosServer.GET("/GetUnDelegation/", routes.GetCosmosUnBounding)
 		CosmosServer.GET("/Register/:wallet", routes.RegisterWallet)
-		CosmosServer.GET("/Unregister/:wallet", routes.UnRegisterWallet)
+		CosmosServer.GET("/UnRegister/:wallet", routes.UnRegisterWallet)
 	}
 	return server
 }

@@ -55,18 +55,15 @@ func GetCosmosMarket(c *gin.Context) {
 	c.String(200, string(Body))
 }
 
-//delegation: staking/delegators/cosmos10nhs553a5g2ve7mh72je7f7zeeg9az7qdmglsj/delegations
-// account URL de requête:
-// unbounding URL de requête: staking/delegators/cosmos10nhs553a5g2ve7mh72je7f7zeeg9az7qdmglsj/unbonding_delegations
-// price URL de requête: https://proxy.atomscan.com/prices
-
 func WrapAllCosmosEndpoint(c *gin.Context) {
 
 	url := fmt.Sprintf("%s:%d/cosmos/GetBalance", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
-	defer resp.Body.Close()
 	url = fmt.Sprintf("%s:%d/cosmos/GetDelegation", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err = http.Get(url)
+	utils.HandleHttpError(err)
+	url = fmt.Sprintf("%s:%d/cosmos/GetUnDelegation", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err = http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()
@@ -80,7 +77,6 @@ func GetCosmosWallet(c *gin.Context) {
 	if dbErr != nil {
 		log.Println(dbErr.Error())
 	}
-	log.Println(Wallets)
 	for _, Wallet := range Wallets {
 		_, balance, coin := thirdapp.GetCosmosBalance(Wallet.Wallet)
 		Balance := data.CosmosBalance{}
@@ -109,12 +105,10 @@ func GetCosmosBounding(c *gin.Context) {
 	if dbErr != nil {
 		log.Println(dbErr.Error())
 	}
-	log.Println(Wallets)
 	for _, Wallet := range Wallets {
 		_, balance, coin := thirdapp.GetCosmosBounding(Wallet.Wallet)
 		Balance := data.CosmosDelegation{}
 		err := json.Unmarshal(balance, &Balance)
-		log.Println(string(balance))
 		if err != nil {
 			log.Println(err.Error())
 		}
@@ -130,6 +124,35 @@ func GetCosmosBounding(c *gin.Context) {
 		}
 	}
 	es.BulkData("cosmos-delegation", CosmosBounding)
+	c.String(200, "Harvest all bound")
+}
+
+func GetCosmosUnBounding(c *gin.Context) {
+	var CosmosUnBounding [][]byte
+
+	Wallets, dbErr := db.GetAllWallets()
+	if dbErr != nil {
+		log.Println(dbErr.Error())
+	}
+	for _, Wallet := range Wallets {
+		_, balance, coin := thirdapp.GetCosmosUnBounding(Wallet.Wallet)
+		Balance := data.CosmosUnDelegation{}
+		err := json.Unmarshal(balance, &Balance)
+		log.Println(string(balance))
+		if err != nil {
+			log.Println(err.Error())
+		}
+		for _, Res := range Balance.Result {
+			Res.Timestamp = time.Now().Format(time.RFC3339)
+			Res.Wallet = Wallet.Wallet
+			Res.GovCoin = coin
+			Res.Height = Balance.Height
+			Res.Factor = data.GetFactor(coin)
+			ResJson, _ := json.Marshal(Res)
+			CosmosUnBounding = append(CosmosUnBounding, ResJson)
+		}
+	}
+	es.BulkData("cosmos-undelegation", CosmosUnBounding)
 	c.String(200, "Harvest all bound")
 }
 

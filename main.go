@@ -4,6 +4,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"minotor/cli"
 	"minotor/config"
+	"minotor/db"
 	"minotor/engine"
 	"minotor/es"
 	"minotor/server"
@@ -17,6 +18,7 @@ func main() {
 	utils.CreateNodes()
 	//redis.InitRedis()
 	es.Connection()
+	db.Migrate()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		//		s.Every(10).Minutes().Do(engine.FluxNodeRentability)

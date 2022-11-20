@@ -43,10 +43,11 @@ func engine() *gin.Engine {
 	{
 		CosmosServer.GET("/get_tokens", routes.GetCosmosTokens)
 		CosmosServer.GET("/get_market", routes.GetCosmosMarket)
-		CosmosServer.GET("/wrapper/:wallet", routes.WrapAllCosmosEndpoint)
-		CosmosServer.GET("/GetBalance/:wallet", routes.GetCosmosWallet)
-		CosmosServer.GET("/GetDelegation/:wallet", routes.GetCosmosBounding)
-
+		CosmosServer.GET("/wrapper/", routes.WrapAllCosmosEndpoint)
+		CosmosServer.GET("/GetBalance/", routes.GetCosmosWallet)
+		CosmosServer.GET("/GetDelegation/", routes.GetCosmosBounding)
+		CosmosServer.GET("/Register/:wallet", routes.RegisterWallet)
+		CosmosServer.GET("/Unregister/:wallet", routes.UnRegisterWallet)
 	}
 	return server
 }

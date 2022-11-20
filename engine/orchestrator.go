@@ -2,7 +2,9 @@ package engine
 
 import (
 	"fmt"
+	"log"
 	"minotor/config"
+	"minotor/db"
 	"minotor/utils"
 	"net/http"
 )
@@ -17,22 +19,17 @@ func HarvestCoinPrice() {
 }
 
 func HarvestComsosWallet() {
-	url := fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "evmos18477p09j434edhcrvczraneu7rlrz6fsf7tgd9")
-	resp, err := http.Get(url)
-	utils.HandleHttpError(err)
-
-	fmt.Println(resp)
-	url = fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "cosmos10nhs553a5g2ve7mh72je7f7zeeg9az7qdmglsj")
-	resp, err = http.Get(url)
-	utils.HandleHttpError(err)
-
-	fmt.Println(resp)
-	url = fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, "osmo10nhs553a5g2ve7mh72je7f7zeeg9az7q9qm0xq")
-	resp, err = http.Get(url)
-	utils.HandleHttpError(err)
-	defer resp.Body.Close()
-
-	fmt.Println(resp)
+	Wallets, dbErr := db.GetAllWallets()
+	if dbErr != nil {
+		log.Println(dbErr.Error())
+	}
+	for _, Wallet := range Wallets {
+		url := fmt.Sprintf("%s:%d/cosmos/wrapper/%s", config.Cfg.APIAdress, config.Cfg.APIPort, Wallet.Wallet)
+		resp, err := http.Get(url)
+		utils.HandleHttpError(err)
+		defer resp.Body.Close()
+	}
+	log.Println("Harvested", Wallets)
 }
 
 func FluxNodeRentability() {

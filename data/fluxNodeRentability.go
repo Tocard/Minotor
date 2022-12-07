@@ -60,8 +60,8 @@ func CalCulRentability(nodes Nodes, stats FluxBlocsStats) (int, string) {
 		RentabilityNode.NodesDefault = NodeList
 		RentabilityNode.FluxNodeNumber = getNodeCount(NodeList, nodes)
 		RentabilityNode.FluxReward = FluxRewardPerBlock * NodeList.Reward / 100
-		RentabilityNode.FluxInstantPaReward = FluxRewardPerBlock * NodeList.Reward / 100 / 2 * 0.7
-		RentabilityNode.FluxLaterPaReward = FluxRewardPerBlock * NodeList.Reward / 100 / 2 * 0.3
+		RentabilityNode.FluxInstantPaReward = FluxRewardPerBlock * NodeList.Reward / 100 * 0.7
+		RentabilityNode.FluxLaterPaReward = FluxRewardPerBlock * NodeList.Reward / 100 * 0.3
 		RentabilityNode.DelayRewardMinutes = stats.TimeBetweenBlocks / 60 * getNodeCount(NodeList, nodes)
 		RentabilityNode.DelayRewardDay = RentabilityNode.DelayRewardMinutes / 1440
 

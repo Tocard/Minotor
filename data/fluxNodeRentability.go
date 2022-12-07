@@ -1,8 +1,8 @@
 package data
 
 import (
-	"minotor/es"
 	"encoding/json"
+	"minotor/es"
 	"time"
 )
 
@@ -60,34 +60,34 @@ func CalCulRentability(nodes Nodes, stats FluxBlocsStats) (int, string) {
 		RentabilityNode.NodesDefault = NodeList
 		RentabilityNode.FluxNodeNumber = getNodeCount(NodeList, nodes)
 		RentabilityNode.FluxReward = FluxRewardPerBlock * NodeList.Reward / 100
-		RentabilityNode.FluxInstantPaReward = FluxRewardPerBlock * NodeList.Reward / 100 / 2
-		RentabilityNode.FluxLaterPaReward = RentabilityNode.FluxInstantPaReward
+		RentabilityNode.FluxInstantPaReward = FluxRewardPerBlock * NodeList.Reward / 100 * 0.7
+		RentabilityNode.FluxLaterPaReward = FluxRewardPerBlock * NodeList.Reward / 100 * 0.3
 		RentabilityNode.DelayRewardMinutes = stats.TimeBetweenBlocks / 60 * getNodeCount(NodeList, nodes)
 		RentabilityNode.DelayRewardDay = RentabilityNode.DelayRewardMinutes / 1440
 
-		RentabilityNode.FluxInstantPaReward7Day = RentabilityNode.FluxInstantPaReward * 1440 * 7 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxInstantPaReward7Day = RentabilityNode.FluxInstantPaReward * 1440 * 7 / RentabilityNode.DelayRewardMinutes * 0.7
 		RentabilityNode.FluxReward7Day = RentabilityNode.FluxReward * 1440 * 7 / RentabilityNode.DelayRewardMinutes
-		RentabilityNode.FluxLaterPaReward7Day = RentabilityNode.FluxLaterPaReward * 1440 * 7 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxLaterPaReward7Day = RentabilityNode.FluxLaterPaReward * 1440 * 7 / RentabilityNode.DelayRewardMinutes * 0.3
 		RentabilityNode.FluxTotalReward7Day = RentabilityNode.FluxLaterPaReward7Day + RentabilityNode.FluxReward7Day + RentabilityNode.FluxInstantPaReward7Day
 
-		RentabilityNode.FluxInstantPaReward15Day = RentabilityNode.FluxInstantPaReward * 1440 * 15 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxInstantPaReward15Day = RentabilityNode.FluxInstantPaReward * 1440 * 15 / RentabilityNode.DelayRewardMinutes * 0.7
 		RentabilityNode.FluxReward15Day = RentabilityNode.FluxReward * 1440 * 15 / RentabilityNode.DelayRewardMinutes
-		RentabilityNode.FluxLaterPaReward15Day = RentabilityNode.FluxLaterPaReward * 1440 * 15 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxLaterPaReward15Day = RentabilityNode.FluxLaterPaReward * 1440 * 15 / RentabilityNode.DelayRewardMinutes * 0.3
 		RentabilityNode.FluxTotalReward15Day = RentabilityNode.FluxLaterPaReward15Day + RentabilityNode.FluxReward15Day + RentabilityNode.FluxInstantPaReward15Day
 
-		RentabilityNode.FluxInstantPaReward30Day = RentabilityNode.FluxInstantPaReward * 1440 * 30 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxInstantPaReward30Day = RentabilityNode.FluxInstantPaReward * 1440 * 30 / RentabilityNode.DelayRewardMinutes * 0.7
 		RentabilityNode.FluxReward30Day = RentabilityNode.FluxReward * 1440 * 30 / RentabilityNode.DelayRewardMinutes
-		RentabilityNode.FluxLaterPaReward30Day = RentabilityNode.FluxLaterPaReward * 1440 * 30 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxLaterPaReward30Day = RentabilityNode.FluxLaterPaReward * 1440 * 30 / RentabilityNode.DelayRewardMinutes * 0.3
 		RentabilityNode.FluxTotalReward30Day = RentabilityNode.FluxLaterPaReward30Day + RentabilityNode.FluxReward30Day + RentabilityNode.FluxInstantPaReward30Day
 
-		RentabilityNode.FluxInstantPaReward180Day = RentabilityNode.FluxInstantPaReward * 1440 * 180 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxInstantPaReward180Day = RentabilityNode.FluxInstantPaReward * 1440 * 180 / RentabilityNode.DelayRewardMinutes * 0.7
 		RentabilityNode.FluxReward180Day = RentabilityNode.FluxReward * 1440 * 180 / RentabilityNode.DelayRewardMinutes
-		RentabilityNode.FluxLaterPaReward180Day = RentabilityNode.FluxLaterPaReward * 1440 * 180 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxLaterPaReward180Day = RentabilityNode.FluxLaterPaReward * 1440 * 180 / RentabilityNode.DelayRewardMinutes * 0.3
 		RentabilityNode.FluxTotalReward180Day = RentabilityNode.FluxLaterPaReward180Day + RentabilityNode.FluxReward180Day + RentabilityNode.FluxInstantPaReward180Day
 
-		RentabilityNode.FluxInstantPaReward365Day = RentabilityNode.FluxInstantPaReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxInstantPaReward365Day = RentabilityNode.FluxInstantPaReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes * 0.7
 		RentabilityNode.FluxReward365Day = RentabilityNode.FluxReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes
-		RentabilityNode.FluxLaterPaReward365Day = RentabilityNode.FluxLaterPaReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes
+		RentabilityNode.FluxLaterPaReward365Day = RentabilityNode.FluxLaterPaReward * 1440 * 365 / RentabilityNode.DelayRewardMinutes * 0.3
 		RentabilityNode.FluxTotalReward365Day = RentabilityNode.FluxLaterPaReward365Day + RentabilityNode.FluxReward365Day + RentabilityNode.FluxInstantPaReward365Day
 		RentabilityNode.Timestamp = time.Now().Format(time.RFC3339)
 

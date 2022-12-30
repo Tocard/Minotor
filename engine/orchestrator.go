@@ -59,3 +59,12 @@ func GetCosmosMarket() {
 
 	fmt.Println(resp)
 }
+
+func HealthCheck() {
+	url := fmt.Sprintf("%s:%d/health", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

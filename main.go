@@ -28,6 +28,7 @@ func main() {
 		s.Every(1).Minutes().Do(engine.GetCosmosMarket)
 		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
 		s.Every(1).Minutes().Do(engine.HarvestComsosWallet)
+		s.Every(1).Minutes().Do(engine.HealthCheck)
 		s.StartAsync()
 	}()
 	server.GoGinServer()

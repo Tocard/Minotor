@@ -68,3 +68,12 @@ func HealthCheck() {
 
 	fmt.Println(resp)
 }
+
+func GetOsmosisPool() {
+	url := fmt.Sprintf("%s:%d/osmosis/getPools", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

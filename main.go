@@ -21,6 +21,8 @@ func main() {
 	db.Migrate()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
+		s.Every(10).Minutes().Do(engine.GetOsmosisPool)
+
 		s.Every(10).Minutes().Do(engine.FluxNodeRentability)
 		s.Every(5).Minutes().Do(engine.FluxNodesOverview)
 

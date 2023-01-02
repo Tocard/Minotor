@@ -50,6 +50,10 @@ func engine() *gin.Engine {
 		CosmosServer.GET("/Register/:wallet", routes.RegisterWallet)
 		CosmosServer.GET("/UnRegister/:wallet", routes.UnRegisterWallet)
 	}
+	OsmosisServer := server.Group("/osmosis")
+	{
+		OsmosisServer.GET("/getPools", routes.GetOsmosisPool)
+	}
 	return server
 }
 

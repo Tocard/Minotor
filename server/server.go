@@ -54,6 +54,10 @@ func engine() *gin.Engine {
 	{
 		OsmosisServer.GET("/getPools", routes.GetOsmosisPool)
 	}
+	GrafanaServer := server.Group("/grafana")
+	{
+		GrafanaServer.GET("/Register/:user", routes.CreateGrafanaUser)
+	}
 	return server
 }
 

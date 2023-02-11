@@ -27,6 +27,8 @@ type Config struct {
 	GrafanaUser     string   `yaml:"grafana_user"`
 	GrafanaPassword string   `yaml:"grafana_password"`
 	GrafanaUrl      string   `yaml:"grafana_url"`
+
+	HopersUrl string `yaml:"hopers_url"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

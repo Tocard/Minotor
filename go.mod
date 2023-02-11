@@ -13,7 +13,6 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/nanmu42/etherscan-api v1.6.0
 	github.com/superoo7/go-gecko v1.0.0
-	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -39,4 +38,5 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

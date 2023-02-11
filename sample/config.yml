@@ -1,36 +1,12 @@
-# Sample of main config file
-
-elasticsearch_user: ""
-elasticsearch_password: ""
-elasticsearch_hosts:  [""]
-elasticsearch_port: 9200
-api_token_etherscan: ""
+---
+elasticsearch_user: minotor
+elasticsearch_password: fhoJWkJQhZvBCuzPazd345890LMwxNKJ
+elasticsearch_hosts:  ["https://cerberus-alpha.ether-source.fr:9200", "https://cerberus-beta.ether-source.fr:9200", "https://cerberus-gamma.ether-source.fr:9200"]
 log_level: INFO # CRITICAL => ERROR => WARNING => INFO => DEBUG
-ca_path: ""
-2miners_url: "https://eth.2miners.com/api"
+ca_path: ssl/chain.pem
 
-miner_listing: ADDR #ALL is used to get all miners from 2miners, ADDR is used for adress variable
-adress_file_path: "/etc/minotor/adress.yml"
-lock_path: ".minotor.lock"
-
-redis_host: 127.0.0.1
-redis_port:
-redis_password:
-redis_short_lifetime: 10
-redis_mid_lifetime: 600
-redis_long_lifetime: 36000
-
-
-factor: 0.000001
-ether_factor: 0.000000000000000001
-gas_factor: 0.000000001
-
-api_adress:
-api_port:             # run the api on the port given in api_port
-api_front_port:             # run the api on the port given in api_port
-api_log_file:         # if set to "", stdout is used, otherwise use the path given in api_log_file
-api_username:      # user used to auth yourself on the api
-api_password:  # password combined with user on the api
+api_adress: http://localhost
+api_port: 8080            # run the api on the port given in api_port
 
 coin_list:
   - "ethereum"
@@ -40,7 +16,25 @@ coin_list:
   - "osmosis"
   - "raptoreum"
 
-hiveos_api_url: "https://api2.hiveos.farm/api/v2"
-hiveos_minotor_user: ""
-hiveos_minotor_password: ""
-hiveos_minotor_token: ""
+flux_node_api_url: "https://runonflux.io/api/"
+taddr: "13fCVN3cJ1Aqhi3CX5kR6oRpoR9UmzDMeo"
+zelid: "L2NLpZCC1tTyRFoGoP2y6o47sgMLvPjCddrm5616UwPwkF11XZ5z"
+
+token_watcher:
+  - "cosmos"
+  - "osmo"
+  - "evmos"
+
+url_token_watcher:
+  - "https://cosmos.lcd.atomscan.com/"
+  - "https://proxy.atomscan.com/osmo-lcd/"
+  - "https://proxy.atomscan.com/evmos-lcd/"
+
+grafana_api_token: glsa_S8RIBwaRs3WOxa4dLFSE5gK4k9Og67e3_e9a8091e
+grafana_user: Minotor
+grafana_password: RIBwaRs3WOxa4dLFSE5gK4k9Og67e3_e9a8091e
+grafana_url: https://mermaid-alpha.ether-source.fr:3000
+
+hopers_api: https://lcd-juno.keplr.app/cosmwasm/wasm/v1/contract/juno1u45shlp0q4gcckvsj06ss4xuvsu0z24a0d0vr9ce6r24pht4e5xq7q995n/smart/
+hopers_custom: eyJiYWxhbmNlIjp7ImFkZHJlc3MiOiJqdW5vMTBuaHM1NTNhNWcydmU3bWg3MmplN2Y3emVlZzlhejdxbWZ0eWh3In19
+

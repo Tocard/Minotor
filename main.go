@@ -21,16 +21,9 @@ func main() {
 	db.Migrate()
 	go func() {
 		s := gocron.NewScheduler(time.Local)
-		s.Every(10).Minutes().Do(engine.GetOsmosisPool)
 
-		s.Every(10).Minutes().Do(engine.FluxNodeRentability)
-		s.Every(5).Minutes().Do(engine.FluxNodesOverview)
+		s.Every(30).Second().Do(engine.GetHoppersBalance)
 
-		s.Every(1).Minutes().Do(engine.GetCosmosTokens)
-		s.Every(1).Minutes().Do(engine.GetCosmosMarket)
-		s.Every(1).Minutes().Do(engine.HarvestCoinPrice)
-		s.Every(1).Minutes().Do(engine.HarvestComsosWallet)
-		s.Every(1).Minutes().Do(engine.HealthCheck)
 		s.StartAsync()
 	}()
 	server.GoGinServer()

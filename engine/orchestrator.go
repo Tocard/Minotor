@@ -77,3 +77,12 @@ func GetOsmosisPool() {
 
 	fmt.Println(resp)
 }
+
+func GetHoppersBalance() {
+	url := fmt.Sprintf("%s:%d/cosmos/hoppers", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

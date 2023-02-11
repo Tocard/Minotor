@@ -49,6 +49,7 @@ func engine() *gin.Engine {
 		CosmosServer.GET("/GetUnDelegation/", routes.GetCosmosUnBounding)
 		CosmosServer.GET("/Register/:wallet", routes.RegisterWallet)
 		CosmosServer.GET("/UnRegister/:wallet", routes.UnRegisterWallet)
+		CosmosServer.GET("/hoppers", routes.GetHopersBalance)
 	}
 	OsmosisServer := server.Group("/osmosis")
 	{

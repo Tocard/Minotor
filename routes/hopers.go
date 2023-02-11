@@ -16,7 +16,7 @@ func GetHopersBalance(c *gin.Context) {
 	HopersBalance.Timestamp = time.Now().Format(time.RFC3339)
 	err := json.Unmarshal(Body, &HopersBalance)
 	if err != nil {
-		c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err))
+		c.String(500, fmt.Sprintf("%s error on GetHopersBalance", err))
 		return
 	}
 	HopersBalanceJson, _ := json.Marshal(HopersBalance)

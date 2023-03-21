@@ -58,6 +58,10 @@ func engine() *gin.Engine {
 	{
 		GrafanaServer.GET("/Register/:user", routes.CreateGrafanaUser)
 	}
+	WalletOverview := server.Group("/wallets")
+	{
+		WalletOverview.POST("/add", routes.PostWalletsOverview)
+	}
 	return server
 }
 

@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"minotor/data"
-	"minotor/es"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"minotor/data"
+	"minotor/es"
 	"time"
 )
 

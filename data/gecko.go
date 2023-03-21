@@ -9,7 +9,7 @@ type GeckoCoin struct {
 	EUR       float32 `json:"eur"`
 }
 
-type GeckoAdvanceCoins []struct {
+type GeckoAdvanceCoin struct {
 	Timestamp                    string      `json:"@timestamp"`
 	ID                           string      `json:"id"`
 	Symbol                       string      `json:"symbol"`
@@ -42,4 +42,8 @@ type GeckoAdvanceCoins []struct {
 	PriceChangePercentage30DInCurrency  float64 `json:"price_change_percentage_30d_in_currency"`
 	PriceChangePercentage200DInCurrency float64 `json:"price_change_percentage_200d_in_currency"`
 	PriceChangePercentage1YInCurrency   float64 `json:"price_change_percentage_1y_in_currency"`
+}
+
+type GeckoAdvanceCoins struct {
+	GeckoAdvanceCoins []GeckoAdvanceCoin
 }

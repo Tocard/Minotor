@@ -46,7 +46,7 @@ func GetCosmosMarket(c *gin.Context) {
 	//	c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err.Error()))
 	//	return
 	//}
-	for _, CosmosToken := range GeckoAdvanceCoins {
+	for _, CosmosToken := range GeckoAdvanceCoins.GeckoAdvanceCoins {
 		CosmosToken.Timestamp = Now
 		CosmosTokenJson, _ := json.Marshal(CosmosToken)
 		GeckoAdvanceCoinsByte = append(GeckoAdvanceCoinsByte, CosmosTokenJson)

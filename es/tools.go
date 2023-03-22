@@ -92,20 +92,20 @@ func Bulk(index, data string) {
 		},
 	)
 	if err != nil {
-		log.Fatalf("Unexpected error: %s", err)
+		log.Printf("Unexpected error: %s\n", err)
 	}
 
 	// Close the indexer channel and flush remaining items
 	//
 	if err := indexer.Close(context.Background()); err != nil {
-		log.Fatalf("Unexpected error: %s", err)
+		log.Printf("Unexpected error: %s\n", err)
 	}
 
 	// Report the indexer statistics
 	//
 	stats := indexer.Stats()
 	if stats.NumFailed > 0 {
-		log.Fatalf("Indexed [%d] documents with [%d] errors", stats.NumFlushed, stats.NumFailed)
+		log.Printf("Indexed [%d] documents with [%d] errors\n", stats.NumFlushed, stats.NumFailed)
 	} else {
 		log.Printf("Successfully indexed [%d] documents", stats.NumFlushed)
 	}

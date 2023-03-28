@@ -62,6 +62,10 @@ func engine() *gin.Engine {
 	{
 		WalletOverview.POST("/add", routes.PostWalletsOverview)
 	}
+	Streamr := server.Group("/streamr")
+	{
+		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
+	}
 	return server
 }
 

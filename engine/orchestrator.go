@@ -77,3 +77,12 @@ func GetOsmosisPool() {
 
 	fmt.Println(resp)
 }
+
+func GetStreamR() {
+	url := fmt.Sprintf("%s:%d/streamr/status/%s", config.Cfg.APIAdress, config.Cfg.APIPort, config.Cfg.StreamRAddr)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

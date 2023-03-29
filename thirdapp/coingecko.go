@@ -2,7 +2,6 @@ package thirdapp
 
 import (
 	"encoding/json"
-	"fmt"
 	gecko "github.com/superoo7/go-gecko/v3"
 	geckoTypes "github.com/superoo7/go-gecko/v3/types"
 	"log"
@@ -15,15 +14,6 @@ func procGeckoClient() *gecko.Client {
 		Timeout: time.Second * 10,
 	}
 	return gecko.NewClient(httpClient)
-}
-
-func GetCoinList() {
-	cg := procGeckoClient()
-	list, err := cg.CoinsList()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	fmt.Println("Available coins:", len(*list))
 }
 
 func GetCurrencyValue(coins ...string) (*map[string]map[string]float32, error) {
@@ -47,7 +37,8 @@ func GetCoinsMarket() []byte {
 	order := geckoTypes.OrderTypeObject.MarketCapDesc
 	market, err := cg.CoinsMarket(vsCurrency, ids, order, perPage, page, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Printf("Error on GetCoinsMarket : %s\n", err.Error())
+		return nil
 	}
 	u, err := json.Marshal(*market)
 	return u
@@ -62,22 +53,13 @@ func Get2CoinsMarket() ([]byte, []byte) {
 	order := geckoTypes.OrderTypeObject.MarketCapDesc
 	market, err := cg.CoinsMarket(vsCurrency, ids, order, 250, 1, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("Error on Get2CoinsMarket CoinMarkets first call%s", err.Error())
 	}
 	u, err := json.Marshal(*market)
 	market2, err := cg.CoinsMarket(vsCurrency, ids, order, 250, 2, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatalf("Error on Get2CoinsMarket CoinMarket Second Call %s", err.Error())
 	}
 	u2, err := json.Marshal(*market2)
 	return u, u2
-}
-
-func GetCoin() {
-	cg := procGeckoClient()
-	list, err := cg.CoinsList()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	fmt.Println("Available coins:", len(*list))
 }

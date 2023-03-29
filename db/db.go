@@ -48,14 +48,8 @@ func GetConn() *gorm.DB {
 	}
 
 	if err != nil {
-		log.Println("fatal ", err.Error())
+		log.Printf("fatal error GetConn %s\n", err.Error())
 	}
-
-	// let GC to close old
-	/*runtime.SetFinalizer(DB, func(DB *gorm.DB) {
-		log.Println("Closing collected unclosed connection")
-		DB.Close()
-	})*/
 
 	if DEBUG {
 		return DB.Debug()

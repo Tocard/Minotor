@@ -34,11 +34,11 @@ func LoadYamlConfig(ConfigFilePath string) {
 	t := Config{}
 	data, err := ioutil.ReadFile(ConfigFilePath)
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatalf("Error on LoadConfig ReadFile: %s\n", err.Error())
 	}
 	err = yaml.Unmarshal(data, &t)
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatalf("Error on LoadConfig Unmarshal: %s\n", err.Error())
 	}
 	Cfg = &t
 }

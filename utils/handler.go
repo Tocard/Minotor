@@ -15,10 +15,6 @@ func HandleHttpError(err error) {
 	}
 }
 
-func HandleFatalMsg(msg string) {
-	log.Fatalln(msg)
-}
-
 func join(s ...string) string {
 	return strings.Join(s, "")
 }

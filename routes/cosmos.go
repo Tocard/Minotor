@@ -41,6 +41,9 @@ func GetCosmosMarket(c *gin.Context) {
 	Now := time.Now().Format(time.RFC3339)
 
 	Body := thirdapp.GetCoinsMarket()
+	if Body == nil {
+		c.String(500, string("Error on thirdapp.GetCoinsMarket()"))
+	}
 	json.Unmarshal(Body, &GeckoAdvanceCoins)
 	//	if err != nil { #TODO: understand why this error is triggered
 	//	c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err.Error()))

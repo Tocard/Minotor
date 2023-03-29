@@ -21,7 +21,7 @@ func GetCoinList() {
 	cg := procGeckoClient()
 	list, err := cg.CoinsList()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	fmt.Println("Available coins:", len(*list))
 }
@@ -47,7 +47,7 @@ func GetCoinsMarket() []byte {
 	order := geckoTypes.OrderTypeObject.MarketCapDesc
 	market, err := cg.CoinsMarket(vsCurrency, ids, order, perPage, page, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	u, err := json.Marshal(*market)
 	return u
@@ -62,12 +62,12 @@ func Get2CoinsMarket() ([]byte, []byte) {
 	order := geckoTypes.OrderTypeObject.MarketCapDesc
 	market, err := cg.CoinsMarket(vsCurrency, ids, order, 250, 1, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	u, err := json.Marshal(*market)
 	market2, err := cg.CoinsMarket(vsCurrency, ids, order, 250, 2, false, priceChangePercentage)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	u2, err := json.Marshal(*market2)
 	return u, u2
@@ -77,7 +77,7 @@ func GetCoin() {
 	cg := procGeckoClient()
 	list, err := cg.CoinsList()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	fmt.Println("Available coins:", len(*list))
 }

@@ -48,7 +48,7 @@ func GetConn() *gorm.DB {
 	}
 
 	if err != nil {
-		log.Println("fatal ", err)
+		log.Println("fatal ", err.Error())
 	}
 
 	// let GC to close old

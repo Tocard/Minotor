@@ -34,36 +34,3 @@ type FluxBlocsStats struct {
 		PercentTotal string `json:"percent_total"`
 	} `json:"blocks_by_pool"`
 }
-
-type FluxNodeOverview struct {
-	Timestamp           string `json:"@timestamp"`
-	Collateral          string `json:"collateral"`
-	Txhash              string `json:"txhash"`
-	Outidx              string `json:"outidx"`
-	IP                  string `json:"ip"`
-	Tier                string `json:"tier"`
-	PaymentAddress      string `json:"payment_address"`
-	Pubkey              string `json:"pubkey"`
-	Activesince         string `json:"activesince,omitempty"`
-	Lastpaid            string `json:"lastpaid,omitempty"`
-	Network             string `json:"network"`
-	Amount              string `json:"amount"`
-	Status              string `json:"status"`
-	EstimatedTimeToWin  string `json:"estimated_date_to_win,omitempty"`
-	Rank                int    `json:"rank"`
-	AddedHeight         int64  `json:"added_height"`
-	ConfirmedHeight     int64  `json:"confirmed_height"`
-	LastConfirmedHeight int64  `json:"last_confirmed_height"`
-	LastPaidHeight      int64  `json:"last_paid_height"`
-}
-
-type FluxNodesOverview struct {
-	Status   string             `json:"status"`
-	FluxNode []FluxNodeOverview `json:"data"`
-}
-
-type GetZelNodeStatus struct {
-	Data struct {
-		Status string `json:"status"`
-	} `json:"data"`
-}

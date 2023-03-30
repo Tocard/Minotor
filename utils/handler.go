@@ -15,17 +15,8 @@ func HandleHttpError(err error) {
 	}
 }
 
-func HandleFatalMsg(msg string) {
-	log.Fatalln(msg)
-}
-
 func join(s ...string) string {
 	return strings.Join(s, "")
-}
-
-func IsValidAdresse(wallet string) bool {
-	//TODO: do something smart & pertinent here
-	return true
 }
 
 // Execute a request. If token provided, it's added as Authorization.

@@ -29,34 +29,18 @@ func engine() *gin.Engine {
 	}))
 	server.Use(gin.Recovery())
 	server.GET("/health", routes.Health)
-
-	DefiExperience := server.Group("/DeFi")
-	{
-		DefiExperience.GET("/coins/price", routes.GetCoinsPrice)
-	}
 	FluxServer := server.Group("/flux")
 	{
 		FluxServer.GET("/calcul_nodes_rentability", routes.CalculNodesRentability)
-		FluxServer.GET("/flux_nodes_overview", routes.GetNodesOverwiew)
 	}
 	CosmosServer := server.Group("/cosmos")
 	{
-		CosmosServer.GET("/get_tokens", routes.GetCosmosTokens)
-		CosmosServer.GET("/get_market", routes.GetCosmosMarket)
 		CosmosServer.GET("/wrapper/", routes.WrapAllCosmosEndpoint)
 		CosmosServer.GET("/GetBalance/", routes.GetCosmosWallet)
 		CosmosServer.GET("/GetDelegation/", routes.GetCosmosBounding)
 		CosmosServer.GET("/GetUnDelegation/", routes.GetCosmosUnBounding)
 		CosmosServer.GET("/Register/:wallet", routes.RegisterWallet)
 		CosmosServer.GET("/UnRegister/:wallet", routes.UnRegisterWallet)
-	}
-	OsmosisServer := server.Group("/osmosis")
-	{
-		OsmosisServer.GET("/getPools", routes.GetOsmosisPool)
-	}
-	GrafanaServer := server.Group("/grafana")
-	{
-		GrafanaServer.GET("/Register/:user", routes.CreateGrafanaUser)
 	}
 	WalletOverview := server.Group("/wallets")
 	{

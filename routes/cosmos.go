@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"log"
 	"minotor/config"
 	"minotor/data"
@@ -14,46 +15,6 @@ import (
 	"net/http"
 	"time"
 )
-
-func GetCosmosTokens(c *gin.Context) {
-	var CosmosTokensByte [][]byte
-	CosmosTokens := data.CosmosTokens{}
-	Now := time.Now().Format(time.RFC3339)
-
-	code, Body := thirdapp.GetCosmosTokens()
-	err := json.Unmarshal(Body, &CosmosTokens)
-	if err != nil {
-		c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err))
-		return
-	}
-	for _, CosmosToken := range CosmosTokens {
-		CosmosToken.Timestamp = Now
-		CosmosTokenJson, _ := json.Marshal(CosmosToken)
-		CosmosTokensByte = append(CosmosTokensByte, CosmosTokenJson)
-	}
-	es.BulkData("minotor-cosmos-token", CosmosTokensByte)
-	c.String(code, string(Body))
-}
-
-func GetCosmosMarket(c *gin.Context) {
-	var GeckoAdvanceCoinsByte [][]byte
-	GeckoAdvanceCoins := data.GeckoAdvanceCoins{}
-	Now := time.Now().Format(time.RFC3339)
-
-	Body := thirdapp.GetCoinsMarket()
-	json.Unmarshal(Body, &GeckoAdvanceCoins)
-	//	if err != nil { #TODO: understand why this error is triggered
-	//	c.String(500, fmt.Sprintf("%s error on GetCosmosTokens", err.Error()))
-	//	return
-	//}
-	for _, CosmosToken := range GeckoAdvanceCoins.GeckoAdvanceCoins {
-		CosmosToken.Timestamp = Now
-		CosmosTokenJson, _ := json.Marshal(CosmosToken)
-		GeckoAdvanceCoinsByte = append(GeckoAdvanceCoinsByte, CosmosTokenJson)
-	}
-	es.BulkData("minotor-cosmos-market", GeckoAdvanceCoinsByte)
-	c.String(200, string(Body))
-}
 
 func WrapAllCosmosEndpoint(c *gin.Context) {
 
@@ -66,7 +27,12 @@ func WrapAllCosmosEndpoint(c *gin.Context) {
 	url = fmt.Sprintf("%s:%d/cosmos/GetUnDelegation", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err = http.Get(url)
 	utils.HandleHttpError(err)
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Printf("Error on WrapAllCosmosEndpoint :%s\n", err.Error())
+		}
+	}(resp.Body)
 	c.String(200, "Call made")
 }
 

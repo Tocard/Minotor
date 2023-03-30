@@ -2,13 +2,6 @@ package data
 
 import "time"
 
-type GeckoCoin struct {
-	Timestamp string  `json:"@timestamp"`
-	Coin      string  `json:"coin_keyword"`
-	USD       float32 `json:"usd"`
-	EUR       float32 `json:"eur"`
-}
-
 type GeckoAdvanceCoin struct {
 	Timestamp                    string      `json:"@timestamp"`
 	ID                           string      `json:"id"`

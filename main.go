@@ -23,7 +23,6 @@ func main() {
 		s.Every(10).Minutes().Do(engine.FluxNodeRentability)
 
 		s.Every(10).Minutes().Do(engine.GetStreamR)
-		s.Every(10).Minutes().Do(engine.HarvestComsosWallet)
 		s.Every(1).Minutes().Do(engine.HealthCheck)
 		s.StartAsync()
 	}()

@@ -13,6 +13,8 @@ import (
 
 func GetNewOsmoPullRequest(c *gin.Context) {
 	var PullRequests []data.PullRequest
+	var Result [][]byte
+
 	resp, err := utils.DoRequest("GET", "https://api.github.com/repos/osmosis-labs/osmosis-frontend/pulls", nil)
 	if err != nil {
 		c.String(resp.StatusCode, fmt.Sprintf("%s error on GetNewOsmoPullRequest -> DoRequest", err.Error()))
@@ -33,10 +35,12 @@ func GetNewOsmoPullRequest(c *gin.Context) {
 					} else {
 						MergedAt = PullRequest.MergedAt.String()
 					}
+					Result = append(Result, []byte(PullRequest.HtmlUrl))
 					discord.SendDiscordMsgAboutPool(PullRequest.Title, MergedAt, PullRequest.CreatedAt.String(), PullRequest.HtmlUrl)
 				}
 			}
 		}
 	}
-	c.String(201, "")
+	ResultJson, _ := json.Marshal(Result)
+	c.String(201, string(ResultJson))
 }

@@ -21,6 +21,7 @@ func main() {
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		s.Every(10).Minutes().Do(engine.FluxNodeRentability)
+		s.Every(10).Minutes().Do(engine.WebhookOsmoPullRequest)
 
 		s.Every(10).Minutes().Do(engine.GetStreamR)
 		s.Every(1).Minutes().Do(engine.HealthCheck)

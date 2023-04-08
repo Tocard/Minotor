@@ -1,42 +1,47 @@
 module minotor
 
-go 1.18
+go 1.20
 
 require (
-	github.com/cenkalti/backoff/v4 v4.1.3
-	github.com/dustin/go-humanize v1.0.0
-	github.com/elastic/elastic-transport-go/v8 v8.0.0-alpha
-	github.com/elastic/go-elasticsearch/v8 v8.0.0-alpha
-	github.com/gin-gonic/gin v1.7.7
-	github.com/go-co-op/gocron v1.11.0
-	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/bensch777/discord-webhook-golang v0.0.5
+	github.com/cenkalti/backoff/v4 v4.2.0
+	github.com/dustin/go-humanize v1.0.1
+	github.com/elastic/elastic-transport-go/v8 v8.2.0
+	github.com/elastic/go-elasticsearch/v8 v8.7.0
+	github.com/gin-gonic/gin v1.9.0
+	github.com/go-co-op/gocron v1.19.0
 	github.com/jinzhu/gorm v1.9.16
-	github.com/nanmu42/etherscan-api v1.6.0
 	github.com/superoo7/go-gecko v1.0.0
-	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
+	github.com/bytedance/sonic v1.8.7 // indirect
+	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-playground/locales v0.13.0 // indirect
-	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.12.0 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/json-iterator/go v1.1.9 // indirect
-	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
-	github.com/mattn/go-sqlite3 v1.14.0 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
-	github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742 // indirect
-	github.com/onsi/ginkgo v1.16.5 // indirect
-	github.com/onsi/gomega v1.18.1 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
+	github.com/leodido/go-urn v1.2.3 // indirect
+	github.com/mattn/go-isatty v0.0.18 // indirect
+	github.com/mattn/go-sqlite3 v1.14.16 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/ugorji/go/codec v1.1.7 // indirect
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
-	golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.1.0 // indirect
-	google.golang.org/protobuf v1.26.0 // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+	github.com/ugorji/go/codec v1.2.11 // indirect
+	golang.org/x/arch v0.3.0 // indirect
+	golang.org/x/crypto v0.8.0 // indirect
+	golang.org/x/net v0.9.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
+	google.golang.org/protobuf v1.30.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

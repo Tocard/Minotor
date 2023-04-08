@@ -50,6 +50,10 @@ func engine() *gin.Engine {
 	{
 		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
 	}
+	Github := server.Group("/github")
+	{
+		Github.GET("/osmo_pool", routes.GetNewOsmoPullRequest)
+	}
 	return server
 }
 

@@ -17,17 +17,19 @@ type Config struct {
 	TokenWatcher          []string `yaml:"token_watcher"`
 	UrlTokenWatcher       []string `yaml:"url_token_watcher"`
 
-	APIAdress       string   `yaml:"api_adress"`
-	APIPort         int      `yaml:"api_port"`
-	CoinList        []string `yaml:"coin_list"`
-	FluxNodeAPIURL  string   `yaml:"flux_node_api_url"`
-	Taddr           string   `yaml:"taddr"`
-	Zelid           string   `yaml:"zelid"`
-	GrafanaToken    string   `yaml:"grafana_api_token"`
-	GrafanaUser     string   `yaml:"grafana_user"`
-	GrafanaPassword string   `yaml:"grafana_password"`
-	GrafanaUrl      string   `yaml:"grafana_url"`
-	StreamRAddr     string   `yaml:"streamr_address"`
+	APIAdress              string   `yaml:"api_adress"`
+	APIPort                int      `yaml:"api_port"`
+	CoinList               []string `yaml:"coin_list"`
+	FluxNodeAPIURL         string   `yaml:"flux_node_api_url"`
+	Taddr                  string   `yaml:"taddr"`
+	Zelid                  string   `yaml:"zelid"`
+	GrafanaToken           string   `yaml:"grafana_api_token"`
+	GrafanaUser            string   `yaml:"grafana_user"`
+	GrafanaPassword        string   `yaml:"grafana_password"`
+	GrafanaUrl             string   `yaml:"grafana_url"`
+	StreamRAddr            string   `yaml:"streamr_address"`
+	DiscordDefiMinotor     string   `yaml:"discord_defi_minotor_handler"`
+	DiscordDefiMinotorLogo string   `yaml:"discord_defi_minotor_logo"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

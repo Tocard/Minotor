@@ -41,3 +41,12 @@ func GetStreamR() {
 
 	fmt.Println(resp)
 }
+
+func WebhookOsmoPullRequest() {
+	url := fmt.Sprintf("%s:%d/github/osmosis-labs/osmosis-frontend", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}

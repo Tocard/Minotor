@@ -22,6 +22,7 @@ type ChiaPlotCheckSummary struct {
 		PlotsSize         float64 `json:"plots_size"`
 		PlotsSizeUnit     string  `json:"plots_size_unit"`
 		InvalidPlotsCount int     `json:"invalid_plots_count"`
+		Challenge         int     `json:"challenge"`
 	} `json:"farm_summary"`
 	Timestamp time.Time `json:"@timestamp"`
 }

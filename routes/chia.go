@@ -19,5 +19,5 @@ func PostChiaPlotSummary(c *gin.Context) {
 		c.String(500, "Error on PostChiaPlotSummary | Marshal: %s ", err.Error())
 	}
 	es.Bulk("minotor-chia_plot_check_summary", string(ChiaPlotCheckSummaryJson))
-	c.String(201, string(ChiaPlotCheckSummaryJson))
+	c.String(201, "Data added to Minotor")
 }

@@ -17,6 +17,7 @@ func PostChiaPlotSummary(c *gin.Context) {
 	}
 	for _, Plot := range ChiaPlotCheckSummary.Plots {
 		Plot.Pseudo = ChiaPlotCheckSummary.Pseudo
+		Plot.Timestamp = ChiaPlotCheckSummary.Timestamp
 		PlotJson, err := json.Marshal(Plot)
 		if err != nil {
 			c.String(500, "Error on PostChiaPlotSummary | Marshal Plot: %s ", err.Error())
@@ -24,7 +25,7 @@ func PostChiaPlotSummary(c *gin.Context) {
 		ChiaPlots = append(ChiaPlots, PlotJson)
 	}
 	es.BulkData("minotor-chia_plot_check_summary", ChiaPlots)
-	ChiaPlotCheckSummary.Plots = nil
+	ChiaPlotCheckSummary.Plots = data.ChiaPlotCheckSummary{}.Plots
 	ChiaPlotCheckSummaryJson, err := json.Marshal(ChiaPlotCheckSummary)
 	if err != nil {
 		c.String(500, "Error on PostChiaPlotSummary | Marshal ChiaPlotCheckSummary : %s ", err.Error())

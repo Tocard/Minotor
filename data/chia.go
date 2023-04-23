@@ -12,6 +12,7 @@ type ChiaPlotCheckSummary struct {
 		PlotQuality  float64 `json:"plot_quality,omitempty"`
 		ProofFound   int     `json:"proof_found,omitempty"`
 		ProofTested  int     `json:"proof_tested,omitempty"`
+		Pseudo       string  `json:"pseudo,omitempty"`
 	} `json:"plots"`
 	InvalidPlots []string `json:"invalid_plots"`
 	Pseudo       string   `json:"pseudo"`

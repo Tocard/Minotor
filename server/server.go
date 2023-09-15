@@ -50,6 +50,10 @@ func engine() *gin.Engine {
 	{
 		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
 	}
+	Nibiru := server.Group("/nibiru")
+	{
+		Nibiru.GET("/validators", routes.GetNibiruValidatorsStatus)
+	}
 	return server
 }
 

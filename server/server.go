@@ -50,6 +50,9 @@ func engine() *gin.Engine {
 	{
 		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
 	}
+	Nibiru := server.Group("/nibiru")
+	{
+		Nibiru.GET("/validators", routes.GetNibiruValidatorsStatus)
 	Chia := server.Group("/chia")
 	{
 		Chia.POST("/plot_check_summary", routes.PostChiaPlotSummary)

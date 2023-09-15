@@ -50,6 +50,10 @@ func engine() *gin.Engine {
 	{
 		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
 	}
+	Chia := server.Group("/chia")
+	{
+		Chia.POST("/plot_check_summary", routes.PostChiaPlotSummary)
+	}
 	return server
 }
 

@@ -42,8 +42,8 @@ func GetStreamR() {
 	fmt.Println(resp)
 }
 
-func GetNibiruValidators() {
-	url := fmt.Sprintf("%s:%d/nibiru/validators", config.Cfg.APIAdress, config.Cfg.APIPort)
+func GetChiaPoolDbWinBlock() {
+	url := fmt.Sprintf("%s:%d/chia/pool/blocks_win", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()

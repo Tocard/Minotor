@@ -2,11 +2,54 @@ package es
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"log"
 	"strings"
 )
+
+func GetMaxValueFromIndexForField(index, field string) (int64, error) {
+	aggregationQuery := map[string]interface{}{
+		"aggs": map[string]interface{}{
+			"search_last_value": map[string]interface{}{
+				"max": map[string]interface{}{
+					"field": field,
+				},
+			},
+		},
+	}
+	aggregationJSON, err := json.Marshal(aggregationQuery)
+	if err != nil {
+		return 0, err
+	}
+	searchRequest := esapi.SearchRequest{
+		Index: []string{index},
+		Body:  strings.NewReader(string(aggregationJSON)),
+	}
+	response, err := searchRequest.Do(context.Background(), EsClient)
+	if err != nil {
+		return 0, err
+	}
+	defer response.Body.Close()
+	if response.StatusCode == 404 {
+		return 0, fmt.Errorf("Elasticsearch index %s does not exist, so it will return 0 | error: %s.", index, response.Status())
+	}
+	if response.IsError() {
+		return 0, fmt.Errorf("Elasticsearch response error: %s.", response.Status())
+	}
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
+		return 0, err
+	}
+	aggregations, _ := result["aggregations"].(map[string]interface{})
+	Search, _ := aggregations["search_last_value"].(map[string]interface{})
+	value, _ := Search["value"].(float64)
+
+	return int64(value), nil
+}
 
 func Bulk(index, data string) {
 	indexer, _ := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{

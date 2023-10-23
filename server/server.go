@@ -59,6 +59,12 @@ func engine() *gin.Engine {
 		Chia.POST("/plot_check_summary", routes.PostChiaPlotSummary)
 		ChiaPool := Chia.Group("/pool")
 		ChiaPool.GET("/blocks_win", routes.ChiaPoolBlockWins)
+		ChiaPool.GET("/farmer", routes.ChiaPoolFarmers)
+		ChiaPool.GET("/farmer_netspace", routes.ChiaPoolFarmerNetspace)
+		ChiaPool.GET("/pool_netspace", routes.ChiaPoolPoolNetspace)
+		ChiaPool.GET("/partials", routes.ChiaPoolPartial)
+		ChiaPool.GET("/payments", routes.ChiaPoolFarmerPayment)
+		ChiaPool.GET("/uptime", routes.ChiaPoolFarmerUptime)
 	}
 	return server
 }

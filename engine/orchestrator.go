@@ -42,8 +42,62 @@ func GetStreamR() {
 	fmt.Println(resp)
 }
 
-func GetNibiruValidators() {
-	url := fmt.Sprintf("%s:%d/nibiru/validators", config.Cfg.APIAdress, config.Cfg.APIPort)
+func EngineChiaPoolBlockWins() {
+	url := fmt.Sprintf("%s:%d/chia/pool/blocks_win", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolFarmers() {
+	url := fmt.Sprintf("%s:%d/chia/pool/farmer", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolFarmerNetspace() {
+	url := fmt.Sprintf("%s:%d/chia/pool/farmer_netspace", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolPartial() {
+	url := fmt.Sprintf("%s:%d/chia/pool/partials", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolFarmerPayment() {
+	url := fmt.Sprintf("%s:%d/chia/pool/payments", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolFarmerUptime() {
+	url := fmt.Sprintf("%s:%d/chia/pool/uptime", config.Cfg.APIAdress, config.Cfg.APIPort)
+	resp, err := http.Get(url)
+	utils.HandleHttpError(err)
+	defer resp.Body.Close()
+
+	fmt.Println(resp)
+}
+
+func EngineChiaPoolPoolNetspace() {
+	url := fmt.Sprintf("%s:%d/chia/pool/pool_netspace", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
 	defer resp.Body.Close()

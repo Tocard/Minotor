@@ -48,7 +48,9 @@ func engine() *gin.Engine {
 	}
 	Streamr := server.Group("/streamr")
 	{
-		Streamr.GET("/status/:addr", routes.GetStreamrStatus)
+		Streamr.GET("/operator/:addr", routes.GetNodeStatus)
+		Streamr.GET("/all_operator", routes.GetAllNodesStatus)
+		Streamr.GET("/slashing_history", routes.GetSlashingHistory)
 	}
 	Nibiru := server.Group("/nibiru")
 	{

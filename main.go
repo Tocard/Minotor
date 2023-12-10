@@ -25,15 +25,8 @@ func main() {
 	}
 	go func() {
 		s := gocron.NewScheduler(time.Local)
-		s.Every(10).Minutes().Do(engine.GetStreamR)
+		s.Every(10).Minutes().Do(engine.GetAllNodesStatus)
 		s.Every(1).Minutes().Do(engine.HealthCheck)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolFarmerPayment)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolFarmerUptime)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolBlockWins)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolPoolNetspace)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolFarmers)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolFarmerNetspace)
-		s.Every(1).Minutes().Do(engine.EngineChiaPoolPartial)
 
 		s.StartAsync()
 	}()

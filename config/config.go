@@ -27,13 +27,14 @@ type Config struct {
 	GrafanaUser     string   `yaml:"grafana_user"`
 	GrafanaPassword string   `yaml:"grafana_password"`
 	GrafanaUrl      string   `yaml:"grafana_url"`
-	StreamRAddr     string   `yaml:"streamr_address"`
 
 	ChiaDBPoolUser string `yaml:"chia_db_pool_user"`
 	ChiaDBPoolPass string `yaml:"chia_db_pool_pass"`
 	ChiaDBPoolHost string `yaml:"chia_db_pool_host"`
 	ChiaDBPoolPort string `yaml:"chia_db_pool_port"`
 	ChiaDBPoolName string `yaml:"chia_db_pool_name"`
+
+	StreamrApiUrl string `yaml:"streamr_api_url"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

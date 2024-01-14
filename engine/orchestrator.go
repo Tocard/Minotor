@@ -33,12 +33,13 @@ func HealthCheck() {
 	fmt.Println(resp)
 }
 
-func GetStreamR() {
-	url := fmt.Sprintf("%s:%d/streamr/status/%s", config.Cfg.APIAdress, config.Cfg.APIPort, config.Cfg.StreamRAddr)
+func GetAllNodesStatus() {
+	url := fmt.Sprintf("%s:%d/streamr/all_operator", config.Cfg.APIAdress, config.Cfg.APIPort)
 	resp, err := http.Get(url)
 	utils.HandleHttpError(err)
-	defer resp.Body.Close()
-
+	if err != nil {
+		defer resp.Body.Close()
+	}
 	fmt.Println(resp)
 }
 

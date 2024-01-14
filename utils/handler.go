@@ -24,10 +24,10 @@ func DoRequest(method, url string, data interface{}, token ...string) (*http.Res
 	b, _ := json.Marshal(data)
 	body := bytes.NewReader(b)
 	req, _ := http.NewRequest(method, url, body)
-	if len(token) > 0 {
+	if token != nil && len(token) > 0 {
 		req.Header.Add("Authorization", "Bearer "+token[0])
+		req.BasicAuth()
 	}
-	req.BasicAuth()
 	client := http.Client{}
 	return client.Do(req)
 }

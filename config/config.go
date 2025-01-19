@@ -34,7 +34,8 @@ type Config struct {
 	ChiaDBPoolPort string `yaml:"chia_db_pool_port"`
 	ChiaDBPoolName string `yaml:"chia_db_pool_name"`
 
-	StreamrApiUrl string `yaml:"streamr_api_url"`
+	StreamrApiUrl    string `yaml:"streamr_api_url"`
+	AutonomysNodeUrl string `yaml:"autonomys_node_url"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

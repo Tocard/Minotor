@@ -68,6 +68,12 @@ func engine() *gin.Engine {
 		ChiaPool.GET("/payments", routes.ChiaPoolFarmerPayment)
 		ChiaPool.GET("/uptime", routes.ChiaPoolFarmerUptime)
 	}
+	Autonomys := server.Group("/autonomys")
+	{
+		AutonomysWallet := Autonomys.Group("/wallet")
+		AutonomysWallet.GET("/harvest", routes.AutonomysHarvestWallet)
+
+	}
 	return server
 }
 

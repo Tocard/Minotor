@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"github.com/gin-gonic/gin"
@@ -52,7 +51,7 @@ func AutonomysHarvestWallet(c *gin.Context) {
 
 		var _Wallet = data.Wallet{Address: _addr, Amount: result, Timestamp: TimeMarker}
 		log.Printf("Public Key 0x%s has a balance of %d\n", hex.EncodeToString(address), balance)
-		rawJson, _ := json.Marshal(_Wallet)
+		rawJson, _ := _Wallet.MarshalJSON()
 
 		Result = append(Result, rawJson)
 	}

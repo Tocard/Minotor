@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/centrifuge/go-substrate-rpc-client/v4/types"
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 	"math/big"
 	"minotor/autonomys"
 	"minotor/data"
+	"minotor/db"
 	"minotor/es"
 	"minotor/utils"
 	"time"
@@ -21,8 +23,10 @@ func AutonomysHarvestWallet(c *gin.Context) {
 	if err != nil {
 		log.Fatalf("Failed to fetch metadata: %v\n", err)
 	}
-	_addresses := []string{
-		"0x62654ea0a3a04edf47ccd0fc36906cb27b9eb3fa3c3b7a6670c0fc167a7f2277",
+	Wallets, _ := db.GetAllWallets()
+	var _addresses []string
+	for _, Wallet := range Wallets {
+		_addresses = append(_addresses, Wallet.Address)
 	}
 	addresses := utils.CleanAddressesArray(_addresses)
 	for _, address := range addresses {
@@ -57,4 +61,48 @@ func AutonomysHarvestWallet(c *gin.Context) {
 	}
 	es.BulkData("minotor-autonomys-wallet", Result)
 	c.String(200, "AutonomysHarvestWallet Done")
+}
+
+func RegisterWallet(c *gin.Context) {
+	wallet := c.Param("wallet")
+	Wallet := db.NewWallet(wallet)
+	err := Wallet.Save()
+	if err != nil {
+		resp := fmt.Sprintf("something went wrong while registered %s", wallet)
+		c.String(503, resp)
+
+	} else {
+		resp := fmt.Sprintf("wallet %s fully registered", wallet)
+		c.String(201, resp)
+	}
+}
+
+func UnRegisterWallet(c *gin.Context) {
+	wallet := c.Param("wallet")
+	Wallet, err := db.GetWalletByAdresses(wallet)
+	if err != nil {
+		resp := fmt.Sprintf("Wallet %s is not registered", wallet)
+		c.String(404, resp)
+	}
+	err = Wallet.Delete()
+	if err != nil {
+		resp := fmt.Sprintf("Unable to delete wallet %s, contact admin", wallet)
+		c.String(503, resp)
+	} else {
+		resp := fmt.Sprintf("wallet %s succefully removed", wallet)
+		c.String(200, resp)
+	}
+}
+
+func ListWallet(c *gin.Context) {
+	Wallets, err := db.GetAllWallets()
+	if err != nil {
+		resp := fmt.Sprintf("something went wrong while getting wallet %s", err.Error())
+		c.String(503, resp)
+
+	} else {
+		WalletsJson, _ := json.Marshal(Wallets)
+
+		c.String(201, string(WalletsJson))
+	}
 }

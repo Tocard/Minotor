@@ -5,6 +5,7 @@ import (
 	"minotor/autonomys"
 	"minotor/cli"
 	"minotor/config"
+	"minotor/db"
 	"minotor/engine"
 	"minotor/es"
 	"minotor/server"
@@ -17,7 +18,7 @@ func main() {
 	//utils.CreateNodes()
 	es.Connection()
 	autonomys.ConnectNode()
-	//db.Migrate()
+	db.Migrate()
 	//if err := ChiaDbPool.ConnectToDB(); err != nil {
 	//	log.Fatal(err)
 	//}

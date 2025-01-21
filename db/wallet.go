@@ -2,12 +2,12 @@ package db
 
 type Wallet struct {
 	Model
-	Wallet string `gorm:",not null" json:"wallet"`
+	Address string `gorm:",not null" json:"address"`
 }
 
 // NewWallet returns a Wallet pointer.
 func NewWallet(wallet string) *Wallet {
-	return &Wallet{Wallet: wallet}
+	return &Wallet{Address: wallet}
 }
 
 // Save the Wallet in database.
@@ -27,13 +27,13 @@ func (w *Wallet) Delete() error {
 }
 
 // GetWalletByAdresses get wallet from adresses.
-func GetWalletByAdresses(wallet string) (Wallet, error) {
+func GetWalletByAdresses(Address string) (Wallet, error) {
 	db := GetConn()
 	defer db.Close()
 	toreturn := Wallet{}
 	err := db.Model(&Wallet{}).Where(
-		"wallet = ?",
-		wallet,
+		"address = ?",
+		Address,
 	).Find(&toreturn)
 	return toreturn, err.Error
 }

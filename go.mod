@@ -1,6 +1,6 @@
 module minotor
 
-go 1.21
+go 1.23.5
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.1
@@ -12,9 +12,7 @@ require (
 	github.com/go-co-op/gocron v1.35.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/mr-tron/base58 v1.2.0
-	github.com/superoo7/go-gecko v1.0.0
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/driver/postgres v1.5.3
 	gorm.io/gorm v1.25.5
 )
 
@@ -44,9 +42,6 @@ require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/gtank/ristretto255 v0.1.2 // indirect
-	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

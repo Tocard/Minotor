@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"math/big"
+	"strings"
 )
 
 type Wallet struct {
@@ -31,4 +32,19 @@ func (w Wallet) MarshalJSON() ([]byte, error) {
 		}(),
 		Alias: (*Alias)(&w),
 	})
+}
+
+// IsValidAutonomysAddress checks if a given address is a well-formatted Autonomys public key.
+func IsValidAutonomysAddress(address string) bool {
+	if len(address) != 66 || !strings.HasPrefix(address, "0x") {
+		return false
+	}
+	hexPart := address[2:]
+	for _, char := range hexPart {
+		if !((char >= '0' && char <= '9') || (char >= 'a' && char <= 'f')) {
+			return false
+		}
+	}
+
+	return true
 }

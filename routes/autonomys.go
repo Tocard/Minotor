@@ -65,31 +65,65 @@ func AutonomysHarvestWallet(c *gin.Context) {
 
 func RegisterWallet(c *gin.Context) {
 	wallet := c.Param("wallet")
-	Wallet := db.NewWallet(wallet)
-	err := Wallet.Save()
+	WalletExist, err := db.WalletExists(wallet)
 	if err != nil {
-		resp := fmt.Sprintf("something went wrong while registered %s", wallet)
+		resp := fmt.Sprintf("Unable to get wallets on RegisterWallet %s", err.Error())
 		c.String(503, resp)
-
-	} else {
-		resp := fmt.Sprintf("wallet %s fully registered", wallet)
-		c.String(201, resp)
+		return
 	}
+	if data.IsValidAutonomysAddress(wallet) == false {
+		resp := fmt.Sprintf("wallet %s is not a correct pulic key", wallet)
+		c.String(400, resp)
+		return
+	}
+	if WalletExist {
+		resp := fmt.Sprintf("wallet %s already registered", wallet)
+		c.String(200, resp)
+		return
+	}
+
+	Wallet := db.NewWallet(wallet)
+	err = Wallet.Save()
+	if err != nil {
+		resp := fmt.Sprintf("something went wrong while registered %s. %s", wallet, err.Error())
+		c.String(503, resp)
+		return
+
+	}
+	resp := fmt.Sprintf("wallet %s fully registered", wallet)
+	c.String(201, resp)
 }
 
 func UnRegisterWallet(c *gin.Context) {
 	wallet := c.Param("wallet")
-	Wallet, err := db.GetWalletByAdresses(wallet)
+	WalletExist, err := db.WalletExists(wallet)
 	if err != nil {
-		resp := fmt.Sprintf("Wallet %s is not registered", wallet)
-		c.String(404, resp)
-	}
-	err = Wallet.Delete()
-	if err != nil {
-		resp := fmt.Sprintf("Unable to delete wallet %s, contact admin", wallet)
+		resp := fmt.Sprintf("Unable to get wallets on RegisterWallet %s", err.Error())
 		c.String(503, resp)
+		return
+	}
+	if data.IsValidAutonomysAddress(wallet) == false {
+		resp := fmt.Sprintf("wallet %s is not a correct pulic key", wallet)
+		c.String(400, resp)
+		return
+	}
+	if WalletExist {
+		Wallet, err := db.GetWalletByAdresses(wallet)
+		if err != nil {
+			resp := fmt.Sprintf("Error while unregistered %s: %s", wallet, err.Error())
+			c.String(404, resp)
+		} else {
+			err = Wallet.Delete()
+			if err != nil {
+				resp := fmt.Sprintf("Unable to delete wallet %s, contact admin", wallet)
+				c.String(503, resp)
+			} else {
+				resp := fmt.Sprintf("wallet %s succefully removed", wallet)
+				c.String(200, resp)
+			}
+		}
 	} else {
-		resp := fmt.Sprintf("wallet %s succefully removed", wallet)
+		resp := fmt.Sprintf("wallet %s not registered", wallet)
 		c.String(200, resp)
 	}
 }

@@ -13,7 +13,6 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/mr-tron/base58 v1.2.0
 	gopkg.in/yaml.v2 v2.4.0
-	gorm.io/gorm v1.25.5
 )
 
 require (

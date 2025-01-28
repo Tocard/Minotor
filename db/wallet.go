@@ -49,3 +49,17 @@ func GetAllWallets() ([]Wallet, error) {
 	}
 	return Wallets, nil
 }
+
+// WalletExists checks if a wallet exists in the database by its identifier.
+func WalletExists(wallet string) (bool, error) {
+	db := GetConn()
+	defer db.Close()
+
+	var count int64
+	res := db.Model(Wallet{}).Where("address = ?", wallet).Count(&count)
+
+	if res.Error != nil {
+		return false, res.Error
+	}
+	return count > 0, nil
+}

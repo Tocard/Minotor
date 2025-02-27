@@ -16,6 +16,21 @@ import (
 	"time"
 )
 
+// AutonomysHarvestWalletSS58 retrieves balance using an SS58 address
+/*func AutonomysHarvestWalletSS58(c *gin.Context) {
+	ss58Address := c.Param("wallet")
+
+	pubKey, prefix, err := utils.DecodeSS58(ss58Address)
+	if err != nil {
+		log.Println("Error:", err)
+		c.String(400, "Invalid SS58 address")
+		return
+	}
+
+	log.Printf("Custom Prefix: %d\nPublic Key: %x\n", prefix, pubKey)
+	c.String(200, fmt.Sprintf("Custom Prefix: %d\nPublic Key: %x", prefix, pubKey))
+}*/
+
 func AutonomysHarvestWallet(c *gin.Context) {
 	var Result = [][]byte{}
 	var TimeMarker = time.Now().Format(time.RFC3339)
@@ -24,28 +39,32 @@ func AutonomysHarvestWallet(c *gin.Context) {
 		log.Fatalf("Failed to fetch metadata: %v\n", err)
 	}
 	Wallets, _ := db.GetAllWallets()
-	var _addresses []string
+	var addresses []string
 	for _, Wallet := range Wallets {
-		_addresses = append(_addresses, Wallet.Address)
+		addresses = append(addresses, Wallet.Address)
 	}
-	addresses := utils.CleanAddressesArray(_addresses)
-	for _, address := range addresses {
-		key, err := types.CreateStorageKey(meta, "System", "Account", address)
+	for _, ss58Address := range addresses {
+		pubKey, _, err := utils.DecodeSS58(ss58Address)
 		if err != nil {
-			log.Printf("Failed to create storage key for public key 0x%s: %v\n", hex.EncodeToString(address), err)
+			log.Println("Error:", err)
+			c.String(400, "Invalid SS58 address")
+			return
+		}
+		key, err := types.CreateStorageKey(meta, "System", "Account", pubKey)
+		if err != nil {
+			log.Printf("Failed to create storage key for public key 0x%s: %v\n", hex.EncodeToString(pubKey), err)
 			continue
 		}
 
 		var accountInfo types.AccountInfo
 		ok, err := autonomys.Node.RPC.State.GetStorageLatest(key, &accountInfo)
 		if err != nil || !ok {
-			log.Printf("Failed to get storage for public key 0x%s: %v\n", hex.EncodeToString(address), err)
+			log.Printf("Failed to get storage for public key 0x%s: %v\n", hex.EncodeToString(pubKey), err)
 			continue
 		}
 
 		balance := accountInfo.Data.Free
 
-		_addr := fmt.Sprintf("0x%s", hex.EncodeToString(address))
 		u128 := new(big.Int)
 		u128.SetString(balance.String(), 10)
 
@@ -53,8 +72,8 @@ func AutonomysHarvestWallet(c *gin.Context) {
 		divisor := big.NewFloat(1000000000000000000)
 		result := new(big.Float).Quo(float128, divisor)
 
-		var _Wallet = data.Wallet{Address: _addr, Amount: result, Timestamp: TimeMarker}
-		log.Printf("Public Key 0x%s has a balance of %d\n", hex.EncodeToString(address), balance)
+		var _Wallet = data.Wallet{Address: ss58Address, Amount: result, Timestamp: TimeMarker}
+		log.Printf("Address %s ss58Address and/or Public Key 0x%s has a balance of %d\n", ss58Address, hex.EncodeToString(pubKey), balance)
 		rawJson, _ := _Wallet.MarshalJSON()
 
 		Result = append(Result, rawJson)
@@ -64,34 +83,40 @@ func AutonomysHarvestWallet(c *gin.Context) {
 }
 
 func RegisterWallet(c *gin.Context) {
-	wallet := c.Param("wallet")
-	WalletExist, err := db.WalletExists(wallet)
+	ss58Address := c.Param("wallet")
+
+	pubKey, prefix, err := utils.DecodeSS58(ss58Address)
+	if err != nil {
+		log.Println("Error:", err)
+		c.String(400, "Invalid SS58 address")
+		return
+	}
+
+	log.Printf("Custom Prefix: %d\nPublic Key: %x\n for address %s\n", prefix, pubKey, ss58Address)
+
+	WalletExist, err := db.WalletExists(ss58Address)
 	if err != nil {
 		resp := fmt.Sprintf("Unable to get wallets on RegisterWallet %s", err.Error())
 		c.String(503, resp)
 		return
 	}
-	if data.IsValidAutonomysAddress(wallet) == false {
-		resp := fmt.Sprintf("wallet %s is not a correct pulic key", wallet)
-		c.String(400, resp)
-		return
-	}
+
 	if WalletExist {
-		resp := fmt.Sprintf("wallet %s already registered", wallet)
-		c.String(200, resp)
+		resp := fmt.Sprintf("wallet %s already registered", ss58Address)
+		c.String(204, resp)
 		return
 	}
 
-	Wallet := db.NewWallet(wallet)
+	Wallet := db.NewWallet(ss58Address)
 	err = Wallet.Save()
 	if err != nil {
-		resp := fmt.Sprintf("something went wrong while registered %s. %s", wallet, err.Error())
+		resp := fmt.Sprintf("something went wrong while registered %s. %s", ss58Address, err.Error())
 		c.String(503, resp)
 		return
 
 	}
-	resp := fmt.Sprintf("wallet %s fully registered", wallet)
-	c.String(201, resp)
+	c.String(201, fmt.Sprintf("Custom Prefix: %d\nPublic Key: %x for adress %s", prefix, pubKey, ss58Address))
+
 }
 
 func UnRegisterWallet(c *gin.Context) {

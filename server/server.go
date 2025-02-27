@@ -36,6 +36,7 @@ func engine() *gin.Engine {
 		AutonomysWallet.GET("/register/:wallet", routes.RegisterWallet)
 		AutonomysWallet.GET("/unregister/:wallet", routes.UnRegisterWallet)
 		AutonomysWallet.GET("/list", routes.ListWallet)
+		//AutonomysWallet.GET("/test/:wallet", routes.AutonomysHarvestWalletSS58)
 	}
 	return server
 }

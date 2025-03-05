@@ -6,6 +6,7 @@ import (
 	"minotor/cli"
 	"minotor/config"
 	"minotor/db"
+	"minotor/engine"
 	"minotor/es"
 	"minotor/server"
 	"time"
@@ -24,6 +25,7 @@ func main() {
 	go func() {
 		s := gocron.NewScheduler(time.Local)
 		//		s.Every(1).Minutes().Do(engine.GetAllNodesStatus)
+		s.Every(1).Minutes().Do(engine.EngineHarvestAutonomysWallet)
 
 		s.StartAsync()
 	}()

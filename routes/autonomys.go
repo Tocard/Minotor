@@ -9,10 +9,12 @@ import (
 	"log"
 	"math/big"
 	"minotor/autonomys"
+	"minotor/config"
 	"minotor/data"
 	"minotor/db"
 	"minotor/es"
 	"minotor/utils"
+	"net/http"
 	"time"
 )
 
@@ -159,4 +161,11 @@ func ListWallet(c *gin.Context) {
 	}
 	WalletsJson, _ := json.Marshal(Wallets)
 	c.String(200, string(WalletsJson))
+}
+
+func ServeWalletPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "wallet.html", gin.H{
+		"apiAddress": config.Cfg.APIAdress,
+		"apiPort":    config.Cfg.APIPort,
+	})
 }

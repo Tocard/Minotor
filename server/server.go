@@ -15,6 +15,7 @@ import (
 func engine() *gin.Engine {
 	gin.ForceConsoleColor()
 	server := gin.New()
+	server.LoadHTMLGlob("templates/*")
 	docs.SwaggerInfo.BasePath = ""
 	server.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 
@@ -37,11 +38,14 @@ func engine() *gin.Engine {
 
 	Autonomys := server.Group("/autonomys")
 	{
+		Autonomys.GET("/wallet", routes.ServeWalletPage)
 		AutonomysWallet := Autonomys.Group("/wallet")
-		AutonomysWallet.GET("/harvest", routes.AutonomysHarvestWallet)
-		AutonomysWallet.GET("/register/:wallet", routes.RegisterWallet)
-		AutonomysWallet.GET("/unregister/:wallet", routes.UnRegisterWallet)
-		AutonomysWallet.GET("/list", routes.ListWallet)
+		{
+			AutonomysWallet.GET("/harvest", routes.AutonomysHarvestWallet)
+			AutonomysWallet.GET("/register/:wallet", routes.RegisterWallet)
+			AutonomysWallet.GET("/unregister/:wallet", routes.UnRegisterWallet)
+			AutonomysWallet.GET("/list", routes.ListWallet)
+		}
 	}
 	return server
 }

@@ -8,7 +8,7 @@ import (
 
 type Wallet struct {
 	Address   string     `json:"address"`
-	Amount    *big.Float `json:"amount"`
+	Amount    *big.Float `json:"amount" swaggertype:"number"` // Tell Swagger to treat it as a string
 	Timestamp string     `json:"@timestamp,omitempty"`
 }
 

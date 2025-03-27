@@ -8,6 +8,13 @@ import (
 	"time"
 )
 
+// @Summary Health Check
+// @Description Returns the health status of Minotor
+// @Tags health
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "In Minotor We Trust"
+// @Router /health [get]
 func Health(c *gin.Context) {
 	Health := data.Health{}
 	Status := string("In Minotor We Trust")

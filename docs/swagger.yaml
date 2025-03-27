@@ -1,0 +1,128 @@
+definitions:
+  data.Wallet:
+    properties:
+      '@timestamp':
+        type: string
+      address:
+        type: string
+      amount:
+        description: Tell Swagger to treat it as a string
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /autonomys/wallet/harvest:
+    get:
+      consumes:
+      - application/json
+      description: Harvests rewards from the autonomous wallet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: AutonomysHarvestWallet Done
+          schema:
+            type: string
+        "400":
+          description: Invalid SS58 address
+          schema:
+            type: string
+      summary: Harvest wallet
+      tags:
+      - autonomys_wallet
+  /autonomys/wallet/list:
+    get:
+      consumes:
+      - application/json
+      description: Lists all registered wallets
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of wallets in JSON format
+          schema:
+            items:
+              $ref: '#/definitions/data.Wallet'
+            type: array
+        "503":
+          description: Service unavailable
+          schema:
+            type: string
+      summary: List wallets
+      tags:
+      - autonomys_wallet
+  /autonomys/wallet/register/{wallet}:
+    get:
+      consumes:
+      - application/json
+      description: Registers a new wallet to the autonomys system
+      parameters:
+      - description: Wallet Address
+        in: path
+        name: wallet
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Wallet successfully registered
+          schema:
+            type: string
+        "400":
+          description: Invalid SS58 address
+          schema:
+            type: string
+        "503":
+          description: Service unavailable
+          schema:
+            type: string
+      summary: Register a wallet
+      tags:
+      - autonomys_wallet
+  /autonomys/wallet/unregister/{wallet}:
+    get:
+      consumes:
+      - application/json
+      description: Removes a wallet from the autonomys system
+      parameters:
+      - description: Wallet Address
+        in: path
+        name: wallet
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Wallet successfully removed
+          schema:
+            type: string
+        "400":
+          description: Invalid wallet address
+          schema:
+            type: string
+        "503":
+          description: Service unavailable
+          schema:
+            type: string
+      summary: Unregister a wallet
+      tags:
+      - autonomys_wallet
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Returns the health status of Minotor
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: In Minotor We Trust
+          schema:
+            type: string
+      summary: Health Check
+      tags:
+      - health
+swagger: "2.0"

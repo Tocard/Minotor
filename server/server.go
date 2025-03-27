@@ -3,8 +3,11 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"minotor/config"
+	"minotor/docs"
 	"minotor/routes"
 	"time"
 )
@@ -12,6 +15,7 @@ import (
 func engine() *gin.Engine {
 	gin.ForceConsoleColor()
 	server := gin.New()
+	docs.SwaggerInfo.BasePath = ""
 	server.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 
 		// your custom format
@@ -29,6 +33,8 @@ func engine() *gin.Engine {
 	}))
 	server.Use(gin.Recovery())
 	server.GET("/health", routes.Health)
+	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	Autonomys := server.Group("/autonomys")
 	{
 		AutonomysWallet := Autonomys.Group("/wallet")

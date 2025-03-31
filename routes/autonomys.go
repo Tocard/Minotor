@@ -107,6 +107,52 @@ func RegisterWallet(c *gin.Context) {
 	c.String(201, fmt.Sprintf("Custom Prefix: %d\nPublic Key: %x for address %s", prefix, pubKey, ss58Address))
 }
 
+// @Summary Register a wallet
+// @Description Registers a new wallet to the autonomys system
+// @Tags autonomys_wallet
+// @Accept json
+// @Produce json
+// @Param wallet body data.Wallet true "Wallet Address"
+// @Success 201 {string} string "Wallet successfully registered"
+// @Failure 400 {string} string "Invalid SS58 address"
+// @Failure 503 {string} string "Service unavailable"
+// @Router /autonomys/wallet/register [post]
+func RegisterWalletPayload(c *gin.Context) {
+	var Payload struct {
+		Wallet string `json:"wallet"`
+	}
+	if err := c.ShouldBindJSON(&Payload); err != nil {
+		c.String(400, fmt.Sprintf("Invalid JSON: %s", err.Error()))
+		return
+	}
+	log.Println(Payload)
+	pubKey, prefix, err := utils.DecodeSS58(Payload.Wallet)
+	if err != nil {
+		log.Println("Error:", err)
+		c.String(400, "Invalid SS58 address")
+		return
+	}
+
+	WalletExist, err := db.WalletExists(Payload.Wallet)
+	if err != nil {
+		c.String(503, fmt.Sprintf("Unable to get wallets: %s", err.Error()))
+		return
+	}
+	if WalletExist {
+		c.String(204, fmt.Sprintf("Wallet %s already registered", Payload.Wallet))
+		return
+	}
+
+	Wallet := db.NewWallet(Payload.Wallet)
+	err = Wallet.Save()
+	if err != nil {
+		c.String(503, fmt.Sprintf("Error registering wallet %s: %s", Payload.Wallet, err.Error()))
+		return
+	}
+
+	c.String(201, fmt.Sprintf("Custom Prefix: %d\nPublic Key: %x for address %s", prefix, pubKey, Payload.Wallet))
+}
+
 // @Summary Unregister a wallet
 // @Description Removes a wallet from the autonomys system
 // @Tags autonomys_wallet
@@ -145,6 +191,47 @@ func UnRegisterWallet(c *gin.Context) {
 	}
 }
 
+// @Summary Unregister a wallet
+// @Description Removes a wallet from the autonomys system
+// @Tags autonomys_wallet
+// @Accept json
+// @Produce json
+// @Param wallet body data.Wallet true "Wallet Address"
+// @Success 200 {string} string "Wallet successfully removed"
+// @Failure 400 {string} string "Invalid wallet address"
+// @Failure 503 {string} string "Service unavailable"
+// @Router /autonomys/wallet/unregister [post]
+func UnRegisterWalletPayload(c *gin.Context) {
+	var Payload struct {
+		Wallet string `json:"wallet"`
+	}
+	if err := c.ShouldBindJSON(&Payload); err != nil {
+		c.String(400, fmt.Sprintf("Invalid JSON: %s", err.Error()))
+		return
+	}
+
+	WalletExist, err := db.WalletExists(Payload.Wallet)
+	if err != nil {
+		c.String(503, fmt.Sprintf("Unable to get wallets: %s", err.Error()))
+		return
+	}
+	if WalletExist {
+		Wallet, err := db.GetWalletByAdresses(Payload.Wallet)
+		if err != nil {
+			c.String(404, fmt.Sprintf("Error unregistering %s: %s", Payload.Wallet, err.Error()))
+		} else {
+			err = Wallet.Delete()
+			if err != nil {
+				c.String(503, fmt.Sprintf("Unable to delete wallet %s, contact admin", Payload.Wallet))
+			} else {
+				c.String(200, fmt.Sprintf("Wallet %s successfully removed", Payload.Wallet))
+			}
+		}
+	} else {
+		c.String(200, fmt.Sprintf("Wallet %s not registered", Payload.Wallet))
+	}
+}
+
 // @Summary List wallets
 // @Description Lists all registered wallets
 // @Tags autonomys_wallet
@@ -164,6 +251,7 @@ func ListWallet(c *gin.Context) {
 }
 
 func ServeWalletPage(c *gin.Context) {
+	log.Println(config.Cfg.APIAdress, config.Cfg.APIPort)
 	c.HTML(http.StatusOK, "wallet.html", gin.H{
 		"apiAddress": config.Cfg.APIAdress,
 		"apiPort":    config.Cfg.APIPort,

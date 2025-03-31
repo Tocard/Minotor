@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,6 +18,13 @@ func engine() *gin.Engine {
 	server := gin.New()
 	server.LoadHTMLGlob("templates/*")
 	docs.SwaggerInfo.BasePath = ""
+	server.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Change this to restrict allowed origins
+		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	server.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 
 		// your custom format
@@ -44,6 +52,8 @@ func engine() *gin.Engine {
 			AutonomysWallet.GET("/harvest", routes.AutonomysHarvestWallet)
 			AutonomysWallet.GET("/register/:wallet", routes.RegisterWallet)
 			AutonomysWallet.GET("/unregister/:wallet", routes.UnRegisterWallet)
+			AutonomysWallet.POST("/register", routes.RegisterWalletPayload)
+			AutonomysWallet.POST("/unregister", routes.UnRegisterWalletPayload)
 			AutonomysWallet.GET("/list", routes.ListWallet)
 		}
 	}

@@ -108,13 +108,14 @@ func RegisterWallet(c *gin.Context) {
 }
 
 // @Summary Register a wallet
-// @Description Registers a new wallet to the autonomys system
+// @Description Registers a new wallet in the autonomys system
 // @Tags autonomys_wallet
 // @Accept json
 // @Produce json
-// @Param wallet body data.Wallet true "Wallet Address"
+// @Param request body struct{Wallet string `json:"wallet"`} true "Wallet Address"
 // @Success 201 {string} string "Wallet successfully registered"
-// @Failure 400 {string} string "Invalid SS58 address"
+// @Success 204 {string} string "Wallet already registered"
+// @Failure 400 {string} string "Invalid JSON or SS58 address"
 // @Failure 503 {string} string "Service unavailable"
 // @Router /autonomys/wallet/register [post]
 func RegisterWalletPayload(c *gin.Context) {
@@ -158,7 +159,7 @@ func RegisterWalletPayload(c *gin.Context) {
 // @Tags autonomys_wallet
 // @Accept json
 // @Produce json
-// @Param wallet path string true "Wallet Address"
+// @Param request body struct{Wallet string `json:"wallet"`} true "Wallet Address"
 // @Success 200 {string} string "Wallet successfully removed"
 // @Failure 400 {string} string "Invalid wallet address"
 // @Failure 503 {string} string "Service unavailable"

@@ -35,31 +35,42 @@
 <script>
     const apiAddress = "{{.apiAddress}}";
     const apiPort = "{{.apiPort}}";
-    document.getElementById("registerForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const wallet = document.getElementById("registerWallet").value;
-        const response = await fetch(`${apiAddress}:${apiPort}/autonomys/wallet/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ wallet })
-        });
 
-        const result = await response.json();
-        alert(result.message || "Wallet registered successfully!");
+    async function handleWalletAction(event, endpoint, inputId) {
+        event.preventDefault();
+        const form = event.target;
+        const walletInput = document.getElementById(inputId);
+        const wallet = walletInput.value.trim();
+
+        if (!wallet) {
+            alert("Please enter a wallet address.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${apiAddress}:${apiPort}/autonomys/wallet/${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ wallet })
+            });
+
+            const result = await response.json();
+            alert(result.message || `Wallet ${endpoint}ed successfully!`);
+
+            // Clear input field after successful request
+            form.reset();
+        } catch (error) {
+            alert("Error communicating with the server.");
+            console.error("Fetch error:", error);
+        }
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        handleWalletAction(event, "register", "registerWallet");
     });
 
-    document.getElementById("unregisterForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const wallet = document.getElementById("unregisterWallet").value;
-
-        const response = await fetch(`${apiAddress}:${apiPort}/autonomys/wallet/unregister`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ wallet })
-        });
-
-        const result = await response.json();
-        alert(result.message || "Wallet unregistered successfully!");
+    document.getElementById("unregisterForm").addEventListener("submit", function(event) {
+        handleWalletAction(event, "unregister", "unregisterWallet");
     });
 </script>
 

@@ -18,6 +18,12 @@ import (
 	"time"
 )
 
+// JSON response structure
+type JSONResponse struct {
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
 // @Summary Harvest wallet
 // @Description Harvests rewards from the autonomous wallet
 // @Tags autonomys_wallet
@@ -127,7 +133,7 @@ func RegisterWalletPayload(c *gin.Context) {
 		return
 	}
 	log.Println(Payload)
-	pubKey, prefix, err := utils.DecodeSS58(Payload.Wallet)
+	_, _, err := utils.DecodeSS58(Payload.Wallet)
 	if err != nil {
 		log.Println("Error:", err)
 		c.String(400, "Invalid SS58 address")
@@ -151,7 +157,7 @@ func RegisterWalletPayload(c *gin.Context) {
 		return
 	}
 
-	c.String(201, fmt.Sprintf("Custom Prefix: %d\nPublic Key: %x for address %s", prefix, pubKey, Payload.Wallet))
+	c.JSON(http.StatusCreated, JSONResponse{Message: fmt.Sprintf("Wallet %s successfully registered", Payload.Wallet)})
 }
 
 // @Summary Unregister a wallet
@@ -225,7 +231,7 @@ func UnRegisterWalletPayload(c *gin.Context) {
 			if err != nil {
 				c.String(503, fmt.Sprintf("Unable to delete wallet %s, contact admin", Payload.Wallet))
 			} else {
-				c.String(200, fmt.Sprintf("Wallet %s successfully removed", Payload.Wallet))
+				c.JSON(http.StatusCreated, JSONResponse{Message: fmt.Sprintf("Wallet %s successfully unregistered", Payload.Wallet)})
 			}
 		}
 	} else {

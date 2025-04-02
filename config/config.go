@@ -18,6 +18,7 @@ type Config struct {
 	APIAdress        string `yaml:"api_adress"`
 	APIPort          int    `yaml:"api_port"`
 	AutonomysNodeUrl string `yaml:"autonomys_node_url"`
+	APItemplatesPath string `yaml:"api_templates_path"`
 }
 
 func LoadYamlConfig(ConfigFilePath string) {

@@ -260,7 +260,6 @@ func ListWallet(c *gin.Context) {
 func ServeWalletPage(c *gin.Context) {
 	log.Println(config.Cfg.APIAdress, config.Cfg.APIPort)
 	c.HTML(http.StatusOK, "wallet.html", gin.H{
-		"apiAddress": config.Cfg.APIAdress,
-		"apiPort":    config.Cfg.APIPort,
+		"api_external_url": config.Cfg.ApiExternalUrl,
 	})
 }

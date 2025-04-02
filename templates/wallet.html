@@ -33,8 +33,7 @@
 </div>
 
 <script>
-    const apiAddress = "{{.apiAddress}}";
-    const apiPort = "{{.apiPort}}";
+    const api_external_url = "{{.api_external_url}}";
 
     async function handleWalletAction(event, endpoint, inputId) {
         event.preventDefault();
@@ -48,7 +47,7 @@
         }
 
         try {
-            const response = await fetch(`${apiAddress}:${apiPort}/autonomys/wallet/${endpoint}`, {
+            const response = await fetch(`${api_external_url}/autonomys/wallet/${endpoint}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ wallet })

@@ -16,7 +16,8 @@ import (
 func engine() *gin.Engine {
 	gin.ForceConsoleColor()
 	server := gin.New()
-	server.LoadHTMLGlob("templates/*")
+	TemplatePath := fmt.Sprintf("%s/*", config.Cfg.APItemplatesPath)
+	server.LoadHTMLGlob(TemplatePath)
 	docs.SwaggerInfo.BasePath = ""
 	server.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"}, // Change this to restrict allowed origins
